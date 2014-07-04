@@ -5,16 +5,23 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 import android.os.Build;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements OnClickListener{
+
+	private ListView myListView;
+	private Button btAddPlaylyst;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -25,15 +32,16 @@ public class MainActivity extends Activity {
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
+		myListView = (ListView) findViewById(R.id.lvPlaylist);
+		btAddPlaylyst = (Button) findViewById(R.id.btAddPlaylist);
 		
-		ListView myListView = (ListView)findViewById(R.id.lvPlaylist);
-		
+		btAddPlaylyst.setOnClickListener(this);
 		
 		
 		ArrayList<Song> listSongProva = new ArrayList<Song>();
 		Song songProva = new Song("leccamele", "orla", null, null);
 		listSongProva.add(songProva);
-		
+
 		Playlist plProva = new Playlist("birra", listSongProva, null, false,
 				null);
 		Playlist plProva1 = new Playlist("birra", listSongProva, null, false,
@@ -50,7 +58,7 @@ public class MainActivity extends Activity {
 				null);
 		Playlist plProva7 = new Playlist("birra", listSongProva, null, false,
 				null);
-		
+
 		ArrayList<Playlist> alPl = new ArrayList<Playlist>();
 		alPl.add(plProva);
 		alPl.add(plProva1);
@@ -61,13 +69,10 @@ public class MainActivity extends Activity {
 		alPl.add(plProva6);
 		alPl.add(plProva7);
 
-
 		PlayListAdapter plAdProva = new PlayListAdapter(this,
 				R.layout.playlist_row_layout, alPl);
-		
+
 		myListView.setAdapter(plAdProva);
-		
-		
 
 	}
 
@@ -105,6 +110,15 @@ public class MainActivity extends Activity {
 			View rootView = inflater.inflate(R.layout.fragment_main, container,
 					false);
 			return rootView;
+		}
+	}
+
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		if(v.getId()==R.id.btAddPlaylist){
+			Intent intent = new Intent(this, CreatePlaylistActivity.class);
+			startActivity(intent);
 		}
 	}
 

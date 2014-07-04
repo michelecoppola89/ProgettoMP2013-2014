@@ -20,5 +20,6 @@
     <string name="sNewPlaylist">Stretching Playlist</string>
     <string name="sExampleRepetitions">2,3,4,...</string>
     <string name="sRepetitionNum">Number of repetitions</string>
+    <string name="sLoop">Loop</string>
 
 </resources>

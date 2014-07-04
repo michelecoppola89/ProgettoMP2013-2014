@@ -23,32 +23,33 @@ public final class R {
     }
     public static final class drawable {
         public static final int ic_launcher=0x7f020000;
+        public static final int kaydet=0x7f020001;
     }
     public static final class id {
         public static final int action_settings=0x7f080017;
         public static final int btAddPlaylist=0x7f080010;
-        public static final int btAddSong=0x7f08000c;
+        public static final int btAddSong=0x7f08000d;
         public static final int btChange=0x7f080015;
         public static final int btDelete=0x7f080016;
         public static final int btPlay=0x7f080014;
-        public static final int button1=0x7f08000f;
         public static final int container=0x7f080000;
         public static final int edNewPlaylistName=0x7f080002;
-        public static final int etRepetitionNum=0x7f08000b;
-        public static final int listView1=0x7f08000e;
+        public static final int etRepetitionNum=0x7f08000c;
+        public static final int listView1=0x7f08000f;
         public static final int lvPlaylist=0x7f080012;
-        public static final int radioGroup1=0x7f080007;
+        public static final int rbLoop=0x7f08000a;
         public static final int rbOneTime=0x7f080009;
         public static final int rbRandom=0x7f080005;
         public static final int rbRepeated=0x7f080008;
         public static final int rbStraight=0x7f080006;
         public static final int rgOrder=0x7f080004;
+        public static final int rgRepetition=0x7f080007;
         public static final int spFadeIn=0x7f080003;
         public static final int tvAddPlayList=0x7f080011;
-        public static final int tvAddSong=0x7f08000d;
+        public static final int tvAddSong=0x7f08000e;
         public static final int tvInsertPlayListName=0x7f080001;
         public static final int tvPlaylistName=0x7f080013;
-        public static final int tvRepetitionNum=0x7f08000a;
+        public static final int tvRepetitionNum=0x7f08000b;
     }
     public static final class layout {
         public static final int activity_create_playlist=0x7f030000;
@@ -72,6 +73,7 @@ public final class R {
         public static final int sAddSong=0x7f05000b;
         public static final int sExampleRepetitions=0x7f050011;
         public static final int sInsertPlayListName=0x7f050009;
+        public static final int sLoop=0x7f050013;
         public static final int sNewPlaylist=0x7f050010;
         public static final int sOneTime=0x7f05000e;
         public static final int sPlus=0x7f050004;

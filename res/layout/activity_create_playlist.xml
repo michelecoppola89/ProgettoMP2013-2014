@@ -43,18 +43,18 @@
             android:id="@+id/rbRandom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:checked="true"
             android:text="@string/sRandom" />
 
         <RadioButton
             android:id="@+id/rbStraight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+             android:checked="true"
             android:text="@string/sStraight" />
     </RadioGroup>
 
     <RadioGroup
-        android:id="@+id/radioGroup1"
+        android:id="@+id/rgRepetition"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
@@ -71,6 +71,12 @@
             android:layout_height="wrap_content"
             android:checked="true"
             android:text="@string/sOneTime" />
+
+        <RadioButton
+            android:id="@+id/rbLoop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sLoop" />
 
     </RadioGroup>
 
@@ -117,11 +123,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
     </ListView>
-
-    <Button
-        android:id="@+id/button1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button" />
 
 </LinearLayout>
