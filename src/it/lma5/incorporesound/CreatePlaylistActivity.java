@@ -1,5 +1,8 @@
 package it.lma5.incorporesound;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
@@ -17,13 +20,17 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
 import android.os.Build;
 
 public class CreatePlaylistActivity extends Activity implements OnClickListener {
 
 	private Button btAddSong;
-	private Uri song;
+	private Button btSavePlaylist;
+	private ListView lvSongList;
+	private ArrayList<Song> songList = new ArrayList<Song>();
+	private SongListAdapter slAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +44,14 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 		}
 
 		btAddSong = (Button) findViewById(R.id.btAddSong);
+
 		btAddSong.setOnClickListener(this);
+
+		lvSongList = (ListView) findViewById(R.id.lvSongList);
+
+		slAdapter = new SongListAdapter(this, R.layout.song_list_row_layout,
+				songList);
+		lvSongList.setAdapter(slAdapter);
 	}
 
 	@Override
@@ -45,6 +59,8 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.create_playlist, menu);
+		
+		
 		return true;
 	}
 
@@ -55,6 +71,9 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
+			if(!songList.isEmpty())
+				Toast.makeText(this,songList.get(1).getUserDuration().toString() ,Toast.LENGTH_LONG).show();
+			
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -83,27 +102,49 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 			Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 			intent.setType("audio/*");
 			startActivityForResult(intent, 10);
-		}
+		} 
+//		else if (v.getId() == R.id.action_settings) {
+//			Toast.makeText(this, "acchiappa 'sto toast!!!!!!!", Toast.LENGTH_LONG).show();
+//		}
+
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
 		if (resultCode == RESULT_OK && requestCode == 10) {
-			song = data.getData();
+			Uri uriSong;
+			uriSong = data.getData();
 
-			Log.v("PROVA", "URI:" + song.toString());
+			Log.v("PROVA", "URI:" + uriSong.toString());
 			MediaMetadataRetriever retriever = new MediaMetadataRetriever();
 			try {
-				retriever.setDataSource(this, song);
+				retriever.setDataSource(this, uriSong);
 				String mimetype = retriever
 						.extractMetadata(MediaMetadataRetriever.METADATA_KEY_MIMETYPE);
 				if (!mimetype.contains("audio")) {
 					Toast.makeText(this, "Wrong format", Toast.LENGTH_SHORT)
 							.show();
+				} else {
+					// Toast.makeText(this, mimetype, Toast.LENGTH_LONG).show();
+
+					String name = retriever
+							.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
+					
+					Integer duration = new Integer(
+							retriever
+									.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
+
+					String artist = retriever
+							.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
+					
+					
+
+					Song songTi = new Song(name, uriSong, 0, 15, duration,
+							artist);
+					slAdapter.add(songTi);
 				}
-				Toast.makeText(this, mimetype, Toast.LENGTH_LONG).show();
-				
+
 			} catch (RuntimeException e) {
 				Toast.makeText(this, "Wrong format", Toast.LENGTH_SHORT).show();
 			}

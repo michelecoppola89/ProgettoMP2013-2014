@@ -12,7 +12,7 @@
     <string name="title_activity_create_playlist">CreatePlaylistActivity</string>
     <string name="sInsertPlayListName">Insert PlayList Name</string>
     <string name="btAddSong">+</string>
-    <string name="sAddSong">Push to add new song</string>
+    <string name="sAddSong">Add new song</string>
     <string name="sRandom">Random</string>
     <string name="sStraight">Straight</string>
     <string name="sOneTime">One time</string>
@@ -21,5 +21,19 @@
     <string name="sExampleRepetitions">2,3,4,...</string>
     <string name="sRepetitionNum">Number of repetitions</string>
     <string name="sLoop">Loop</string>
+
+    <string-array name="arDurations">
+        <item>15</item>
+        <item>30</item>
+        <item>40</item>
+        <item>45</item>
+        <item>60</item>
+    </string-array>
+
+    <string-array name="arPlayMode">
+        <item>random</item>
+        <item>beginning</item>
+    </string-array>
+        <string name="minus">-</string>
 
 </resources>

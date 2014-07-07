@@ -8,6 +8,10 @@
 package it.lma5.incorporesound;
 
 public final class R {
+    public static final class array {
+        public static final int arDurations=0x7f060000;
+        public static final int arPlayMode=0x7f060001;
+    }
     public static final class attr {
     }
     public static final class dimen {
@@ -26,30 +30,35 @@ public final class R {
         public static final int kaydet=0x7f020001;
     }
     public static final class id {
-        public static final int action_settings=0x7f080017;
-        public static final int btAddPlaylist=0x7f080010;
-        public static final int btAddSong=0x7f08000d;
-        public static final int btChange=0x7f080015;
-        public static final int btDelete=0x7f080016;
-        public static final int btPlay=0x7f080014;
-        public static final int container=0x7f080000;
-        public static final int edNewPlaylistName=0x7f080002;
-        public static final int etRepetitionNum=0x7f08000c;
-        public static final int listView1=0x7f08000f;
-        public static final int lvPlaylist=0x7f080012;
-        public static final int rbLoop=0x7f08000a;
-        public static final int rbOneTime=0x7f080009;
-        public static final int rbRandom=0x7f080005;
-        public static final int rbRepeated=0x7f080008;
-        public static final int rbStraight=0x7f080006;
-        public static final int rgOrder=0x7f080004;
-        public static final int rgRepetition=0x7f080007;
-        public static final int spFadeIn=0x7f080003;
-        public static final int tvAddPlayList=0x7f080011;
-        public static final int tvAddSong=0x7f08000e;
-        public static final int tvInsertPlayListName=0x7f080001;
-        public static final int tvPlaylistName=0x7f080013;
-        public static final int tvRepetitionNum=0x7f08000b;
+        public static final int action_settings=0x7f09001c;
+        public static final int btAddPlaylist=0x7f090010;
+        public static final int btAddSong=0x7f09000d;
+        public static final int btChange=0x7f090015;
+        public static final int btDelete=0x7f090016;
+        public static final int btPlay=0x7f090014;
+        public static final int btRemoveSong=0x7f09001b;
+        public static final int container=0x7f090000;
+        public static final int edNewPlaylistName=0x7f090002;
+        public static final int etRepetitionNum=0x7f09000c;
+        public static final int lvPlaylist=0x7f090012;
+        public static final int lvSongList=0x7f09000f;
+        public static final int rbLoop=0x7f09000a;
+        public static final int rbOneTime=0x7f090009;
+        public static final int rbRandom=0x7f090005;
+        public static final int rbRepeated=0x7f090008;
+        public static final int rbStraight=0x7f090006;
+        public static final int rgOrder=0x7f090004;
+        public static final int rgRepetition=0x7f090007;
+        public static final int spFadeIn=0x7f090003;
+        public static final int spSongDuration=0x7f09001a;
+        public static final int spSongStart=0x7f090019;
+        public static final int tvAddPlayList=0x7f090011;
+        public static final int tvAddSong=0x7f09000e;
+        public static final int tvArtist=0x7f090018;
+        public static final int tvInsertPlayListName=0x7f090001;
+        public static final int tvPlaylistName=0x7f090013;
+        public static final int tvRepetitionNum=0x7f09000b;
+        public static final int tvSongName=0x7f090017;
     }
     public static final class layout {
         public static final int activity_create_playlist=0x7f030000;
@@ -57,10 +66,11 @@ public final class R {
         public static final int fragment_create_playlist=0x7f030002;
         public static final int fragment_main=0x7f030003;
         public static final int playlist_row_layout=0x7f030004;
+        public static final int song_list_row_layout=0x7f030005;
     }
     public static final class menu {
-        public static final int create_playlist=0x7f070000;
-        public static final int main=0x7f070001;
+        public static final int create_playlist=0x7f080000;
+        public static final int main=0x7f080001;
     }
     public static final class string {
         public static final int action_settings=0x7f050002;
@@ -69,6 +79,7 @@ public final class R {
         public static final int change=0x7f050006;
         public static final int delete=0x7f050007;
         public static final int hello_world=0x7f050001;
+        public static final int minus=0x7f050014;
         public static final int play=0x7f050005;
         public static final int sAddSong=0x7f05000b;
         public static final int sExampleRepetitions=0x7f050011;
@@ -106,10 +117,10 @@ public final class R {
     
  API 14 theme customizations can go here. 
          */
-        public static final int AppBaseTheme=0x7f060000;
+        public static final int AppBaseTheme=0x7f070000;
         /**  Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
          */
-        public static final int AppTheme=0x7f060001;
+        public static final int AppTheme=0x7f070001;
     }
 }
