@@ -1,8 +1,12 @@
 package it.lma5.incorporesound;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 import android.R.integer;
+import android.app.Activity;
 import android.content.Context;
 import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
@@ -13,10 +17,13 @@ import android.webkit.WebView.FindListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListAdapter;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemSelectedListener;
+
 public class SongListAdapter extends ArrayAdapter<Song> {
 
 	private ArrayList<Song> list;
@@ -32,7 +39,7 @@ public class SongListAdapter extends ArrayAdapter<Song> {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View rowView = convertView;
 		Button btRemove;
-		Spinner spSongStart;
+		final Spinner spSongStart;
 		final Spinner spSongDuration;
 
 		if (rowView == null) {
@@ -40,58 +47,147 @@ public class SongListAdapter extends ArrayAdapter<Song> {
 					Context.LAYOUT_INFLATER_SERVICE);
 			rowView = li.inflate(R.layout.song_list_row_layout, null);
 		}
-		
-		
-		
-		String songlistName = list.get(position).getName(); 
-		String artistName= list.get(position).getArtist();
-		
-		if(songlistName!=null){
-			
-			TextView tvSonglist = (TextView) rowView.findViewById(R.id.tvSongName);
+		Song rowSong = list.get(position);
+
+		if (rowSong != null) {
+
+			String songlistName = rowSong.getName();
+			String artistName = rowSong.getArtist();
+
+			Integer songDuration = rowSong.getDuration();
+
+			TextView tvSonglist = (TextView) rowView
+					.findViewById(R.id.tvSongName);
 			TextView tvArtist = (TextView) rowView.findViewById(R.id.tvArtist);
-		
+
 			tvSonglist.setText(songlistName);
 			tvArtist.setText(artistName);
-			
+
 			btRemove = (Button) rowView.findViewById(R.id.btRemoveSong);
-			spSongDuration = (Spinner) rowView.findViewById(R.id.spSongDuration);
-			spSongStart= (Spinner) rowView.findViewById(R.id.spSongStart);
-			spSongDuration.setTag(position);
 			btRemove.setTag(position);
+
+			spSongDuration = (Spinner) rowView
+					.findViewById(R.id.spSongDuration);
+			spSongStart = (Spinner) rowView.findViewById(R.id.spSongStart);
+			spSongStart.setTag(position);
+			spSongDuration.setTag(position);
+
+			List<String> durationList = new ArrayList<String>(
+					Arrays.asList(getContext().getResources().getStringArray(
+							R.array.arDurations)));
+
+			if (songDuration < 30000) {
+
+				for (int i = 0; i < 3; i++) {
+					durationList.remove(durationList.size() - 1);
+				}
+
+				ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+						getContext(), android.R.layout.simple_spinner_item,
+						durationList);
+				adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+				spSongDuration.setAdapter(adapter);
+
+			} else if (songDuration < 45000) {
+
+				for (int i = 0; i < 2; i++) {
+					durationList.remove(durationList.size() - 1);
+				}
+
+				ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+						getContext(), android.R.layout.simple_spinner_item,
+						durationList);
+				adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+				spSongDuration.setAdapter(adapter);
+
+			} else if (songDuration < 60000) {
+
+				durationList.remove(durationList.size() - 1);
+
+				ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+						getContext(), android.R.layout.simple_spinner_item,
+						durationList);
+				adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+				spSongDuration.setAdapter(adapter);
+
+			} else {
+				ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+						getContext(), android.R.layout.simple_spinner_item,
+						durationList);
+				adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+				spSongDuration.setAdapter(adapter);
+			}
+
 			btRemove.setOnClickListener(new OnClickListener() {
-				
+
 				@Override
 				public void onClick(View v) {
-					remove(list.get((Integer)v.getTag()));
+					remove(list.get((Integer) v.getTag()));
 					notifyDataSetChanged();
-					
+
 				}
 			});
-			spSongDuration.setOnItemSelectedListener(new OnItemSelectedListener() {
+			spSongDuration
+					.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+						@Override
+						public void onItemSelected(AdapterView<?> arg0,
+								View arg1, int arg2, long arg3) {
+
+							Integer duration = Integer.parseInt(spSongDuration
+									.getSelectedItem().toString());
+							list.get((Integer) arg0.getTag()).setUserDuration(
+									duration);
+
+						}
+
+						@Override
+						public void onNothingSelected(AdapterView<?> arg0) {
+							// TODO Auto-generated method stub
+
+						}
+
+					});
+
+			spSongStart.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 				@Override
 				public void onItemSelected(AdapterView<?> arg0, View arg1,
 						int arg2, long arg3) {
-				
-					Integer duration= Integer.parseInt(spSongDuration.getSelectedItem().toString());
-					list.get((Integer)arg0.getTag()).setUserDuration(duration);
-				
-					
+
+					String beginning = (spSongStart.getSelectedItem()
+							.toString());
+					Song temp = list.get((Integer) arg0.getTag());
+					if (beginning.equals("Random")) {
+						Integer interval = temp.getDuration()
+								- temp.getUserDuration();
+						if (interval >= 0) {
+
+							Random rand = new Random();
+							Integer beginTime = rand.nextInt(interval + 1);
+							temp.setBeginTime(beginTime);
+
+						} else {
+
+						}
+
+					} else {
+						list.get((Integer) arg0.getTag()).setBeginTime(0);
+					}
+
 				}
 
 				@Override
 				public void onNothingSelected(AdapterView<?> arg0) {
 					// TODO Auto-generated method stub
-					
+
 				}
-				
+
 			});
-			
+
 		}
 
 		return rowView;
 	}
-
 
 }

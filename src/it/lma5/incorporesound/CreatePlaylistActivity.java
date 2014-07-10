@@ -59,8 +59,7 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.create_playlist, menu);
-		
-		
+
 		return true;
 	}
 
@@ -71,9 +70,10 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
-			if(!songList.isEmpty())
-				Toast.makeText(this,songList.get(1).getUserDuration().toString() ,Toast.LENGTH_LONG).show();
-			
+			if (!songList.isEmpty())
+				Toast.makeText(this, songList.get(0).getBeginTime().toString(),
+						Toast.LENGTH_LONG).show();
+
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -102,10 +102,11 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 			Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 			intent.setType("audio/*");
 			startActivityForResult(intent, 10);
-		} 
-//		else if (v.getId() == R.id.action_settings) {
-//			Toast.makeText(this, "acchiappa 'sto toast!!!!!!!", Toast.LENGTH_LONG).show();
-//		}
+		}
+		// else if (v.getId() == R.id.action_settings) {
+		// Toast.makeText(this, "acchiappa 'sto toast!!!!!!!",
+		// Toast.LENGTH_LONG).show();
+		// }
 
 	}
 
@@ -130,21 +131,26 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 
 					String name = retriever
 							.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
-					
+
 					Integer duration = new Integer(
 							retriever
 									.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION));
 
 					String artist = retriever
 							.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
-					
-					
 
-					Song songTi = new Song(name, uriSong, 0, 15, duration,
-							artist);
-					slAdapter.add(songTi);
+					Log.v("DURATION", "duration = "+duration);
+					if (duration < 15000) {
+						Toast.makeText(this, "song duration is too short",
+								Toast.LENGTH_SHORT).show();
+						
+					}
+					else {
+						Song songTi = new Song(name, uriSong, 0, 15000, duration,
+								artist);
+						slAdapter.add(songTi);
+					}
 				}
-
 			} catch (RuntimeException e) {
 				Toast.makeText(this, "Wrong format", Toast.LENGTH_SHORT).show();
 			}
