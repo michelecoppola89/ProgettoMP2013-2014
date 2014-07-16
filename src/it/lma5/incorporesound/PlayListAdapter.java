@@ -1,5 +1,6 @@
 package it.lma5.incorporesound;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-public class PlayListAdapter extends ArrayAdapter<Playlist> {
+public class PlayListAdapter extends ArrayAdapter<Playlist> implements Serializable{
 
 	private ArrayList<Playlist> list;
 

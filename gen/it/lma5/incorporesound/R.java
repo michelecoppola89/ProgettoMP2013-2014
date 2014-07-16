@@ -38,7 +38,7 @@ public final class R {
         public static final int btPlay=0x7f090014;
         public static final int btRemoveSong=0x7f09001b;
         public static final int container=0x7f090000;
-        public static final int edNewPlaylistName=0x7f090002;
+        public static final int etNewPlaylistName=0x7f090002;
         public static final int etRepetitionNum=0x7f09000c;
         public static final int lvPlaylist=0x7f090012;
         public static final int lvSongList=0x7f09000f;

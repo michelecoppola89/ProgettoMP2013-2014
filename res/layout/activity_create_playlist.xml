@@ -18,7 +18,7 @@
             android:text="@string/sInsertPlayListName" />
 
         <EditText
-            android:id="@+id/edNewPlaylistName"
+            android:id="@+id/etNewPlaylistName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"

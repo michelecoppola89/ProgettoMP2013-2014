@@ -12,6 +12,8 @@ public class Song {
 	private Integer duration;
 	private Integer userDuration;
 
+	private Integer id;
+
 	public Song(String name, Uri path, Integer beginTime, Integer userDuration,
 			Integer duration, String artist) {
 		if (name == null) {
@@ -82,9 +84,17 @@ public class Song {
 	private String splitUri(Uri uri) {
 		String uriToS = uri.toString();
 		String ret = uriToS.substring(uriToS.lastIndexOf("/"));
-		
+
 		return ret;
-		
+
+	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 }

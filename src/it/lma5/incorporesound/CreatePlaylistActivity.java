@@ -3,6 +3,7 @@ package it.lma5.incorporesound;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.R.integer;
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
@@ -20,7 +21,10 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 import android.os.Build;
 
@@ -28,6 +32,10 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 
 	private Button btAddSong;
 	private Button btSavePlaylist;
+	private EditText etPlaylistName;
+	private EditText etRepetitionNum;
+	private RadioGroup rgOrder;
+	private RadioGroup rgRepetition;
 	private ListView lvSongList;
 	private ArrayList<Song> songList = new ArrayList<Song>();
 	private SongListAdapter slAdapter;
@@ -44,7 +52,6 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 		}
 
 		btAddSong = (Button) findViewById(R.id.btAddSong);
-
 		btAddSong.setOnClickListener(this);
 
 		lvSongList = (ListView) findViewById(R.id.lvSongList);
@@ -52,6 +59,10 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 		slAdapter = new SongListAdapter(this, R.layout.song_list_row_layout,
 				songList);
 		lvSongList.setAdapter(slAdapter);
+		etPlaylistName = (EditText) findViewById(R.id.etNewPlaylistName);
+		etRepetitionNum = (EditText) findViewById(R.id.etRepetitionNum);
+		rgOrder = (RadioGroup) findViewById(R.id.rgOrder);
+		rgRepetition = (RadioGroup) findViewById(R.id.rgRepetition);
 	}
 
 	@Override
@@ -70,9 +81,33 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 		// as you specify a parent activity in AndroidManifest.xml.
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
-			if (!songList.isEmpty())
-				Toast.makeText(this, songList.get(0).getBeginTime().toString(),
-						Toast.LENGTH_LONG).show();
+			PlayListAdapter adapter = (PlayListAdapter) getIntent()
+					.getSerializableExtra("adapter");
+			InCorporeSoundHelper helper = (InCorporeSoundHelper) getIntent()
+					.getSerializableExtra("helper");
+
+			DbTask runner = new DbTask(adapter, helper);
+			String playListName = etPlaylistName.getText().toString();
+			boolean isRandom;
+			Integer repetition;
+			int selectedRepetition = rgRepetition.getCheckedRadioButtonId();
+			if (selectedRepetition == R.id.rbOneTime)
+				repetition = 1;
+			else if (selectedRepetition == R.id.rbLoop)
+				repetition = 0;
+			else {
+				repetition = Integer.parseInt(etRepetitionNum.getText()
+						.toString());
+			}
+			int selectedOrder = rgOrder.getCheckedRadioButtonId();
+			if (selectedOrder == R.id.rbRandom)
+				isRandom = true;
+			else
+				isRandom = false;
+			
+			//---------------------------------------------------------------------------------------------------
+			//Playlist playListToInsert=new Playlist(playListName, songList, repetition, isRandom, fadeIn);
+			// runner.execute(params);
 
 			return true;
 		}
@@ -139,15 +174,14 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 					String artist = retriever
 							.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
 
-					Log.v("DURATION", "duration = "+duration);
+					Log.v("DURATION", "duration = " + duration);
 					if (duration < 15000) {
 						Toast.makeText(this, "song duration is too short",
 								Toast.LENGTH_SHORT).show();
-						
-					}
-					else {
-						Song songTi = new Song(name, uriSong, 0, 15000, duration,
-								artist);
+
+					} else {
+						Song songTi = new Song(name, uriSong, 0, 15000,
+								duration, artist);
 						slAdapter.add(songTi);
 					}
 				}
