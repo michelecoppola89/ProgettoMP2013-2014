@@ -6,8 +6,11 @@ import java.util.List;
 import android.R.integer;
 import android.app.Activity;
 import android.app.ActionBar;
+import android.app.AlertDialog;
+import android.app.AlertDialog.Builder;
 import android.app.Fragment;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
@@ -25,6 +28,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.Toast;
 import android.os.Build;
 
@@ -36,6 +40,7 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 	private EditText etRepetitionNum;
 	private RadioGroup rgOrder;
 	private RadioGroup rgRepetition;
+	private Spinner spFadeIn;
 	private ListView lvSongList;
 	private ArrayList<Song> songList = new ArrayList<Song>();
 	private SongListAdapter slAdapter;
@@ -63,6 +68,7 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 		etRepetitionNum = (EditText) findViewById(R.id.etRepetitionNum);
 		rgOrder = (RadioGroup) findViewById(R.id.rgOrder);
 		rgRepetition = (RadioGroup) findViewById(R.id.rgRepetition);
+		spFadeIn = (Spinner) findViewById(R.id.spFadeIn);
 	}
 
 	@Override
@@ -70,6 +76,8 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.create_playlist, menu);
+		Button btSave = (Button) findViewById(R.id.action_settings);
+		
 
 		return true;
 	}
@@ -79,14 +87,12 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
+		
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
-			PlayListAdapter adapter = (PlayListAdapter) getIntent()
-					.getSerializableExtra("adapter");
-			InCorporeSoundHelper helper = (InCorporeSoundHelper) getIntent()
-					.getSerializableExtra("helper");
+			InCorporeSoundHelper helper = new InCorporeSoundHelper(this);
 
-			DbTask runner = new DbTask(adapter, helper);
+			DbTask runner = new DbTask(helper);
 			String playListName = etPlaylistName.getText().toString();
 			boolean isRandom;
 			Integer repetition;
@@ -104,13 +110,31 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 				isRandom = true;
 			else
 				isRandom = false;
+			Integer fadeIn= Integer.parseInt(spFadeIn.getSelectedItem().toString());
+			Playlist playListToInsert=new Playlist(playListName, songList, repetition, isRandom, fadeIn);
+			runner.execute(playListToInsert);
 			
-			//---------------------------------------------------------------------------------------------------
-			//Playlist playListToInsert=new Playlist(playListName, songList, repetition, isRandom, fadeIn);
-			// runner.execute(params);
-
+			setResult(RESULT_OK);
+			
+	
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage("Look at this dialog!")
+			       .setCancelable(false)
+			       .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+			           public void onClick(DialogInterface dialog, int id) {
+			        	  
+			                returnToMainActivity();
+			           }
+			       });
+			AlertDialog alert = builder.create();
+			alert.show();
+			
+			
+			
 			return true;
+			
 		}
+		
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -190,5 +214,11 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 			}
 
 		}
+	}
+	
+	private void returnToMainActivity() {
+		// TODO Auto-generated method stub
+		finish();
+		
 	}
 }

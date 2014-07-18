@@ -2,19 +2,16 @@ package it.lma5.incorporesound;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebSettings.LayoutAlgorithm;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 public class PlayListAdapter extends ArrayAdapter<Playlist> implements Serializable{
 
+	private static final long serialVersionUID = 1L;
 	private ArrayList<Playlist> list;
 
 	public PlayListAdapter(Context context, int resource,
@@ -44,5 +41,6 @@ public class PlayListAdapter extends ArrayAdapter<Playlist> implements Serializa
 
 		return rowView;
 	}
+
 
 }

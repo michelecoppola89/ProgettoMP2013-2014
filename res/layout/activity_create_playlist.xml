@@ -31,7 +31,8 @@
     <Spinner
         android:id="@+id/spFadeIn"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:entries="@array/arFadeIn" />
 
     <RadioGroup
         android:id="@+id/rgOrder"

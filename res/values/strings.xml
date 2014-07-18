@@ -28,6 +28,12 @@
         <item>45</item>
         <item>60</item>
     </string-array>
+    
+     <string-array name="arFadeIn">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
 
     <string-array name="arPlayMode">
         <item>random</item>

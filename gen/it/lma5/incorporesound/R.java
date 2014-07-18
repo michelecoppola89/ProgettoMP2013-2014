@@ -10,7 +10,8 @@ package it.lma5.incorporesound;
 public final class R {
     public static final class array {
         public static final int arDurations=0x7f060000;
-        public static final int arPlayMode=0x7f060001;
+        public static final int arFadeIn=0x7f060001;
+        public static final int arPlayMode=0x7f060002;
     }
     public static final class attr {
     }

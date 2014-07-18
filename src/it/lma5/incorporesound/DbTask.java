@@ -6,11 +6,9 @@ import android.os.AsyncTask;
 
 public class DbTask extends AsyncTask<Playlist, Integer, ArrayList<Playlist>> {
 	
-	private PlayListAdapter adapter;
 	private InCorporeSoundHelper helper;
 	
-	public DbTask(PlayListAdapter adapter, InCorporeSoundHelper helper) {
-		this.adapter = adapter;
+	public DbTask(InCorporeSoundHelper helper) {
 		this.helper=helper;
 	}
 
@@ -30,10 +28,7 @@ public class DbTask extends AsyncTask<Playlist, Integer, ArrayList<Playlist>> {
 	@Override
 	protected void onPostExecute(ArrayList<Playlist> result) {
 	
-		for(int i=0; i<result.size(); i++){
-			adapter.add(result.get(i));
-		}
-
+		
 	
 	}
 

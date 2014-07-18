@@ -1,9 +1,15 @@
 package it.lma5.incorporesound;
 
+import java.io.Serializable;
+
 import android.net.Uri;
 
-public class Song {
+public class Song implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String name;
 	private String artist;
 	private Uri path;

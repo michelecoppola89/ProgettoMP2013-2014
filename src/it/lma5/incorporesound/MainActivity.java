@@ -2,12 +2,14 @@ package it.lma5.incorporesound;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,9 +25,8 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	private ListView myListView;
 	private Button btAddPlaylyst;
-	
 
-	private InCorporeSoundHelper helper;
+	public static InCorporeSoundHelper helper;
 	private PlayListAdapter adapter;
 
 	@Override
@@ -39,7 +40,6 @@ public class MainActivity extends Activity implements OnClickListener {
 		}
 		myListView = (ListView) findViewById(R.id.lvPlaylist);
 		btAddPlaylyst = (Button) findViewById(R.id.btAddPlaylist);
-		
 
 		btAddPlaylyst.setOnClickListener(this);
 
@@ -163,10 +163,51 @@ public class MainActivity extends Activity implements OnClickListener {
 		// TODO Auto-generated method stub
 		if (v.getId() == R.id.btAddPlaylist) {
 			Intent intent = new Intent(this, CreatePlaylistActivity.class);
-			intent.putExtra("helper", helper);
-			intent.putExtra("adapter", adapter);
-			startActivity(intent);
+			startActivityForResult(intent, 5);
 		}
 	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+
+		if (requestCode == 5) {
+			if (resultCode == RESULT_OK) {
+				adapter.clear();
+				List<Playlist> list = helper.getAllPlaylists();
+				for (int i = 0; i < list.size(); i++) {
+					adapter.add(list.get(i));
+				}
+				adapter.notifyDataSetChanged();
+
+			}
+		}
+	}
+
+	// @Override
+	// public void onResume() {
+	// super.onResume();
+	// Log.v("onRESUME", "SONO ENTRATO");
+	// adapter.clear();
+	// List<Playlist> list = helper.getAllPlaylists();
+	// for (int i = 0; i < list.size(); i++) {
+	// adapter.add(list.get(i));
+	// }
+	// adapter.notifyDataSetChanged();
+	//
+	// }
+
+	// @Override
+	// protected void onRestart() {
+	// Log.v("onRESTART", "SONO ENTRATO");
+	// super.onRestart();
+	// adapter.clear();
+	// List<Playlist> list = helper.getAllPlaylists();
+	// for (int i = 0; i < list.size(); i++) {
+	// adapter.add(list.get(i));
+	// }
+	// adapter.notifyDataSetChanged();
+	// }
 
 }

@@ -8,19 +8,21 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.util.Log;
 
-public class InCorporeSoundHelper extends SQLiteOpenHelper implements Serializable {
+public class InCorporeSoundHelper extends SQLiteOpenHelper {
 
-	private static final String DBNAME = "InCorporeSounds";
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private static final String DBNAME = "InCorporeSounds.sqlite";
 	private static final String TABLE_NAME_PLAYLIST = "playlists";
 	private static final String TABLE_NAME_SONGS = "songs";
 	private static final String COLNAME_PLAYLIST_NAME = "name";
@@ -388,5 +390,7 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper implements Serializab
 
 		}
 	}
+
+
 
 }
