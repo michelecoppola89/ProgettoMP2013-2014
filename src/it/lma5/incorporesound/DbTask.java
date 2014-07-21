@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import android.os.AsyncTask;
 
-public class DbTask extends AsyncTask<Playlist, Integer, ArrayList<Playlist>> {
+public class DbTask extends AsyncTask<Playlist, Integer, Playlist> {
 	
 	private InCorporeSoundHelper helper;
 	
@@ -14,19 +14,15 @@ public class DbTask extends AsyncTask<Playlist, Integer, ArrayList<Playlist>> {
 
 
 	@Override
-	protected ArrayList<Playlist> doInBackground(Playlist... params) {
+	protected Playlist doInBackground(Playlist... params) {
+		
 		Playlist ti= params[0];
-		ArrayList<Playlist> ret = new ArrayList<Playlist>();
-		ret.add(ti);
-		
-		helper.addPlaylist(ti);
-		
-		return ret;
+		return helper.addPlaylist(ti);
 	}
 
 
 	@Override
-	protected void onPostExecute(ArrayList<Playlist> result) {
+	protected void onPostExecute(Playlist result) {
 	
 		
 	

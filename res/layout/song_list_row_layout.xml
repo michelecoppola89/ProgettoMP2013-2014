@@ -16,32 +16,55 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
-    <LinearLayout
+    <TableLayout
+        android:id="@+id/TableLayout1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal" >
+        android:stretchColumns="0,1,2" >
 
-        <Spinner
-            android:id="@+id/spSongStart"
+        <TableRow
+            android:id="@+id/tableRow1"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:entries="@array/arPlayMode" />
+            android:layout_height="wrap_content" >
 
-        <Spinner
-            android:id="@+id/spSongDuration"
+            <TextView
+                android:id="@+id/tvStart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/sStart" />
+
+            <TextView
+                android:id="@+id/tvDuration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/sDuration" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRow2"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:entries="@array/arDurations" />
+            android:layout_height="wrap_content" >
 
-        <Button
-            android:id="@+id/btRemoveSong"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/minus" />
+            <Spinner
+                android:id="@+id/spSongStart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/arPlayMode" />
 
-    </LinearLayout>
+            <Spinner
+                android:id="@+id/spSongDuration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:entries="@array/arDurations" />
+
+            <Button
+                android:id="@+id/btRemoveSong"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/minus" />
+        </TableRow>
+    </TableLayout>
 
 </LinearLayout>

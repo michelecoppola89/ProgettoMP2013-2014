@@ -21,6 +21,10 @@
     <string name="sExampleRepetitions">2,3,4,...</string>
     <string name="sRepetitionNum">Number of repetitions</string>
     <string name="sLoop">Loop</string>
+    <string name="minus">-</string>
+    <string name="sFadeIn">Fade in (sec)</string>
+    <string name="sStart">Start</string>
+    <string name="sDuration">Duration</string>
 
     <string-array name="arDurations">
         <item>15</item>
@@ -28,17 +32,14 @@
         <item>45</item>
         <item>60</item>
     </string-array>
-    
-     <string-array name="arFadeIn">
+    <string-array name="arFadeIn">
         <item>1</item>
         <item>2</item>
         <item>3</item>
     </string-array>
-
     <string-array name="arPlayMode">
         <item>random</item>
         <item>beginning</item>
     </string-array>
-        <string name="minus">-</string>
 
 </resources>

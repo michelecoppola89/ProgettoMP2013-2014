@@ -28,6 +28,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Spinner;
 import android.widget.Toast;
 import android.os.Build;
@@ -69,6 +70,19 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 		rgOrder = (RadioGroup) findViewById(R.id.rgOrder);
 		rgRepetition = (RadioGroup) findViewById(R.id.rgRepetition);
 		spFadeIn = (Spinner) findViewById(R.id.spFadeIn);
+		rgRepetition.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(RadioGroup group, int checkedId) {
+				if( checkedId==R.id.rbRepeated)
+				{
+					etRepetitionNum.setEnabled(true);
+				}
+				else
+					etRepetitionNum.setEnabled(false);
+				
+			}
+		});
 	}
 
 	@Override
@@ -90,10 +104,20 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 		
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
+			if(songList.isEmpty()){
+				Toast.makeText(this, "no Song inserted!", Toast.LENGTH_SHORT).show();
+				return true;
+			}
+			String playListName = etPlaylistName.getText().toString();
+			if(playListName.isEmpty())
+			{
+				Toast.makeText(this, "no Playlist title inserted!", Toast.LENGTH_SHORT).show();
+				return true;
+			}
+				
 			InCorporeSoundHelper helper = new InCorporeSoundHelper(this);
 
 			DbTask runner = new DbTask(helper);
-			String playListName = etPlaylistName.getText().toString();
 			boolean isRandom;
 			Integer repetition;
 			int selectedRepetition = rgRepetition.getCheckedRadioButtonId();
@@ -102,8 +126,13 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 			else if (selectedRepetition == R.id.rbLoop)
 				repetition = 0;
 			else {
-				repetition = Integer.parseInt(etRepetitionNum.getText()
-						.toString());
+				String temp =etRepetitionNum.getText().toString();
+				if(temp.isEmpty())
+				{
+					Toast.makeText(this, "Insert number of repetition!!", Toast.LENGTH_SHORT).show();
+					return true;
+				}
+				repetition = Integer.parseInt(temp);
 			}
 			int selectedOrder = rgOrder.getCheckedRadioButtonId();
 			if (selectedOrder == R.id.rbRandom)
@@ -112,13 +141,17 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 				isRandom = false;
 			Integer fadeIn= Integer.parseInt(spFadeIn.getSelectedItem().toString());
 			Playlist playListToInsert=new Playlist(playListName, songList, repetition, isRandom, fadeIn);
-			runner.execute(playListToInsert);
+			if(helper.getPlaylistFromId(playListToInsert.getName())!=null) {
+				Toast.makeText(this, "playlist name inserted already exists", Toast.LENGTH_SHORT).show();
+				return true;
+			}
 			
+			runner.execute(playListToInsert);
 			setResult(RESULT_OK);
 			
 	
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage("Look at this dialog!")
+			builder.setMessage("Playlist saved")
 			       .setCancelable(false)
 			       .setPositiveButton("OK", new DialogInterface.OnClickListener() {
 			           public void onClick(DialogInterface dialog, int id) {
@@ -134,6 +167,7 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 			return true;
 			
 		}
+		
 		
 		return super.onOptionsItemSelected(item);
 	}

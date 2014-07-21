@@ -47,77 +47,16 @@ public class MainActivity extends Activity implements OnClickListener {
 
 		ArrayList<Playlist> alPl = new ArrayList<Playlist>();
 
-		adapter = new PlayListAdapter(this, R.layout.playlist_row_layout, alPl);
+		adapter = new PlayListAdapter(this, R.layout.playlist_row_layout, alPl,
+				helper);
 
 		myListView.setAdapter(adapter);
 
-		// ArrayList<Song> listSongProva = new ArrayList<Song>();
-		// Song songProva = new Song(null, null,null, null, null,null);//di
-		// prova
-		// listSongProva.add(songProva);
-		//
-		// Playlist plProva = new Playlist("birra", listSongProva, null, false,
-		// null);
-		// Playlist plProva1 = new Playlist("birra", listSongProva, null, false,
-		// null);
-		// Playlist plProva2 = new Playlist("birra", listSongProva, null, false,
-		// null);
-		// Playlist plProva3 = new Playlist("birra", listSongProva, null, false,
-		// null);
-		// Playlist plProva4 = new Playlist("birra", listSongProva, null, false,
-		// null);
-		// Playlist plProva5 = new Playlist("birra", listSongProva, null, false,
-		// null);
-		// Playlist plProva6 = new Playlist("birra", listSongProva, null, false,
-		// null);
-		// Playlist plProva7 = new Playlist("birra", listSongProva, null, false,
-		// null);
-		//
-		// ArrayList<Playlist> alPl = new ArrayList<Playlist>();
-		// alPl.add(plProva);
-		// alPl.add(plProva1);
-		// alPl.add(plProva2);
-		// alPl.add(plProva3);
-		// alPl.add(plProva4);
-		// alPl.add(plProva5);
-		// alPl.add(plProva6);
-		// alPl.add(plProva7);ArrayList<Song> listSongProva = new
-		// ArrayList<Song>();
-		// Song songProva = new Song(null, null,null, null, null,null);//di
-		// prova
-		// listSongProva.add(songProva);
-		//
-		// Playlist plProva = new Playlist("birra", listSongProva, null, false,
-		// null);
-		// Playlist plProva1 = new Playlist("birra", listSongProva, null, false,
-		// null);
-		// Playlist plProva2 = new Playlist("birra", listSongProva, null, false,
-		// null);
-		// Playlist plProva3 = new Playlist("birra", listSongProva, null, false,
-		// null);
-		// Playlist plProva4 = new Playlist("birra", listSongProva, null, false,
-		// null);
-		// Playlist plProva5 = new Playlist("birra", listSongProva, null, false,
-		// null);
-		// Playlist plProva6 = new Playlist("birra", listSongProva, null, false,
-		// null);
-		// Playlist plProva7 = new Playlist("birra", listSongProva, null, false,
-		// null);
-		//
-		// ArrayList<Playlist> alPl = new ArrayList<Playlist>();
-		// alPl.add(plProva);
-		// alPl.add(plProva1);
-		// alPl.add(plProva2);
-		// alPl.add(plProva3);
-		// alPl.add(plProva4);
-		// alPl.add(plProva5);
-		// alPl.add(plProva6);
-		// alPl.add(plProva7);
-
-		// PlayListAdapter plAdProva = new PlayListAdapter(this,
-		// R.layout.playlist_row_layout, alPl);
-		//
-		// myListView.setAdapter(plAdProva);
+		List<Playlist> list = helper.getAllPlaylists();
+		for (int i = 0; i < list.size(); i++) {
+			adapter.add(list.get(i));
+		}
+		adapter.notifyDataSetChanged();
 
 	}
 
@@ -184,30 +123,9 @@ public class MainActivity extends Activity implements OnClickListener {
 			}
 		}
 	}
-
-	// @Override
-	// public void onResume() {
-	// super.onResume();
-	// Log.v("onRESUME", "SONO ENTRATO");
-	// adapter.clear();
-	// List<Playlist> list = helper.getAllPlaylists();
-	// for (int i = 0; i < list.size(); i++) {
-	// adapter.add(list.get(i));
-	// }
-	// adapter.notifyDataSetChanged();
-	//
-	// }
-
-	// @Override
-	// protected void onRestart() {
-	// Log.v("onRESTART", "SONO ENTRATO");
-	// super.onRestart();
-	// adapter.clear();
-	// List<Playlist> list = helper.getAllPlaylists();
-	// for (int i = 0; i < list.size(); i++) {
-	// adapter.add(list.get(i));
-	// }
-	// adapter.notifyDataSetChanged();
-	// }
+	static public void ChangePlaylist(String playlistName){
+		
+		
+	}
 
 }

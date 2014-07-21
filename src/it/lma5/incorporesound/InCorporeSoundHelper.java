@@ -8,13 +8,16 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.util.Log;
+import android.widget.Toast;
 
 public class InCorporeSoundHelper extends SQLiteOpenHelper {
 
@@ -35,7 +38,7 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 	private static final String COLNAME_BEGINNING = "beginning";
 	private static final String COLNAME_DURATION = "duration";
 	private static final String COLNAME_USER_DURATION = "user_duration";
-	private static final String COLNAME_SONG_PLAYLIST = "playist_id";
+	private static final String COLNAME_SONG_PLAYLIST = "playlist_id";
 	private static final String COLNAME_SONG_URI = "uri";
 	private Context context;
 	private SQLiteDatabase db;
@@ -108,14 +111,32 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 			cursor.moveToPosition(-1);
 
 			while (cursor.moveToNext()) {
-				ret.add(getAllPlaylistFromRow(cursor));
+				ret.add(getPlaylistFromRow(cursor));
 			}
 		}
 		cursor.close();
 		return ret;
 	}
 
-	private Playlist getAllPlaylistFromRow(Cursor cursor) {
+	public Playlist getPlaylistFromId(String playlistName) {
+
+		String[] columns = { COLNAME_PLAYLIST_NAME, COLNAME_RANDOM,
+				COLNAME_FADE_IN, COLNAME_LOOP };
+
+		String[] varargs = new String[1];
+		varargs[0] = playlistName;
+		Cursor cursor = db.query(TABLE_NAME_PLAYLIST, columns,
+				COLNAME_PLAYLIST_NAME + "= ?", varargs, null, null, null);
+
+		cursor.moveToPosition(-1);
+		if(cursor.moveToNext())
+			return getPlaylistFromRow(cursor);
+		else
+			return null;
+
+	}
+
+	private Playlist getPlaylistFromRow(Cursor cursor) {
 
 		Integer round = Integer.parseInt(cursor.getString(cursor
 				.getColumnIndex(COLNAME_LOOP)));
@@ -132,7 +153,7 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 
 	}
 
-	public void addPlaylist(Playlist playlist) {
+	public Playlist addPlaylist(Playlist playlist) {
 
 		ContentValues values = new ContentValues();
 		values.put(COLNAME_PLAYLIST_NAME, playlist.getName());
@@ -140,17 +161,24 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 		values.put(COLNAME_FADE_IN, playlist.getFadeIn());
 		values.put(COLNAME_RANDOM, playlist.is_random());
 		try {
-			db.insert(TABLE_NAME_PLAYLIST, null, values);
+			long ret = db.insert(TABLE_NAME_PLAYLIST, null, values);
+			Log.v("DBERR", Long.toString(ret));
+			if (ret == -1) {
+				return null;
+			}
 			for (int i = 0; i < playlist.getSongList().size(); i++) {
 				Song temp;
 				temp = playlist.getSongList().get(i);
 				addSongToPlaylist(temp, playlist.getName());
 
 			}
+
 		} catch (Exception e) {
 			Log.e("DB_ERROR", e.toString());
 			e.printStackTrace();
 		}
+
+		return playlist;
 
 	}
 
@@ -160,7 +188,7 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 
 		String[] columns = { COLNAME_ID_SONG, COLNAME_SONG_TITLE,
 				COLNAME_ARTIST, COLNAME_BEGINNING, COLNAME_DURATION,
-				COLNAME_USER_DURATION, COLNAME_SONG_PLAYLIST };
+				COLNAME_USER_DURATION, COLNAME_SONG_PLAYLIST, COLNAME_SONG_URI };
 
 		String[] varargs = new String[1];
 		varargs[0] = playlistId;
@@ -189,8 +217,10 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 		}
 
 		try {
-			db.delete(TABLE_NAME_PLAYLIST, COLNAME_PLAYLIST_NAME + "="
-					+ playlistName, null);
+			String[] varargs = new String[1];
+			varargs[0] = playlistName;
+			db.delete(TABLE_NAME_PLAYLIST, COLNAME_PLAYLIST_NAME + "= ?",
+					varargs);
 		} catch (Exception e) {
 			Log.v("DB_ERROR", "errore delete playlist");
 		}
@@ -200,13 +230,16 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 	public void addSongToPlaylist(Song song, String playlistName) {
 
 		ContentValues songValues = new ContentValues();
-		songValues.put(COLNAME_ID_SONG, "null"); // null per
-													// autoincremento
+		// songValues.put(COLNAME_ID_SONG, ""); // null per
+		// autoincremento
 		songValues.put(COLNAME_ARTIST, song.getArtist());
 		songValues.put(COLNAME_SONG_TITLE, song.getName());
 		songValues.put(COLNAME_DURATION, song.getDuration());
 		songValues.put(COLNAME_USER_DURATION, song.getUserDuration());
 		songValues.put(COLNAME_SONG_PLAYLIST, playlistName);
+		songValues.put(COLNAME_SONG_URI, song.getPath().toString());
+		songValues.put(COLNAME_BEGINNING, song.getBeginTime());
+
 		db.insert(TABLE_NAME_SONGS, null, songValues);
 	}
 
@@ -232,8 +265,10 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 			values.put(COLNAME_LOOP, round);
 
 			try {
+				String[] varargs = new String[1];
+				varargs[0] = toUpdate.getName();
 				db.update(TABLE_NAME_PLAYLIST, values, COLNAME_PLAYLIST_NAME
-						+ "=" + toUpdate.getName(), null);
+						+ "= ?", varargs);
 			} catch (Exception e) {
 				Log.v("DB_ERROR", "Error update playlist round");
 
@@ -247,8 +282,10 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 			values.put(COLNAME_RANDOM, isRandom);
 
 			try {
+				String[] varargs = new String[1];
+				varargs[0] = toUpdate.getName();
 				db.update(TABLE_NAME_PLAYLIST, values, COLNAME_PLAYLIST_NAME
-						+ "=" + toUpdate.getName(), null);
+						+ "= ?", varargs);
 			} catch (Exception e) {
 				Log.v("DB_ERROR", "Error update playlist random");
 
@@ -262,8 +299,10 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 			values.put(COLNAME_FADE_IN, fadeIn);
 
 			try {
+				String[] varargs = new String[1];
+				varargs[0] = toUpdate.getName();
 				db.update(TABLE_NAME_PLAYLIST, values, COLNAME_PLAYLIST_NAME
-						+ "=" + toUpdate.getName(), null);
+						+ "= ?", varargs);
 			} catch (Exception e) {
 				Log.v("DB_ERROR", "Error update playlist fadeIn");
 
@@ -273,8 +312,11 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 
 	private Song getSongFromRow(Cursor cursor) {
 
+		Log.v("RICOGNIZIONE ERRORE",
+				Integer.toString(cursor.getColumnIndex(COLNAME_SONG_URI)));
 		Uri uri = Uri.parse(cursor.getString(cursor
 				.getColumnIndex(COLNAME_SONG_URI)));
+
 		Integer begin = Integer.parseInt(cursor.getString(cursor
 				.getColumnIndex(COLNAME_BEGINNING)));
 		Integer userDuration = Integer.parseInt(cursor.getString(cursor
@@ -295,7 +337,9 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 
 	public void deleteSong(Integer id) {
 		try {
-			db.delete(TABLE_NAME_SONGS, COLNAME_ID_SONG + "=" + id, null);
+			String[] varargs = new String[1];
+			varargs[0] = id.toString();
+			db.delete(TABLE_NAME_SONGS, COLNAME_ID_SONG + "= ?", varargs);
 		} catch (Exception e) {
 			Log.v("DB_ERROR", "errore delete song");
 		}
@@ -311,8 +355,11 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 			values.put(COLNAME_SONG_TITLE, name);
 
 			try {
-				db.update(TABLE_NAME_SONGS, values, COLNAME_ID_SONG + "="
-						+ toUpdate.getId(), null);
+				String[] varargs = new String[1];
+				varargs[0] = toUpdate.getId().toString();
+
+				db.update(TABLE_NAME_SONGS, values, COLNAME_ID_SONG + "= ?",
+						varargs);
 			} catch (Exception e) {
 				Log.v("DB_ERROR", "Error update song title");
 
@@ -325,8 +372,10 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 			values.put(COLNAME_SONG_URI, path.toString());
 
 			try {
-				db.update(TABLE_NAME_SONGS, values, COLNAME_ID_SONG + "="
-						+ toUpdate.getId(), null);
+				String[] varargs = new String[1];
+				varargs[0] = toUpdate.getId().toString();
+				db.update(TABLE_NAME_SONGS, values, COLNAME_ID_SONG + "= ?",
+						varargs);
 			} catch (Exception e) {
 				Log.v("DB_ERROR", "Error update song uri");
 
@@ -339,8 +388,10 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 			values.put(COLNAME_BEGINNING, beginTime);
 
 			try {
-				db.update(TABLE_NAME_SONGS, values, COLNAME_ID_SONG + "="
-						+ toUpdate.getId(), null);
+				String[] varargs = new String[1];
+				varargs[0] = toUpdate.getId().toString();
+				db.update(TABLE_NAME_SONGS, values, COLNAME_ID_SONG + "= ?",
+						varargs);
 			} catch (Exception e) {
 				Log.v("DB_ERROR", "Error update song begin time");
 
@@ -353,8 +404,10 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 			values.put(COLNAME_USER_DURATION, userDuration);
 
 			try {
-				db.update(TABLE_NAME_SONGS, values, COLNAME_ID_SONG + "="
-						+ toUpdate.getId(), null);
+				String[] varargs = new String[1];
+				varargs[0] = toUpdate.getId().toString();
+				db.update(TABLE_NAME_SONGS, values, COLNAME_ID_SONG + "= ?",
+						varargs);
 			} catch (Exception e) {
 				Log.v("DB_ERROR", "Error update song userDuration");
 
@@ -367,8 +420,10 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 			values.put(COLNAME_SONG_TITLE, name);
 
 			try {
-				db.update(TABLE_NAME_SONGS, values, COLNAME_ID_SONG + "="
-						+ toUpdate.getId(), null);
+				String[] varargs = new String[1];
+				varargs[0] = toUpdate.getId().toString();
+				db.update(TABLE_NAME_SONGS, values, COLNAME_ID_SONG + "= ?",
+						varargs);
 			} catch (Exception e) {
 				Log.v("DB_ERROR", "Error update song duration");
 
@@ -381,8 +436,10 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 			values.put(COLNAME_ARTIST, artist);
 
 			try {
-				db.update(TABLE_NAME_SONGS, values, COLNAME_ID_SONG + "="
-						+ toUpdate.getId(), null);
+				String[] varargs = new String[1];
+				varargs[0] = toUpdate.getId().toString();
+				db.update(TABLE_NAME_SONGS, values, COLNAME_ID_SONG + "= ?",
+						varargs);
 			} catch (Exception e) {
 				Log.v("DB_ERROR", "Error update song artist");
 
@@ -390,7 +447,5 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 
 		}
 	}
-
-
 
 }
