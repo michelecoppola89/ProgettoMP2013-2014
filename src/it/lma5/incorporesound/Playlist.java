@@ -76,6 +76,10 @@ public class Playlist implements Serializable {
 		this.is_random = is_random;
 		this.fadeIn = fadeIn;
 	}
+	
+	public Playlist(){
+		
+	}
 
 	
 

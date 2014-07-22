@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.sax.StartElementListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,18 +17,20 @@ import android.widget.TextView;
 public class PlayListAdapter extends ArrayAdapter<Playlist> implements
 		OnClickListener {
 
-	private static final long serialVersionUID = 1L;
 	private ArrayList<Playlist> list;
 	private Button btPlay;
 	private Button btChange;
 	private Button btDelete;
 	private InCorporeSoundHelper helper;
+	private MainActivity mainActivity;
 
 	public PlayListAdapter(Context context, int resource,
-			ArrayList<Playlist> objects, InCorporeSoundHelper helper) {
+			ArrayList<Playlist> objects, InCorporeSoundHelper helper,
+			MainActivity mainActivity) {
 		super(context, resource, objects);
 		this.helper = helper;
 		list = objects;
+		this.mainActivity = mainActivity;
 
 	}
 
@@ -51,10 +54,10 @@ public class PlayListAdapter extends ArrayAdapter<Playlist> implements
 			btChange = (Button) rowView.findViewById(R.id.btChange);
 			btDelete = (Button) rowView.findViewById(R.id.btDelete);
 			btPlay.setOnClickListener(this);
-			btChange.setOnClickListener(this);
+			btChange.setOnClickListener(mainActivity);
 			btDelete.setOnClickListener(this);
 			btPlay.setTag(position);
-			btChange.setTag(position);
+			btChange.setTag(playlistName);
 			btDelete.setTag(position);
 		}
 
@@ -67,14 +70,15 @@ public class PlayListAdapter extends ArrayAdapter<Playlist> implements
 
 		}
 
-		else if (v.getId() == R.id.btChange) {
-			Playlist toChange=list.get((Integer) v.getTag());
-		}
+//		else if (v.getId() == R.id.btChange) {
+//			Playlist toChange = list.get((Integer) v.getTag());
+//
+//		}
 
 		else {
-			Playlist toRemove=list.get((Integer) v.getTag());
+			Playlist toRemove = list.get((Integer) v.getTag());
 			remove(toRemove);
-			DbTaskDeletePlaylist run= new DbTaskDeletePlaylist(helper);
+			DbTaskDeletePlaylist run = new DbTaskDeletePlaylist(helper);
 			run.execute(toRemove);
 			notifyDataSetChanged();
 

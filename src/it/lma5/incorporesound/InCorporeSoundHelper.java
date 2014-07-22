@@ -129,9 +129,11 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 				COLNAME_PLAYLIST_NAME + "= ?", varargs, null, null, null);
 
 		cursor.moveToPosition(-1);
-		if(cursor.moveToNext())
-			return getPlaylistFromRow(cursor);
-		else
+		if (cursor.moveToNext()) {
+			Playlist ret = getPlaylistFromRow(cursor);
+			ret.setSongList(getSongsFromPlaylistId(playlistName));
+			return ret;
+		} else
 			return null;
 
 	}
@@ -244,20 +246,8 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 	}
 
 	public void updatePlaylist(Playlist toUpdate, String playlistName,
-			Integer round, Boolean isRandom, Integer fadeIn) {
-
-		if (playlistName != null) {
-
-			deletePlaylist(toUpdate.getName());
-			toUpdate.setName(playlistName);
-			addPlaylist(toUpdate);
-
-			try {
-
-			} catch (Exception e) {
-				Log.v("DB_ERROR", "Error update playlist round");
-			}
-		}
+			Integer round, Boolean isRandom, Integer fadeIn,
+			ArrayList<Song> songList) {
 
 		if (round != null) {
 
@@ -308,6 +298,38 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 
 			}
 		}
+
+		deleteAllSongsFromPlaylistId(toUpdate.getName());
+
+		if (playlistName == null) {
+			for (int i = 0; i < songList.size(); i++)
+				addSongToPlaylist(songList.get(i), toUpdate.getName());
+		}
+		else {
+			for (int i = 0; i < songList.size(); i++)
+				addSongToPlaylist(songList.get(i), playlistName);
+		}
+
+		if (playlistName != null) {
+
+			// deletePlaylist(toUpdate.getName());
+			// toUpdate.setName(playlistName);
+			// addPlaylist(toUpdate);
+
+			ContentValues values = new ContentValues();
+			values.put(COLNAME_PLAYLIST_NAME, playlistName);
+
+			try {
+				String[] varargs = new String[1];
+				varargs[0] = toUpdate.getName();
+				db.update(TABLE_NAME_PLAYLIST, values, COLNAME_PLAYLIST_NAME
+						+ "= ?", varargs);
+			} catch (Exception e) {
+				Log.v("DB_ERROR", "Error update playlist round");
+
+			}
+
+		}
 	}
 
 	private Song getSongFromRow(Cursor cursor) {
@@ -342,6 +364,16 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 			db.delete(TABLE_NAME_SONGS, COLNAME_ID_SONG + "= ?", varargs);
 		} catch (Exception e) {
 			Log.v("DB_ERROR", "errore delete song");
+		}
+	}
+
+	public void deleteAllSongsFromPlaylistId(String playlistName) {
+		try {
+			String[] varargs = new String[1];
+			varargs[0] = playlistName;
+			db.delete(TABLE_NAME_SONGS, COLNAME_SONG_PLAYLIST + "= ?", varargs);
+		} catch (Exception e) {
+			Log.v("DB_ERROR", "errore delete all song from playlist id");
 		}
 	}
 

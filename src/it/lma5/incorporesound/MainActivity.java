@@ -48,7 +48,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		ArrayList<Playlist> alPl = new ArrayList<Playlist>();
 
 		adapter = new PlayListAdapter(this, R.layout.playlist_row_layout, alPl,
-				helper);
+				helper, this);
 
 		myListView.setAdapter(adapter);
 
@@ -102,7 +102,15 @@ public class MainActivity extends Activity implements OnClickListener {
 		// TODO Auto-generated method stub
 		if (v.getId() == R.id.btAddPlaylist) {
 			Intent intent = new Intent(this, CreatePlaylistActivity.class);
+			intent.putExtra("IS_UPDATED", false);
 			startActivityForResult(intent, 5);
+		} else if (v.getId() == R.id.btChange) {
+			String plName = v.getTag().toString();
+			Intent intent = new Intent(this, CreatePlaylistActivity.class);
+			intent.putExtra("IS_UPDATED", true);
+			intent.putExtra("PLAYLIST_ID", plName);
+			startActivityForResult(intent, 5);
+
 		}
 	}
 
@@ -122,10 +130,6 @@ public class MainActivity extends Activity implements OnClickListener {
 
 			}
 		}
-	}
-	static public void ChangePlaylist(String playlistName){
-		
-		
 	}
 
 }

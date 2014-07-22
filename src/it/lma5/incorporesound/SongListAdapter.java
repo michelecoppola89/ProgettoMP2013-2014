@@ -57,7 +57,7 @@ public class SongListAdapter extends ArrayAdapter<Song> {
 			Integer songDuration = rowSong.getDuration();
 
 			TextView tvSonglist = (TextView) rowView
-					.findViewById(R.id.tvSongName);
+					.findViewById(R.id.tvSongTitle);
 			TextView tvArtist = (TextView) rowView.findViewById(R.id.tvArtist);
 
 			tvSonglist.setText(songlistName);

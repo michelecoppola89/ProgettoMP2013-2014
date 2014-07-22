@@ -64,7 +64,7 @@ public final class R {
         public static final int tvInsertPlayListName=0x7f090001;
         public static final int tvPlaylistName=0x7f090014;
         public static final int tvRepetitionNum=0x7f09000c;
-        public static final int tvSongName=0x7f090018;
+        public static final int tvSongTitle=0x7f090018;
         public static final int tvStart=0x7f09001c;
     }
     public static final class layout {

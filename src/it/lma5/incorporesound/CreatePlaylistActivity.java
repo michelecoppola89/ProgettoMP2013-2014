@@ -14,6 +14,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,6 +24,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -45,6 +47,13 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 	private ListView lvSongList;
 	private ArrayList<Song> songList = new ArrayList<Song>();
 	private SongListAdapter slAdapter;
+	private boolean isUpdated;
+	private String playListToUpdate;
+	private Integer fadeInUpd;
+	private Integer repetitionUpd;
+	private boolean isRandomUpd;
+
+	private InCorporeSoundHelper helper;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -70,19 +79,61 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 		rgOrder = (RadioGroup) findViewById(R.id.rgOrder);
 		rgRepetition = (RadioGroup) findViewById(R.id.rgRepetition);
 		spFadeIn = (Spinner) findViewById(R.id.spFadeIn);
+
 		rgRepetition.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			
+
 			@Override
 			public void onCheckedChanged(RadioGroup group, int checkedId) {
-				if( checkedId==R.id.rbRepeated)
-				{
+				if (checkedId == R.id.rbRepeated) {
 					etRepetitionNum.setEnabled(true);
-				}
-				else
+				} else
 					etRepetitionNum.setEnabled(false);
-				
+
 			}
 		});
+
+		helper = new InCorporeSoundHelper(this);
+
+		isUpdated = getIntent().getBooleanExtra("IS_UPDATED", false);
+		Log.v("ERR", "isUpdated" + Boolean.toString(isUpdated));
+
+		if (isUpdated) {
+			Log.v("ERR", "isUpdated" + Boolean.toString(isUpdated));
+			playListToUpdate = getIntent().getStringExtra("PLAYLIST_ID");
+			Playlist tempPlaylist = helper.getPlaylistFromId(playListToUpdate);
+
+			etPlaylistName.setText(playListToUpdate);
+
+			if (tempPlaylist.getFadeIn() == 1)
+				spFadeIn.setSelection(0);
+			else if (tempPlaylist.getFadeIn() == 2)
+				spFadeIn.setSelection(1);
+			else
+				spFadeIn.setSelection(2);
+			fadeInUpd = tempPlaylist.getFadeIn();
+
+			if (tempPlaylist.is_random()) {
+				rgOrder.check(R.id.rbRandom);
+			} else
+				rgOrder.check(R.id.rbStraight);
+			isRandomUpd = tempPlaylist.is_random();
+
+			if (tempPlaylist.getRound() == 0) {
+				rgRepetition.check(R.id.rbLoop);
+			} else if (tempPlaylist.getRound() == 1) {
+				rgRepetition.check(R.id.rbOneTime);
+			} else {
+				rgRepetition.check(R.id.rbRepeated);
+				etRepetitionNum.setText(tempPlaylist.getRound().toString());
+			}
+			repetitionUpd = tempPlaylist.getRound();
+
+			for (int i = 0; i < tempPlaylist.getSongList().size(); i++) {
+				slAdapter.add(tempPlaylist.getSongList().get(i));
+			}
+
+		}
+
 	}
 
 	@Override
@@ -91,7 +142,6 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.create_playlist, menu);
 		Button btSave = (Button) findViewById(R.id.action_settings);
-		
 
 		return true;
 	}
@@ -101,23 +151,23 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 		// Handle action bar item clicks here. The action bar will
 		// automatically handle clicks on the Home/Up button, so long
 		// as you specify a parent activity in AndroidManifest.xml.
-		
+
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
-			if(songList.isEmpty()){
-				Toast.makeText(this, "no Song inserted!", Toast.LENGTH_SHORT).show();
+			if (songList.isEmpty()) {
+				Toast.makeText(this, "no Song inserted!", Toast.LENGTH_SHORT)
+						.show();
 				return true;
 			}
 			String playListName = etPlaylistName.getText().toString();
-			if(playListName.isEmpty())
-			{
-				Toast.makeText(this, "no Playlist title inserted!", Toast.LENGTH_SHORT).show();
+			if (playListName.isEmpty()) {
+				Toast.makeText(this, "no Playlist title inserted!",
+						Toast.LENGTH_SHORT).show();
 				return true;
 			}
-				
-			InCorporeSoundHelper helper = new InCorporeSoundHelper(this);
 
-			DbTask runner = new DbTask(helper);
+			// helper = new InCorporeSoundHelper(this);
+
 			boolean isRandom;
 			Integer repetition;
 			int selectedRepetition = rgRepetition.getCheckedRadioButtonId();
@@ -126,10 +176,10 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 			else if (selectedRepetition == R.id.rbLoop)
 				repetition = 0;
 			else {
-				String temp =etRepetitionNum.getText().toString();
-				if(temp.isEmpty())
-				{
-					Toast.makeText(this, "Insert number of repetition!!", Toast.LENGTH_SHORT).show();
+				String temp = etRepetitionNum.getText().toString();
+				if (temp.isEmpty()) {
+					Toast.makeText(this, "Insert number of repetition!!",
+							Toast.LENGTH_SHORT).show();
 					return true;
 				}
 				repetition = Integer.parseInt(temp);
@@ -139,36 +189,73 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 				isRandom = true;
 			else
 				isRandom = false;
-			Integer fadeIn= Integer.parseInt(spFadeIn.getSelectedItem().toString());
-			Playlist playListToInsert=new Playlist(playListName, songList, repetition, isRandom, fadeIn);
-			if(helper.getPlaylistFromId(playListToInsert.getName())!=null) {
-				Toast.makeText(this, "playlist name inserted already exists", Toast.LENGTH_SHORT).show();
-				return true;
+			Integer fadeIn = Integer.parseInt(spFadeIn.getSelectedItem()
+					.toString());
+
+			if (!isUpdated) {
+				Playlist playListToInsert = new Playlist(playListName,
+						songList, repetition, isRandom, fadeIn);
+
+				if (helper.getPlaylistFromId(playListToInsert.getName()) != null) {
+					Toast.makeText(this,
+							"playlist name inserted already exists",
+							Toast.LENGTH_SHORT).show();
+					return true;
+				}
+
+				DbTask runner = new DbTask(helper);
+				runner.execute(playListToInsert);
 			}
-			
-			runner.execute(playListToInsert);
+			else {
+				// update playlist
+				Playlist toUpdate = new Playlist(playListToUpdate, null,repetitionUpd, isRandomUpd, fadeInUpd);
+				Playlist modified = new Playlist();
+				
+				if(!playListName.equals(playListToUpdate)) {
+					
+					if (helper.getPlaylistFromId(playListName) != null) {
+						Toast.makeText(this,
+								"playlist name inserted already exists",
+								Toast.LENGTH_SHORT).show();
+						return true;
+					}
+					modified.setName(playListName);
+				}
+				if(repetition!=repetitionUpd)
+					modified.setRound(repetition);
+				if(isRandomUpd!=isRandom)
+					modified.setIs_random(isRandom);
+				if(fadeIn!=fadeInUpd)
+					modified.setFadeIn(fadeIn);
+				
+				modified.setSongList(songList);
+				
+				DbTaskUpdatePlaylist runner = new DbTaskUpdatePlaylist(helper);
+				runner.execute(toUpdate,modified);
+				
+				
+			}
+
 			setResult(RESULT_OK);
-			
-	
+
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setMessage("Playlist saved")
-			       .setCancelable(false)
-			       .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-			           public void onClick(DialogInterface dialog, int id) {
-			        	  
-			                returnToMainActivity();
-			           }
-			       });
+					.setCancelable(false)
+					.setPositiveButton("OK",
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int id) {
+
+									returnToMainActivity();
+								}
+							});
 			AlertDialog alert = builder.create();
 			alert.show();
-			
-			
-			
+
 			return true;
-			
+
 		}
-		
-		
+
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -249,10 +336,10 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 
 		}
 	}
-	
+
 	private void returnToMainActivity() {
 		// TODO Auto-generated method stub
 		finish();
-		
+
 	}
 }
