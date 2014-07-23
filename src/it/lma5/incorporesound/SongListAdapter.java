@@ -9,6 +9,7 @@ import android.R.integer;
 import android.app.Activity;
 import android.content.Context;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -155,10 +156,10 @@ public class SongListAdapter extends ArrayAdapter<Song> {
 				public void onItemSelected(AdapterView<?> arg0, View arg1,
 						int arg2, long arg3) {
 
-					String beginning = (spSongStart.getSelectedItem()
-							.toString());
+					String beginning = spSongStart.getSelectedItem().toString();
+					Log.v("PROVA", spSongStart.getSelectedItem().toString());
 					Song temp = list.get((Integer) arg0.getTag());
-					if (beginning.equals("Random")) {
+					if (beginning.equals("random")) {
 						Integer interval = temp.getDuration()
 								- temp.getUserDuration();
 						if (interval >= 0) {
@@ -167,12 +168,11 @@ public class SongListAdapter extends ArrayAdapter<Song> {
 							Integer beginTime = rand.nextInt(interval + 1);
 							temp.setBeginTime(beginTime);
 
-						} else {
-
 						}
 
 					} else {
-						list.get((Integer) arg0.getTag()).setBeginTime(0);
+						//list.get((Integer) arg0.getTag()).setBeginTime(1);
+						temp.setBeginTime(0);
 					}
 
 				}
@@ -185,6 +185,19 @@ public class SongListAdapter extends ArrayAdapter<Song> {
 
 			});
 
+			if (rowSong.getUserDuration() == 15)
+				spSongDuration.setSelection(0);
+			else if (rowSong.getUserDuration() == 30)
+				spSongDuration.setSelection(1);
+			else if (rowSong.getUserDuration() == 45)
+				spSongDuration.setSelection(2);
+			else
+				spSongDuration.setSelection(3);
+
+			if (rowSong.getBeginTime() == 0)
+				spSongStart.setSelection(1);
+			else
+				spSongStart.setSelection(0);
 		}
 
 		return rowView;

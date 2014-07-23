@@ -319,7 +319,6 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 					String artist = retriever
 							.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
 
-					Log.v("DURATION", "duration = " + duration);
 					if (duration < 15000) {
 						Toast.makeText(this, "song duration is too short",
 								Toast.LENGTH_SHORT).show();
@@ -329,6 +328,7 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 								duration, artist);
 						slAdapter.add(songTi);
 					}
+					
 				}
 			} catch (RuntimeException e) {
 				Toast.makeText(this, "Wrong format", Toast.LENGTH_SHORT).show();
