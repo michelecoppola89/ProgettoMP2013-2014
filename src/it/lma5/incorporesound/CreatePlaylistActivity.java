@@ -134,6 +134,44 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 
 		}
 
+		MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+		ArrayList<Integer> missingSongPosition = new ArrayList<Integer>();
+		ArrayList<Song> toDelete = new ArrayList<Song>();
+
+		for (int i = 0; i < songList.size(); i++) {
+			Song temp = songList.get(i);
+			try {
+				retriever.setDataSource(this, temp.getPath());
+			} catch (IllegalArgumentException e) {
+				missingSongPosition.add(i);
+				toDelete.add(temp);
+			}
+		}
+
+		for (int i = missingSongPosition.size() - 1; i >= 0; i--) {
+			slAdapter.remove(songList.get(missingSongPosition.get(i)));
+		}
+
+		if (missingSongPosition.size() > 0) {
+
+			DbTaskDeleteSongs dbTaskDeleteSongs = new DbTaskDeleteSongs(helper);
+			dbTaskDeleteSongs.execute(toDelete);
+
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage("There are songs removed from device")
+					.setCancelable(false)
+					.setPositiveButton("OK",
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int id) {
+
+								}
+							});
+			AlertDialog alert = builder.create();
+			alert.show();
+
+		}
+
 	}
 
 	@Override
@@ -205,14 +243,14 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 
 				DbTask runner = new DbTask(helper);
 				runner.execute(playListToInsert);
-			}
-			else {
+			} else {
 				// update playlist
-				Playlist toUpdate = new Playlist(playListToUpdate, null,repetitionUpd, isRandomUpd, fadeInUpd);
+				Playlist toUpdate = new Playlist(playListToUpdate, null,
+						repetitionUpd, isRandomUpd, fadeInUpd);
 				Playlist modified = new Playlist();
-				
-				if(!playListName.equals(playListToUpdate)) {
-					
+
+				if (!playListName.equals(playListToUpdate)) {
+
 					if (helper.getPlaylistFromId(playListName) != null) {
 						Toast.makeText(this,
 								"playlist name inserted already exists",
@@ -221,19 +259,18 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 					}
 					modified.setName(playListName);
 				}
-				if(repetition!=repetitionUpd)
+				if (repetition != repetitionUpd)
 					modified.setRound(repetition);
-				if(isRandomUpd!=isRandom)
+				if (isRandomUpd != isRandom)
 					modified.setIs_random(isRandom);
-				if(fadeIn!=fadeInUpd)
+				if (fadeIn != fadeInUpd)
 					modified.setFadeIn(fadeIn);
-				
+
 				modified.setSongList(songList);
-				
+
 				DbTaskUpdatePlaylist runner = new DbTaskUpdatePlaylist(helper);
-				runner.execute(toUpdate,modified);
-				
-				
+				runner.execute(toUpdate, modified);
+
 			}
 
 			setResult(RESULT_OK);
@@ -328,7 +365,7 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 								duration, artist);
 						slAdapter.add(songTi);
 					}
-					
+
 				}
 			} catch (RuntimeException e) {
 				Toast.makeText(this, "Wrong format", Toast.LENGTH_SHORT).show();
