@@ -53,7 +53,7 @@ public class PlayListAdapter extends ArrayAdapter<Playlist> implements
 			btPlay = (Button) rowView.findViewById(R.id.btPlay);
 			btChange = (Button) rowView.findViewById(R.id.btChange);
 			btDelete = (Button) rowView.findViewById(R.id.btDelete);
-			btPlay.setOnClickListener(this);
+			btPlay.setOnClickListener(mainActivity);
 			btChange.setOnClickListener(mainActivity);
 			btDelete.setOnClickListener(this);
 			btPlay.setTag(position);
@@ -66,16 +66,7 @@ public class PlayListAdapter extends ArrayAdapter<Playlist> implements
 
 	@Override
 	public void onClick(View v) {
-		if (v.getId() == R.id.btPlay) {
-
-		}
-
-//		else if (v.getId() == R.id.btChange) {
-//			Playlist toChange = list.get((Integer) v.getTag());
-//
-//		}
-
-		else {
+		if (v.getId() == R.id.btDelete) {
 			Playlist toRemove = list.get((Integer) v.getTag());
 			remove(toRemove);
 			DbTaskDeletePlaylist run = new DbTaskDeletePlaylist(helper);

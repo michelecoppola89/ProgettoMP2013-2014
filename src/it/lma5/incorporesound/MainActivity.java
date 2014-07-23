@@ -112,6 +112,12 @@ public class MainActivity extends Activity implements OnClickListener {
 			startActivityForResult(intent, 5);
 
 		}
+		else if(v.getId() == R.id.btPlay){
+			Intent intent = new Intent(this, PlayActivity.class);
+			String plName = v.getTag().toString();
+			intent.putExtra("PLAYLIST_ID", plName);
+			startActivity(intent);
+		}
 	}
 
 	@Override

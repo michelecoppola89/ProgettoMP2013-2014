@@ -1,0 +1,63 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="it.lma5.incorporesound.PlayActivity"
+    tools:ignore="MergeRootFrame" >
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView" />
+
+    <SeekBar
+        android:id="@+id/seekBar1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/btPlaySong"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sPlayTemp" />
+
+        <Button
+            android:id="@+id/btStopSong"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sStopTemp" />
+
+        <Button
+            android:id="@+id/btPauseSong"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sPauseTemp" />
+
+        <Button
+            android:id="@+id/btForwardSong"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sForwardTemp" />
+
+        <Button
+            android:id="@+id/btBackwardSong"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sBackwardTemp" />
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/lvPlaySongList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </ListView>
+
+</LinearLayout>

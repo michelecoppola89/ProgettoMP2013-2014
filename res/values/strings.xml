@@ -42,4 +42,18 @@
         <item>beginning</item>
     </string-array>
 
+    <string name="title_activity_play">PlayActivity</string>
+
+    <string name="sPlayTemp">></string>
+
+    <string name="sStopTemp">O</string>
+
+    <string name="sPauseTemp">II</string>
+
+    <string name="sForwardSongTemp">I></string>
+
+    <string name="sBackwardTemp">&lt; I</string>
+
+    <string name="sForwardTemp">I ></string>
+
 </resources>
