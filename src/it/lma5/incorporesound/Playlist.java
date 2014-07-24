@@ -10,7 +10,7 @@ public class Playlist implements Serializable {
 	private ArrayList<Song> songList;
 	private Integer round;
 	private boolean is_random;
-	private Integer fadeIn;
+	private Integer fadeIn;       //sec   
 	
 	
 	public ArrayList<Song> getSongList() {

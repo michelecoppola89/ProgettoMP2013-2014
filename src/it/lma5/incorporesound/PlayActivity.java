@@ -3,18 +3,23 @@ package it.lma5.incorporesound;
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.os.Build;
 
-public class PlayActivity extends Activity {
+public class PlayActivity extends Activity implements OnClickListener {
 
+	private Intent serviceIntent;
 	private InCorporeSoundHelper helper;
 	private Playlist playlist;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -24,10 +29,21 @@ public class PlayActivity extends Activity {
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
-		helper= new InCorporeSoundHelper(this);
-		String playlistName=getIntent().getStringExtra("PLAYLIST_ID");
-		playlist=helper.getPlaylistFromId(playlistName);
+		helper = new InCorporeSoundHelper(this);
+		String playlistName = getIntent().getStringExtra("PLAYLIST_ID");
+		Log.v("PlayActivity!!!!", playlistName);
 		
+		playlist = helper.getPlaylistFromId(playlistName);
+		
+		Log.v("PlayActivity", playlistName);
+		
+		if(playlist==null)
+			Log.v("PlayActivity", "ERR");
+		
+		serviceIntent = new Intent(getApplicationContext(), MusicService.class);
+		serviceIntent.putExtra("PL_ID", playlistName);
+		startService(serviceIntent);
+
 	}
 
 	@Override
@@ -65,6 +81,17 @@ public class PlayActivity extends Activity {
 					false);
 			return rootView;
 		}
+	}
+
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+
+		if (v.getId() == R.id.btStopSong) {
+			stopService(serviceIntent);
+
+		}
+
 	}
 
 }

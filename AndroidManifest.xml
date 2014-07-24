@@ -38,6 +38,13 @@
             android:name="it.lma5.incorporesound.PlayActivity"
             android:label="@string/title_activity_play" >
         </activity>
+        
+        <service
+           android:name="it.lma5.incorporesound.MusicService"
+           android:icon="@drawable/ic_launcher"
+           android:label="Music service" >
+       </service>
+        
     </application>
 
 </manifest>

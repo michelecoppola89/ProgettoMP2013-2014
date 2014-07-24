@@ -5,7 +5,7 @@ import java.io.Serializable;
 import android.net.Uri;
 
 public class Song implements Serializable{
-
+	
 	/**
 	 * 
 	 */
@@ -14,9 +14,9 @@ public class Song implements Serializable{
 	private String artist;
 	private Uri path;
 
-	private Integer beginTime;
-	private Integer duration;
-	private Integer userDuration;
+	private Integer beginTime;     //mSec
+	private Integer duration;      //mSEc
+	private Integer userDuration;  //sec
 
 	private Integer id;
 
