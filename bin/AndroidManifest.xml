@@ -36,15 +36,15 @@
         </activity>
         <activity
             android:name="it.lma5.incorporesound.PlayActivity"
-            android:label="@string/title_activity_play" >
+            android:label="@string/title_activity_play"
+            android:screenOrientation="portrait" >
         </activity>
-        
+
         <service
-           android:name="it.lma5.incorporesound.MusicService"
-           android:icon="@drawable/ic_launcher"
-           android:label="Music service" >
-       </service>
-        
+            android:name="it.lma5.incorporesound.MusicService"
+            android:icon="@drawable/ic_launcher"
+            android:label="Music service" >
+        </service>
     </application>
 
 </manifest>

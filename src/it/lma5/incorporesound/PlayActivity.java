@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.os.Build;
 
 public class PlayActivity extends Activity implements OnClickListener {
@@ -19,6 +20,11 @@ public class PlayActivity extends Activity implements OnClickListener {
 	private Intent serviceIntent;
 	private InCorporeSoundHelper helper;
 	private Playlist playlist;
+	private Button btPlaySong;
+	private Button btPauseSong;
+	private Button btStopSong;
+	private Button btForwardSong;
+	private Button btBackwardSong;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -29,17 +35,27 @@ public class PlayActivity extends Activity implements OnClickListener {
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
+		btStopSong = (Button) findViewById(R.id.btStopSong);
+		btStopSong.setOnClickListener(this);
+		btPlaySong = (Button) findViewById(R.id.btPlaySong);
+		btPlaySong.setOnClickListener(this);
+		btPauseSong = (Button) findViewById(R.id.btPauseSong);
+		btPauseSong.setOnClickListener(this);
+		btBackwardSong = (Button) findViewById(R.id.btBackwardSong);
+		btBackwardSong.setOnClickListener(this);
+		btForwardSong = (Button) findViewById(R.id.btForwardSong);
+		btForwardSong.setOnClickListener(this);
 		helper = new InCorporeSoundHelper(this);
 		String playlistName = getIntent().getStringExtra("PLAYLIST_ID");
 		Log.v("PlayActivity!!!!", playlistName);
-		
+
 		playlist = helper.getPlaylistFromId(playlistName);
-		
+
 		Log.v("PlayActivity", playlistName);
-		
-		if(playlist==null)
+
+		if (playlist == null)
 			Log.v("PlayActivity", "ERR");
-		
+
 		serviceIntent = new Intent(getApplicationContext(), MusicService.class);
 		serviceIntent.putExtra("PL_ID", playlistName);
 		startService(serviceIntent);
@@ -88,10 +104,28 @@ public class PlayActivity extends Activity implements OnClickListener {
 		// TODO Auto-generated method stub
 
 		if (v.getId() == R.id.btStopSong) {
+			
+			Intent i = new Intent(MusicService.STOP_NOTIFICATION);
+			sendBroadcast(i);
 			stopService(serviceIntent);
+			finish();
 
 		}
 
+		else if (v.getId() == R.id.btPlaySong) {
+			Intent i = new Intent(MusicService.PLAY_NOTIFICATION);
+			sendBroadcast(i);
+
+		} else if (v.getId() == R.id.btPauseSong) {
+			Intent i = new Intent(MusicService.PAUSE_NOTIFICATION);
+			sendBroadcast(i);
+
+		} else if (v.getId() == R.id.btForwardSong) {
+			stopService(serviceIntent);
+
+		} else {
+
+		}
 	}
 
 }

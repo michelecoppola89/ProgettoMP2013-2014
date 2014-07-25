@@ -102,5 +102,10 @@ public class Song implements Serializable{
 	public void setId(Integer id) {
 		this.id = id;
 	}
+	
+	public Integer getLastTimeMillis() {
+		return beginTime+userDuration*1000;
+	}
+
 
 }
