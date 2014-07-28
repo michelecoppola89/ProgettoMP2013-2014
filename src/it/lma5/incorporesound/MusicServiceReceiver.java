@@ -1,5 +1,8 @@
 package it.lma5.incorporesound;
 
+import java.io.IOException;
+import java.util.ArrayList;
+
 import android.R.integer;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -13,10 +16,14 @@ public class MusicServiceReceiver extends BroadcastReceiver {
 
 	private MediaPlayer mediaPlayer;
 	private Song songToPlay;
-	private CountDownTimer cntr_aCounter;
 	private Integer timeOfLastPause;
+	
+	private CountDownTimer cntr_aCounter;
+	private ArrayList<Song> toPlay;
+	private Integer songPosition;
 
-	public MusicServiceReceiver(MediaPlayer mediaPlayer) {
+	public MusicServiceReceiver(MediaPlayer mediaPlayer, Context context) {
+		
 		this.mediaPlayer = mediaPlayer;
 	}
 
@@ -24,32 +31,40 @@ public class MusicServiceReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 
 		if (intent.getAction().equals(MusicService.PLAY_NOTIFICATION)) {
+
+			Integer temp = songToPlay.getLastTimeMillis() - timeOfLastPause;
+			Log.v("ENTRATO IN PLAY", "rimanenti "+temp.toString()+ "da "+timeOfLastPause);
+
+			try {
+
+				cntr_aCounter = new PlayTimer(songToPlay.getLastTimeMillis()
+						- timeOfLastPause, 1000, toPlay, songPosition,this,context, mediaPlayer);		
+				cntr_aCounter.start();
+				
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SecurityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalStateException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		} else if (intent.getAction().equals(MusicService.STOP_NOTIFICATION)) {
 			
-			Integer temp = songToPlay.getLastTimeMillis()-timeOfLastPause;
-			Log.v("ENTRATO IN PLAY", temp.toString());
-			cntr_aCounter = new CountDownTimer(
-					songToPlay.getLastTimeMillis()-timeOfLastPause, 10000) {
-
-				public void onTick(long millisUntilFinished) {
-
-					mediaPlayer.start();
-					Log.v("onTic", "----------------------");
-				}
-
-				public void onFinish() {
-					// code fire after finish
-					mediaPlayer.stop();
-				}
-			};
-			cntr_aCounter.start();
-
-		} else if(intent.getAction().equals(MusicService.STOP_NOTIFICATION)) {
 			cntr_aCounter.cancel();
-		}
-		else if (intent.getAction().equals(MusicService.PAUSE_NOTIFICATION)) {
-			timeOfLastPause=mediaPlayer.getCurrentPosition();
+			
+			
+		} else if (intent.getAction().equals(MusicService.PAUSE_NOTIFICATION)) {
+			
+			cntr_aCounter.cancel();
 			mediaPlayer.pause();
-			cntr_aCounter.cancel();
+			timeOfLastPause = mediaPlayer.getCurrentPosition();
 			Log.v("ENTRATO IN PAUSA", timeOfLastPause.toString());
 
 		} else if (intent.getAction().equals(MusicService.FORWARD_NOTIFICATION)) {
@@ -67,7 +82,7 @@ public class MusicServiceReceiver extends BroadcastReceiver {
 	public void setCntr_aCounter(CountDownTimer cntr_aCounter) {
 		this.cntr_aCounter = cntr_aCounter;
 	}
-	
+
 	public Song getSongToPlay() {
 		return songToPlay;
 	}
@@ -75,5 +90,31 @@ public class MusicServiceReceiver extends BroadcastReceiver {
 	public void setSongToPlay(Song songToPlay) {
 		this.songToPlay = songToPlay;
 	}
+
+	public ArrayList<Song> getToPlay() {
+		return toPlay;
+	}
+
+	public void setToPlay(ArrayList<Song> toPlay) {
+		this.toPlay = toPlay;
+	}
+
+	public Integer getSongPosition() {
+		return songPosition;
+	}
+
+	public void setSongPosition(Integer songPosition) {
+		this.songPosition = songPosition;
+	}
+
+	public MediaPlayer getMediaPlayer() {
+		return mediaPlayer;
+	}
+
+	public void setMediaPlayer(MediaPlayer mediaPlayer) {
+		this.mediaPlayer = mediaPlayer;
+	}
 	
+	
+
 }

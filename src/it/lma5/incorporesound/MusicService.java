@@ -24,10 +24,9 @@ public class MusicService extends Service {
 
 	private InCorporeSoundHelper helper;
 	private Playlist playlist;
-	private MediaPlayer mediaPlayer;
+	private static  MediaPlayer mediaPlayer;
 	private MusicServiceReceiver musicServiceReceiver;
-	private CountDownTimer cntr_aCounter;
-	private Integer songPosition;
+
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 
@@ -38,70 +37,53 @@ public class MusicService extends Service {
 		playlist = helper.getPlaylistFromId(playlistName);
 		Log.v("PLAYLIST NAME", playlistName);
 		mediaPlayer = new MediaPlayer();
-		musicServiceReceiver=new MusicServiceReceiver(mediaPlayer);
-		IntentFilter intentFilter=new IntentFilter();
+		musicServiceReceiver = new MusicServiceReceiver(mediaPlayer,getApplicationContext());
+		
+		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(BACKWARD_NOTIFICATION);
 		intentFilter.addAction(FORWARD_NOTIFICATION);
 		intentFilter.addAction(PLAY_NOTIFICATION);
 		intentFilter.addAction(STOP_NOTIFICATION);
 		intentFilter.addAction(PAUSE_NOTIFICATION);
 		registerReceiver(musicServiceReceiver, intentFilter);
-		songPosition = 0;
-		play();
+		musicServiceReceiver.setSongPosition(0);
+		musicServiceReceiver.setToPlay(playlist.getSongList());
+
+		try {
+			play();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		return Service.START_STICKY_COMPATIBILITY;
 	}
 
-	public void play() {
+	public void play() throws IllegalArgumentException, SecurityException, IllegalStateException, IOException {
 
 		ArrayList<Song> toPlay;
 
 		toPlay = playlist.getSongList();
 
 		Log.v("SONO IN PLAY", "toPlay" + toPlay.size());
+		Song songToPlay = playlist.getSongList().get(0);
 
-		for (int i = 0; i < toPlay.size(); i++) {
-			Song songToPlay = toPlay.get(i);
-			try {
-				
-				mediaPlayer.setDataSource(getApplicationContext(),Uri.parse(songToPlay.getPath().toString()));
-				mediaPlayer.prepare();
-
-				mediaPlayer.seekTo(songToPlay.getBeginTime());
-
-				cntr_aCounter = new CountDownTimer(
-						songToPlay.getUserDuration()*1000, 10000) {
-
-					public void onTick(long millisUntilFinished) {
-
-						mediaPlayer.start();
-						Log.v("onTic", "----------------------");
-					}
-
-					public void onFinish() {
-						// code fire after finish
-						mediaPlayer.stop();
-						mediaPlayer.reset();
-					}
-				};
-				musicServiceReceiver.setCntr_aCounter(cntr_aCounter);
-				musicServiceReceiver.setSongToPlay(songToPlay);
-				cntr_aCounter.start();
-				Thread.sleep(playlist.getFadeIn() * 1000);
-				Log.v("MUSIC SERVICE", "dopo il fade in");
-
-			} catch (IllegalArgumentException e) {
-				e.printStackTrace();
-			} catch (SecurityException e) {
-				e.printStackTrace();
-			} catch (IllegalStateException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+		PlayTimer playTimer = new PlayTimer(
+				songToPlay.getUserDuration() * 1000, 1000,
+				playlist.getSongList(), 0, musicServiceReceiver,getApplicationContext());
+		
+		musicServiceReceiver.setCntr_aCounter(playTimer);
+		musicServiceReceiver.setSongToPlay(songToPlay);
+		playTimer.start();
 
 	}
 
@@ -111,41 +93,25 @@ public class MusicService extends Service {
 		mediaPlayer.stop();
 		mediaPlayer.release();
 		unregisterReceiver(musicServiceReceiver);
-		
+
 	}
+	
 
 	@Override
 	public IBinder onBind(Intent arg0) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	private void playSong() throws IllegalArgumentException, SecurityException, IllegalStateException, IOException {
-		
-		Song songToPlay = playlist.getSongList().get(songPosition);
-		
-		mediaPlayer.setDataSource(getApplicationContext(),Uri.parse(songToPlay.getPath().toString()));
-		mediaPlayer.prepare();
-		mediaPlayer.seekTo(songToPlay.getBeginTime());
-		cntr_aCounter = new CountDownTimer(
-				songToPlay.getUserDuration()*1000, 10000) {
 
-			public void onTick(long millisUntilFinished) {
 
-				mediaPlayer.start();
-				Log.v("onTic", "----------------------");
-			}
-
-			public void onFinish() {
-				// code fire after finish
-				mediaPlayer.stop();
-				mediaPlayer.reset();
-			}
-		};
-		musicServiceReceiver.setCntr_aCounter(cntr_aCounter);
-		musicServiceReceiver.setSongToPlay(songToPlay);
-		cntr_aCounter.start();
-		
+	public static MediaPlayer getMediaPlayer() {
+		return mediaPlayer;
 	}
+
+	public static void setMediaPlayer(MediaPlayer mediaPlayer) {
+		MusicService.mediaPlayer = mediaPlayer;
+	}
+	
+	
 
 }
