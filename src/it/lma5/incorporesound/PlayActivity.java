@@ -121,9 +121,12 @@ public class PlayActivity extends Activity implements OnClickListener {
 			sendBroadcast(i);
 
 		} else if (v.getId() == R.id.btForwardSong) {
-			stopService(serviceIntent);
-
+			Intent i = new Intent(MusicService.FORWARD_NOTIFICATION);
+			sendBroadcast(i);
 		} else {
+			
+			Intent i = new Intent(MusicService.BACKWARD_NOTIFICATION);
+			sendBroadcast(i);
 
 		}
 	}

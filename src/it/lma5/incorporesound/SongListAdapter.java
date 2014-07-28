@@ -165,7 +165,7 @@ public class SongListAdapter extends ArrayAdapter<Song> {
 						if (interval >= 0) {
 
 							Random rand = new Random();
-							Integer beginTime = rand.nextInt(interval + 1);
+							Integer beginTime = rand.nextInt(interval)+1;
 							temp.setBeginTime(beginTime);
 
 						}

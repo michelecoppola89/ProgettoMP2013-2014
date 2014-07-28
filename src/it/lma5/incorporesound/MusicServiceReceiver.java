@@ -17,13 +17,13 @@ public class MusicServiceReceiver extends BroadcastReceiver {
 	private MediaPlayer mediaPlayer;
 	private Song songToPlay;
 	private Integer timeOfLastPause;
-	
+
 	private CountDownTimer cntr_aCounter;
 	private ArrayList<Song> toPlay;
 	private Integer songPosition;
 
 	public MusicServiceReceiver(MediaPlayer mediaPlayer, Context context) {
-		
+
 		this.mediaPlayer = mediaPlayer;
 	}
 
@@ -33,14 +33,16 @@ public class MusicServiceReceiver extends BroadcastReceiver {
 		if (intent.getAction().equals(MusicService.PLAY_NOTIFICATION)) {
 
 			Integer temp = songToPlay.getLastTimeMillis() - timeOfLastPause;
-			Log.v("ENTRATO IN PLAY", "rimanenti "+temp.toString()+ "da "+timeOfLastPause);
+			Log.v("ENTRATO IN PLAY", "rimanenti " + temp.toString() + "da "
+					+ timeOfLastPause);
 
 			try {
 
 				cntr_aCounter = new PlayTimer(songToPlay.getLastTimeMillis()
-						- timeOfLastPause, 1000, toPlay, songPosition,this,context, mediaPlayer);		
+						- timeOfLastPause, 1000, toPlay, songPosition, this,
+						context, mediaPlayer);
 				cntr_aCounter.start();
-				
+
 			} catch (IllegalArgumentException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -56,12 +58,11 @@ public class MusicServiceReceiver extends BroadcastReceiver {
 			}
 
 		} else if (intent.getAction().equals(MusicService.STOP_NOTIFICATION)) {
-			
+
 			cntr_aCounter.cancel();
-			
-			
+
 		} else if (intent.getAction().equals(MusicService.PAUSE_NOTIFICATION)) {
-			
+
 			cntr_aCounter.cancel();
 			mediaPlayer.pause();
 			timeOfLastPause = mediaPlayer.getCurrentPosition();
@@ -69,8 +70,70 @@ public class MusicServiceReceiver extends BroadcastReceiver {
 
 		} else if (intent.getAction().equals(MusicService.FORWARD_NOTIFICATION)) {
 
+			cntr_aCounter.cancel();
+			mediaPlayer.stop();
+			mediaPlayer.release();
+			
+			try {
+				songPosition = (songPosition + 1) % toPlay.size();
+				Log.v("FORWARD", "new pos " + songPosition);
+				songToPlay = toPlay.get(songPosition);
+
+				if (songToPlay != null)
+					Log.v("FORWARD", "songToPlay != null" + songPosition);
+
+				cntr_aCounter = new PlayTimer(
+						songToPlay.getUserDuration() * 1000, 1000, toPlay,
+						songPosition, this, context);
+				cntr_aCounter.start();
+
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SecurityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalStateException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 		} else if (intent.getAction()
 				.equals(MusicService.BACKWARD_NOTIFICATION)) {
+			
+			cntr_aCounter.cancel();
+			mediaPlayer.stop();
+			mediaPlayer.release();
+			
+			try {
+				
+				songPosition = (songPosition - 1) ;
+				if(songPosition==-1)
+					songPosition=toPlay.size()-1;
+				Log.v("BACKWARD", "new pos " + songPosition);
+				
+				songToPlay = toPlay.get(songPosition);
+				cntr_aCounter = new PlayTimer(
+						songToPlay.getUserDuration() * 1000, 1000, toPlay,
+						songPosition, this, context);
+				cntr_aCounter.start();
+				
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SecurityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalStateException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 		}
 	}
@@ -114,7 +177,5 @@ public class MusicServiceReceiver extends BroadcastReceiver {
 	public void setMediaPlayer(MediaPlayer mediaPlayer) {
 		this.mediaPlayer = mediaPlayer;
 	}
-	
-	
 
 }

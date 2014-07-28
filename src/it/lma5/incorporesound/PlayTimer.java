@@ -2,6 +2,7 @@ package it.lma5.incorporesound;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Random;
 
 import android.content.Context;
 import android.media.MediaPlayer;
@@ -39,7 +40,18 @@ public class PlayTimer extends CountDownTimer {
 		mediaPlayer.setDataSource(context,
 				Uri.parse(songToPlay.getPath().toString()));
 		mediaPlayer.prepare();
+		
+		if(songToPlay.getBeginTime()!=0){
+			
+			Integer interval = songToPlay.getDuration()
+					- songToPlay.getUserDuration();
+			Random rand = new Random();
+			Integer beginTime = rand.nextInt(interval+1);
+			songToPlay.setBeginTime(beginTime);
+			
+		}
 		mediaPlayer.seekTo(songToPlay.getBeginTime());
+			
 	}
 	
 	// used when a song starts after pause
@@ -65,11 +77,14 @@ public class PlayTimer extends CountDownTimer {
 		songPosition++;
 		mediaPlayer.stop();
 		mediaPlayer.reset();
-		mediaPlayer.release();
+		//mediaPlayer.release();
 
 		
-		if (songPosition >= songList.size())
+		if (songPosition >= songList.size()) {
+			mediaPlayer.release();
 			return;
+		}
+			
 		
 		Log.v("PLAYTIMER", "canzone sucessiva");
 		Log.v("PLAYTIMER", "position "+songPosition);
