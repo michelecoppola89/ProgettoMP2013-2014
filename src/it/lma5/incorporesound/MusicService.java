@@ -3,6 +3,9 @@ package it.lma5.incorporesound;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Random;
 
 import android.app.Service;
 import android.content.Intent;
@@ -21,7 +24,7 @@ public class MusicService extends Service {
 	public static String PAUSE_NOTIFICATION = "it.lma5.incorporesound.pause";
 	public static String FORWARD_NOTIFICATION = "it.lma5.incorporesound.forward";
 	public static String BACKWARD_NOTIFICATION = "it.lma5.incorporesound.backward";
-
+private static Integer NUMBER_OF_SHUFFLES=20;
 	private InCorporeSoundHelper helper;
 	private Playlist playlist;
 	private static  MediaPlayer mediaPlayer;
@@ -75,16 +78,33 @@ public class MusicService extends Service {
 		toPlay = playlist.getSongList();
 
 		Log.v("SONO IN PLAY", "toPlay" + toPlay.size());
+		
+		
+		if(playlist.is_random())
+			Collections.shuffle(toPlay);
+		
 		Song songToPlay = playlist.getSongList().get(0);
-
 		PlayTimer playTimer = new PlayTimer(
 				songToPlay.getUserDuration() * 1000, 1000,
-				playlist.getSongList(), 0, musicServiceReceiver,getApplicationContext());
+				toPlay, 0, musicServiceReceiver,getApplicationContext(),playlist.getRound());
 		
 		musicServiceReceiver.setCntr_aCounter(playTimer);
 		musicServiceReceiver.setSongToPlay(songToPlay);
+		musicServiceReceiver.setNumOfIteration(playlist.getRound());
 		playTimer.start();
 
+	}
+
+	// shuffle songs
+	private void shuffleSongList(ArrayList<Song> toPlay) {
+		for(int i=0;i<NUMBER_OF_SHUFFLES;i++)
+		{
+			Random random = new Random();
+			Integer a= random.nextInt(toPlay.size());
+			Integer b= random.nextInt(toPlay.size());
+			Collections.swap(toPlay, a, b);
+		}
+		
 	}
 
 	@Override

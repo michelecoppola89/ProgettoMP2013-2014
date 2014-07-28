@@ -263,6 +263,8 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 					modified.setRound(repetition);
 				if (isRandomUpd != isRandom)
 					modified.setIs_random(isRandom);
+				else
+					modified.setIs_random(isRandomUpd);
 				if (fadeIn != fadeInUpd)
 					modified.setFadeIn(fadeIn);
 

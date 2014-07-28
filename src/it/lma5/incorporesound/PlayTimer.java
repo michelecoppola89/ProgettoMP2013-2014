@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentSender.SendIntentException;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.CountDownTimer;
@@ -14,6 +17,7 @@ public class PlayTimer extends CountDownTimer {
 	
 	private ArrayList<Song> songList;
 	private Integer songPosition;
+	private Integer numOfIteration;
 	private MediaPlayer mediaPlayer;
 	private Song songToPlay;
 	private MusicServiceReceiver receiver;
@@ -22,11 +26,12 @@ public class PlayTimer extends CountDownTimer {
 	// used to start new song
 	public PlayTimer(long millisInFuture, long countDownInterval,
 			ArrayList<Song> songList, Integer songPosition,
-			MusicServiceReceiver receiver, Context context) throws IllegalArgumentException,
+			MusicServiceReceiver receiver, Context context,Integer numOfIteration) throws IllegalArgumentException,
 			SecurityException, IllegalStateException, IOException {
 
 		super(millisInFuture, countDownInterval);
 		this.songList = songList;
+		this.numOfIteration=numOfIteration;
 		this.songPosition = songPosition;
 		this.receiver = receiver;
 		this.context = context;
@@ -57,7 +62,7 @@ public class PlayTimer extends CountDownTimer {
 	// used when a song starts after pause
 	public PlayTimer(long millisInFuture, long countDownInterval,
 			ArrayList<Song> songList, Integer songPosition,
-			MusicServiceReceiver receiver, Context context, MediaPlayer player) throws IllegalArgumentException,
+			MusicServiceReceiver receiver, Context context, MediaPlayer player, Integer numOfIteration) throws IllegalArgumentException,
 			SecurityException, IllegalStateException, IOException {
 
 		super(millisInFuture, countDownInterval);
@@ -65,7 +70,7 @@ public class PlayTimer extends CountDownTimer {
 		this.songPosition = songPosition;
 		this.receiver = receiver;
 		this.context = context;
-		
+		this.numOfIteration=numOfIteration;
 		
 		mediaPlayer = player;
 		
@@ -81,7 +86,10 @@ public class PlayTimer extends CountDownTimer {
 
 		
 		if (songPosition >= songList.size()) {
+			receiver.setSongPosition(songPosition);
 			mediaPlayer.release();
+			Intent i = new Intent(PlayActivity.STOP_PLAYLIST_NOTIFICATION);
+			context.sendBroadcast(i);
 			return;
 		}
 			
@@ -98,7 +106,7 @@ public class PlayTimer extends CountDownTimer {
 
 			PlayTimer timer = new PlayTimer(
 					songToPlay.getUserDuration() * 1000, 1000, songList,
-					songPosition, receiver,context);
+					songPosition, receiver,context,numOfIteration);
 			receiver.setCntr_aCounter(timer);
 			receiver.setSongPosition(songPosition);
 			receiver.setSongToPlay(songToPlay);

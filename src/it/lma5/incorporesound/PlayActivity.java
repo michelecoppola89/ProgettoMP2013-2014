@@ -3,7 +3,9 @@ package it.lma5.incorporesound;
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,6 +27,8 @@ public class PlayActivity extends Activity implements OnClickListener {
 	private Button btStopSong;
 	private Button btForwardSong;
 	private Button btBackwardSong;
+	public static String STOP_PLAYLIST_NOTIFICATION = "it.lma5.incorporesound.PlayActivity.stopPlaylistNotification";
+	private PlaylistActivityReceiver receiver;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +43,7 @@ public class PlayActivity extends Activity implements OnClickListener {
 		btStopSong.setOnClickListener(this);
 		btPlaySong = (Button) findViewById(R.id.btPlaySong);
 		btPlaySong.setOnClickListener(this);
+		btPlaySong.setEnabled(false);
 		btPauseSong = (Button) findViewById(R.id.btPauseSong);
 		btPauseSong.setOnClickListener(this);
 		btBackwardSong = (Button) findViewById(R.id.btBackwardSong);
@@ -59,7 +64,9 @@ public class PlayActivity extends Activity implements OnClickListener {
 		serviceIntent = new Intent(getApplicationContext(), MusicService.class);
 		serviceIntent.putExtra("PL_ID", playlistName);
 		startService(serviceIntent);
-
+		
+		receiver= new PlaylistActivityReceiver(this);
+		
 	}
 
 	@Override
@@ -104,7 +111,7 @@ public class PlayActivity extends Activity implements OnClickListener {
 		// TODO Auto-generated method stub
 
 		if (v.getId() == R.id.btStopSong) {
-			
+
 			Intent i = new Intent(MusicService.STOP_NOTIFICATION);
 			sendBroadcast(i);
 			stopService(serviceIntent);
@@ -115,20 +122,45 @@ public class PlayActivity extends Activity implements OnClickListener {
 		else if (v.getId() == R.id.btPlaySong) {
 			Intent i = new Intent(MusicService.PLAY_NOTIFICATION);
 			sendBroadcast(i);
-
+			btBackwardSong.setEnabled(true);
+			btForwardSong.setEnabled(true);
+			btPauseSong.setEnabled(true);
+			btPlaySong.setEnabled(false);
+			btStopSong.setEnabled(true);
 		} else if (v.getId() == R.id.btPauseSong) {
 			Intent i = new Intent(MusicService.PAUSE_NOTIFICATION);
 			sendBroadcast(i);
-
+			btBackwardSong.setEnabled(false);
+			btForwardSong.setEnabled(false);
+			btPauseSong.setEnabled(false);
+			btPlaySong.setEnabled(true);
 		} else if (v.getId() == R.id.btForwardSong) {
 			Intent i = new Intent(MusicService.FORWARD_NOTIFICATION);
 			sendBroadcast(i);
 		} else {
-			
+
 			Intent i = new Intent(MusicService.BACKWARD_NOTIFICATION);
 			sendBroadcast(i);
 
 		}
 	}
 
+	@Override
+	protected void onPause() {
+		
+		super.onPause();
+		unregisterReceiver(receiver);
+	}
+
+	@Override
+	protected void onResume() {
+		
+		super.onResume();
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction(STOP_PLAYLIST_NOTIFICATION);
+		registerReceiver(receiver, intentFilter);
+
+	}
+	
+	
 }

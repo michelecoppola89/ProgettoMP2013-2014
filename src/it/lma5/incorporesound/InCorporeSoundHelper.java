@@ -144,12 +144,17 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 				.getColumnIndex(COLNAME_LOOP)));
 		Integer fadeIn = Integer.parseInt(cursor.getString(cursor
 				.getColumnIndex(COLNAME_FADE_IN)));
-		boolean isRandom = Boolean.parseBoolean(cursor.getString(cursor
+		Integer isRandom = Integer.parseInt(cursor.getString(cursor
 				.getColumnIndex(COLNAME_RANDOM)));
+		boolean rand;
+		if(isRandom==0)
+			rand = false;
+		else
+			rand = true;
 		String name = cursor.getString(cursor
 				.getColumnIndex(COLNAME_PLAYLIST_NAME));
 
-		Playlist ret = new Playlist(name, null, round, isRandom, fadeIn);
+		Playlist ret = new Playlist(name, null, round, rand, fadeIn);
 
 		return ret;
 
@@ -161,7 +166,11 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 		values.put(COLNAME_PLAYLIST_NAME, playlist.getName());
 		values.put(COLNAME_LOOP, playlist.getRound());
 		values.put(COLNAME_FADE_IN, playlist.getFadeIn());
-		values.put(COLNAME_RANDOM, playlist.is_random());
+		if (playlist.is_random())
+			values.put(COLNAME_RANDOM, 1);
+		else
+			values.put(COLNAME_RANDOM, 0);
+
 		try {
 			long ret = db.insert(TABLE_NAME_PLAYLIST, null, values);
 			Log.v("DBERR", Long.toString(ret));
@@ -269,8 +278,10 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 		if (isRandom != null) {
 
 			ContentValues values = new ContentValues();
-			values.put(COLNAME_RANDOM, isRandom);
-
+			if (isRandom)
+				values.put(COLNAME_RANDOM, 1);
+			else
+				values.put(COLNAME_RANDOM, 0);
 			try {
 				String[] varargs = new String[1];
 				varargs[0] = toUpdate.getName();
@@ -304,8 +315,7 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 		if (playlistName == null) {
 			for (int i = 0; i < songList.size(); i++)
 				addSongToPlaylist(songList.get(i), toUpdate.getName());
-		}
-		else {
+		} else {
 			for (int i = 0; i < songList.size(); i++)
 				addSongToPlaylist(songList.get(i), playlistName);
 		}
