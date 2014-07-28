@@ -14,55 +14,64 @@ import android.os.CountDownTimer;
 import android.util.Log;
 
 public class PlayTimer extends CountDownTimer {
-	
+
 	private ArrayList<Song> songList;
 	private Integer songPosition;
 	private Integer numOfIteration;
+	private Integer fadeIn;
 	private MediaPlayer mediaPlayer;
 	private Song songToPlay;
 	private MusicServiceReceiver receiver;
 	private Context context;
+	private Boolean isInfinite;
+	
 
 	// used to start new song
 	public PlayTimer(long millisInFuture, long countDownInterval,
 			ArrayList<Song> songList, Integer songPosition,
-			MusicServiceReceiver receiver, Context context,Integer numOfIteration) throws IllegalArgumentException,
+			MusicServiceReceiver receiver, Context context,
+			Integer numOfIteration,Integer fadeIn) throws IllegalArgumentException,
 			SecurityException, IllegalStateException, IOException {
 
 		super(millisInFuture, countDownInterval);
 		this.songList = songList;
-		this.numOfIteration=numOfIteration;
+		this.numOfIteration = numOfIteration;
+		if (numOfIteration == 0)
+			isInfinite = true;
+		else
+			isInfinite = false;
 		this.songPosition = songPosition;
 		this.receiver = receiver;
 		this.context = context;
-		
-		
+		this.fadeIn=fadeIn;
+
 		mediaPlayer = new MediaPlayer();
-		
+
 		MusicService.setMediaPlayer(mediaPlayer);
 		receiver.setMediaPlayer(mediaPlayer);
-		songToPlay = songList.get(songPosition);	
+		songToPlay = songList.get(songPosition);
 		mediaPlayer.setDataSource(context,
 				Uri.parse(songToPlay.getPath().toString()));
 		mediaPlayer.prepare();
-		
-		if(songToPlay.getBeginTime()!=0){
-			
+
+		if (songToPlay.getBeginTime() != 0) {
+
 			Integer interval = songToPlay.getDuration()
 					- songToPlay.getUserDuration();
 			Random rand = new Random();
-			Integer beginTime = rand.nextInt(interval+1);
+			Integer beginTime = rand.nextInt(interval + 1);
 			songToPlay.setBeginTime(beginTime);
-			
+
 		}
 		mediaPlayer.seekTo(songToPlay.getBeginTime());
-			
+
 	}
-	
+
 	// used when a song starts after pause
 	public PlayTimer(long millisInFuture, long countDownInterval,
 			ArrayList<Song> songList, Integer songPosition,
-			MusicServiceReceiver receiver, Context context, MediaPlayer player, Integer numOfIteration) throws IllegalArgumentException,
+			MusicServiceReceiver receiver, Context context, MediaPlayer player,
+			Integer numOfIteration,Integer fadeIn) throws IllegalArgumentException,
 			SecurityException, IllegalStateException, IOException {
 
 		super(millisInFuture, countDownInterval);
@@ -70,11 +79,17 @@ public class PlayTimer extends CountDownTimer {
 		this.songPosition = songPosition;
 		this.receiver = receiver;
 		this.context = context;
-		this.numOfIteration=numOfIteration;
+		this.numOfIteration = numOfIteration;
+		this.fadeIn=fadeIn;
 		
+		if (numOfIteration == 0)
+			isInfinite = true;
+		else
+			isInfinite = false;
+
 		mediaPlayer = player;
-		
-		songToPlay = songList.get(songPosition);	
+
+		songToPlay = songList.get(songPosition);
 	}
 
 	@Override
@@ -82,20 +97,23 @@ public class PlayTimer extends CountDownTimer {
 		songPosition++;
 		mediaPlayer.stop();
 		mediaPlayer.reset();
-		//mediaPlayer.release();
 
-		
-		if (songPosition >= songList.size()) {
-			receiver.setSongPosition(songPosition);
-			mediaPlayer.release();
-			Intent i = new Intent(PlayActivity.STOP_PLAYLIST_NOTIFICATION);
-			context.sendBroadcast(i);
-			return;
+		if (!isInfinite && songPosition >= songList.size()) {
+			numOfIteration--;
+
+			if (numOfIteration == 0) {
+				receiver.setSongPosition(songPosition);
+				mediaPlayer.release();
+				Intent i = new Intent(PlayActivity.STOP_PLAYLIST_NOTIFICATION);
+				context.sendBroadcast(i);
+				return;
+			}
 		}
-			
 		
+		songPosition = songPosition % songList.size();
+
 		Log.v("PLAYTIMER", "canzone sucessiva");
-		Log.v("PLAYTIMER", "position "+songPosition);
+		Log.v("PLAYTIMER", "position " + songPosition);
 		// play next song
 		songToPlay = songList.get(songPosition);
 		try {
@@ -106,10 +124,12 @@ public class PlayTimer extends CountDownTimer {
 
 			PlayTimer timer = new PlayTimer(
 					songToPlay.getUserDuration() * 1000, 1000, songList,
-					songPosition, receiver,context,numOfIteration);
+					songPosition, receiver, context, numOfIteration,fadeIn);
 			receiver.setCntr_aCounter(timer);
 			receiver.setSongPosition(songPosition);
 			receiver.setSongToPlay(songToPlay);
+			// fade in
+			Thread.sleep(fadeIn*1000);
 			timer.start();
 
 		} catch (IllegalArgumentException e) {
@@ -124,6 +144,8 @@ public class PlayTimer extends CountDownTimer {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (InterruptedException e) {
+			
 		}
 
 	}

@@ -86,11 +86,12 @@ private static Integer NUMBER_OF_SHUFFLES=20;
 		Song songToPlay = playlist.getSongList().get(0);
 		PlayTimer playTimer = new PlayTimer(
 				songToPlay.getUserDuration() * 1000, 1000,
-				toPlay, 0, musicServiceReceiver,getApplicationContext(),playlist.getRound());
+				toPlay, 0, musicServiceReceiver,getApplicationContext(),playlist.getRound(),playlist.getFadeIn());
 		
 		musicServiceReceiver.setCntr_aCounter(playTimer);
 		musicServiceReceiver.setSongToPlay(songToPlay);
 		musicServiceReceiver.setNumOfIteration(playlist.getRound());
+		musicServiceReceiver.setFadeIn(playlist.getFadeIn());
 		playTimer.start();
 
 	}

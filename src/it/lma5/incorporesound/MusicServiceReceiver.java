@@ -22,6 +22,7 @@ public class MusicServiceReceiver extends BroadcastReceiver {
 	private ArrayList<Song> toPlay;
 	private Integer songPosition;
 	private Integer numOfIteration;
+	private Integer fadeIn;
 
 	public MusicServiceReceiver(MediaPlayer mediaPlayer, Context context) {
 
@@ -33,18 +34,18 @@ public class MusicServiceReceiver extends BroadcastReceiver {
 
 		if (intent.getAction().equals(MusicService.PLAY_NOTIFICATION)) {
 
-//			Integer temp = songToPlay.getLastTimeMillis() - timeOfLastPause;
-//			Log.v("ENTRATO IN PLAY", "rimanenti " + temp.toString() + "da "
-//					+ timeOfLastPause);
+			// Integer temp = songToPlay.getLastTimeMillis() - timeOfLastPause;
+			// Log.v("ENTRATO IN PLAY", "rimanenti " + temp.toString() + "da "
+			// + timeOfLastPause);
 
 			try {
 				if (songPosition >= toPlay.size()) {
 					// play from start
 					songPosition = 0;
 					songToPlay = toPlay.get(songPosition);
-					cntr_aCounter = new PlayTimer(
-							songToPlay.getBeginTime(),
-							1000, toPlay, songPosition, this, context,numOfIteration);
+					cntr_aCounter = new PlayTimer(songToPlay.getBeginTime(),
+							1000, toPlay, songPosition, this, context,
+							numOfIteration,fadeIn);
 					cntr_aCounter.start();
 
 				} else {
@@ -52,7 +53,7 @@ public class MusicServiceReceiver extends BroadcastReceiver {
 					cntr_aCounter = new PlayTimer(
 							songToPlay.getLastTimeMillis() - timeOfLastPause,
 							1000, toPlay, songPosition, this, context,
-							mediaPlayer,numOfIteration);
+							mediaPlayer, numOfIteration,fadeIn);
 					cntr_aCounter.start();
 				}
 
@@ -97,7 +98,7 @@ public class MusicServiceReceiver extends BroadcastReceiver {
 
 				cntr_aCounter = new PlayTimer(
 						songToPlay.getUserDuration() * 1000, 1000, toPlay,
-						songPosition, this, context,numOfIteration);
+						songPosition, this, context, numOfIteration,fadeIn);
 				cntr_aCounter.start();
 
 			} catch (IllegalArgumentException e) {
@@ -131,7 +132,7 @@ public class MusicServiceReceiver extends BroadcastReceiver {
 				songToPlay = toPlay.get(songPosition);
 				cntr_aCounter = new PlayTimer(
 						songToPlay.getUserDuration() * 1000, 1000, toPlay,
-						songPosition, this, context,numOfIteration);
+						songPosition, this, context, numOfIteration,fadeIn);
 				cntr_aCounter.start();
 
 			} catch (IllegalArgumentException e) {
@@ -197,6 +198,14 @@ public class MusicServiceReceiver extends BroadcastReceiver {
 
 	public void setNumOfIteration(Integer numOfIteration) {
 		this.numOfIteration = numOfIteration;
+	}
+
+	public Integer getFadeIn() {
+		return fadeIn;
+	}
+
+	public void setFadeIn(Integer fadeIn) {
+		this.fadeIn = fadeIn;
 	}
 	
 
