@@ -135,7 +135,7 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 		}
 
 		// check if songs exist
-		
+
 		MediaMetadataRetriever retriever = new MediaMetadataRetriever();
 		ArrayList<Integer> missingSongPosition = new ArrayList<Integer>();
 		ArrayList<Song> toDelete = new ArrayList<Song>();

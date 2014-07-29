@@ -6,12 +6,16 @@ import android.app.Activity;
 import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,12 +26,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.os.Build;
 
 public class PlayActivity extends Activity implements OnClickListener {
 
-	private Intent serviceIntent;
+	private static Intent serviceIntent;
 	private InCorporeSoundHelper helper;
 	private Playlist playlist;
 	private Button btPlaySong;
@@ -40,6 +45,7 @@ public class PlayActivity extends Activity implements OnClickListener {
 	private ProgressBar pbPlaySong;
 	private SongListToPlayAdapter adapter;
 	private ListView lvPlaySongList;
+	Notification notification;
 	public static String STOP_PLAYLIST_NOTIFICATION = "it.lma5.incorporesound.PlayActivity.stopPlaylistNotification";
 	public static String PROGRESS_PLAYLIST_NOTIFICATION = "it.lma5.incorporesound.PlayActivity.progressPlaylistNotification";
 	public static String PLAYSONG_PLAYLIST_NOTIFICATION = "it.lma5.incorporesound.PlayActivity.playSongPlaylistNotification";
@@ -55,6 +61,7 @@ public class PlayActivity extends Activity implements OnClickListener {
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
+
 		btStopSong = (Button) findViewById(R.id.btStopSong);
 		btStopSong.setOnClickListener(this);
 		btPlaySong = (Button) findViewById(R.id.btPlaySong);
@@ -86,11 +93,11 @@ public class PlayActivity extends Activity implements OnClickListener {
 
 		if (playlist == null)
 			Log.v("PlayActivity", "ERR");
-		
+
 		adapter = new SongListToPlayAdapter(this,
 				R.layout.song_list_play_row_layout, playlist.getSongList());
 		lvPlaySongList.setAdapter(adapter);
-		
+
 		checkSongs();
 
 		serviceIntent = new Intent(getApplicationContext(), MusicService.class);
@@ -98,6 +105,8 @@ public class PlayActivity extends Activity implements OnClickListener {
 		startService(serviceIntent);
 
 		receiver = new PlaylistActivityReceiver(this, adapter);
+
+		initilizeNotification();
 
 	}
 
@@ -195,8 +204,8 @@ public class PlayActivity extends Activity implements OnClickListener {
 		registerReceiver(receiver, intentFilter);
 
 	}
-	
-	public void checkSongs(){
+
+	public void checkSongs() {
 		MediaMetadataRetriever retriever = new MediaMetadataRetriever();
 		ArrayList<Integer> missingSongPosition = new ArrayList<Integer>();
 		ArrayList<Song> toDelete = new ArrayList<Song>();
@@ -212,7 +221,8 @@ public class PlayActivity extends Activity implements OnClickListener {
 		}
 
 		for (int i = missingSongPosition.size() - 1; i >= 0; i--) {
-			adapter.remove(playlist.getSongList().get(missingSongPosition.get(i)));
+			adapter.remove(playlist.getSongList().get(
+					missingSongPosition.get(i)));
 		}
 
 		if (missingSongPosition.size() > 0) {
@@ -234,5 +244,46 @@ public class PlayActivity extends Activity implements OnClickListener {
 			alert.show();
 		}
 	}
+
+	public void initilizeNotification() {
+		// prepare intent which is triggered if the
+		// notification is selected
+
+		Intent intent = new Intent(this, TempActivity.class);
+		PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+		// Create remote view and set bigContentView.
+		RemoteViews expandedView = new RemoteViews(this.getPackageName(),
+				R.layout.notification_layout);
+
+		// build notification
+		// the addAction re-use the same intent to keep the example short
+
+		notification = new Notification.Builder(this)
+				.setContentTitle("PROVA")
+				.setContentText("Subject").setSmallIcon(R.drawable.ic_launcher)
+				.setContentIntent(pIntent).setAutoCancel(true)
+				.setContent(expandedView).build();
+		
+		 notification.bigContentView = expandedView;
+	}
+
+	@Override
+	protected void onDestroy() {
+//		NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//
+//		notificationManager.notify(0, notification);
+		super.onDestroy();
+	}
+
+	public static Intent getServiceIntent() {
+		return serviceIntent;
+	}
+
+	public static void setServiceIntent(Intent serviceIntent) {
+		PlayActivity.serviceIntent = serviceIntent;
+	}
+	
+	
 
 }

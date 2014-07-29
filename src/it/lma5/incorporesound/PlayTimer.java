@@ -59,7 +59,7 @@ public class PlayTimer extends CountDownTimer {
 		receiver.setMediaPlayer(mediaPlayer);
 		songToPlay = songList.get(songPosition);
 
-		// modify adapater
+		// modify adapter
 		Intent intent = new Intent(PlayActivity.PLAYSONG_PLAYLIST_NOTIFICATION);
 		intent.putExtra("idSong", songToPlay.getId());
 		context.sendBroadcast(intent);

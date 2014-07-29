@@ -31,24 +31,28 @@ public final class R {
         public static final int kaydet=0x7f020001;
     }
     public static final class id {
-        public static final int LinearLayout1=0x7f090022;
-        public static final int TableLayout1=0x7f090028;
-        public static final int action_settings=0x7f090030;
+        public static final int LinearLayout1=0x7f090029;
+        public static final int TableLayout1=0x7f09002f;
+        public static final int action_settings=0x7f090037;
         public static final int btAddPlaylist=0x7f090011;
         public static final int btAddSong=0x7f09000e;
         public static final int btBackwardSong=0x7f09001c;
-        public static final int btChange=0x7f090020;
-        public static final int btDelete=0x7f090021;
+        public static final int btChange=0x7f090027;
+        public static final int btDelete=0x7f090028;
         public static final int btForwardSong=0x7f09001b;
+        public static final int btNotificationBackward=0x7f090021;
+        public static final int btNotificationForward=0x7f090024;
+        public static final int btNotificationPlay=0x7f090023;
+        public static final int btNotificationpause=0x7f090022;
         public static final int btPauseSong=0x7f09001a;
-        public static final int btPlay=0x7f09001f;
+        public static final int btPlay=0x7f090026;
         public static final int btPlaySong=0x7f090018;
-        public static final int btRemoveSong=0x7f09002f;
+        public static final int btRemoveSong=0x7f090036;
         public static final int btStopSong=0x7f090019;
         public static final int container=0x7f090000;
         public static final int etNewPlaylistName=0x7f090002;
         public static final int etRepetitionNum=0x7f09000d;
-        public static final int ivPlayingSongImg=0x7f090023;
+        public static final int ivPlayingSongImg=0x7f09002a;
         public static final int lvPlaySongList=0x7f09001d;
         public static final int lvPlaylist=0x7f090013;
         public static final int lvSongList=0x7f090010;
@@ -61,25 +65,28 @@ public final class R {
         public static final int rgOrder=0x7f090005;
         public static final int rgRepetition=0x7f090008;
         public static final int spFadeIn=0x7f090004;
-        public static final int spSongDuration=0x7f09002e;
-        public static final int spSongStart=0x7f09002d;
-        public static final int tableRow1=0x7f090029;
-        public static final int tableRow2=0x7f09002c;
+        public static final int spSongDuration=0x7f090035;
+        public static final int spSongStart=0x7f090034;
+        public static final int tableRow1=0x7f090030;
+        public static final int tableRow2=0x7f090033;
         public static final int tvAddPlayList=0x7f090012;
         public static final int tvAddSong=0x7f09000f;
-        public static final int tvArtist=0x7f090027;
-        public static final int tvArtistPlay=0x7f090025;
-        public static final int tvDuration=0x7f09002b;
+        public static final int tvArtist=0x7f09002e;
+        public static final int tvArtistPlay=0x7f09002c;
+        public static final int tvDuration=0x7f090032;
         public static final int tvFadeIn=0x7f090003;
         public static final int tvInsertPlayListName=0x7f090001;
+        public static final int tvNotificationArtist=0x7f090020;
+        public static final int tvNotificationPlaylistName=0x7f09001e;
+        public static final int tvNotificationSongTitle=0x7f09001f;
         public static final int tvPlayListLabel=0x7f090014;
-        public static final int tvPlaylistName=0x7f09001e;
+        public static final int tvPlaylistName=0x7f090025;
         public static final int tvRandomMode=0x7f090016;
         public static final int tvRepetitionNum=0x7f09000c;
         public static final int tvRunninPlaylistName=0x7f090015;
-        public static final int tvSongTitle=0x7f090026;
-        public static final int tvStart=0x7f09002a;
-        public static final int tvTitlePlaySong=0x7f090024;
+        public static final int tvSongTitle=0x7f09002d;
+        public static final int tvStart=0x7f090031;
+        public static final int tvTitlePlaySong=0x7f09002b;
     }
     public static final class layout {
         public static final int activity_create_playlist=0x7f030000;
@@ -88,9 +95,10 @@ public final class R {
         public static final int fragment_create_playlist=0x7f030003;
         public static final int fragment_main=0x7f030004;
         public static final int fragment_play=0x7f030005;
-        public static final int playlist_row_layout=0x7f030006;
-        public static final int song_list_play_row_layout=0x7f030007;
-        public static final int song_list_row_layout=0x7f030008;
+        public static final int notification_layout=0x7f030006;
+        public static final int playlist_row_layout=0x7f030007;
+        public static final int song_list_play_row_layout=0x7f030008;
+        public static final int song_list_row_layout=0x7f030009;
     }
     public static final class menu {
         public static final int create_playlist=0x7f080000;

@@ -74,6 +74,7 @@ public class MusicServiceReceiver extends BroadcastReceiver {
 		} else if (intent.getAction().equals(MusicService.STOP_NOTIFICATION)) {
 
 			cntr_aCounter.cancel();
+			
 
 		} else if (intent.getAction().equals(MusicService.PAUSE_NOTIFICATION)) {
 
@@ -149,6 +150,14 @@ public class MusicServiceReceiver extends BroadcastReceiver {
 				e.printStackTrace();
 			}
 
+		}
+		else if(intent.getAction()
+				.equals(MusicService.CLOSE_SERVICE_NOTIFICATION)){
+			
+			cntr_aCounter.cancel();
+			context.stopService(PlayActivity.getServiceIntent());
+			// chiudere anche l'activity PlayActivity
+			
 		}
 	}
 
