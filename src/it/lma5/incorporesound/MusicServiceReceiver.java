@@ -44,7 +44,7 @@ public class MusicServiceReceiver extends BroadcastReceiver {
 					songPosition = 0;
 					songToPlay = toPlay.get(songPosition);
 					cntr_aCounter = new PlayTimer(songToPlay.getBeginTime(),
-							1000, toPlay, songPosition, this, context,
+							100, toPlay, songPosition, this, context,
 							numOfIteration,fadeIn);
 					cntr_aCounter.start();
 
@@ -52,7 +52,7 @@ public class MusicServiceReceiver extends BroadcastReceiver {
 					// resume after pause
 					cntr_aCounter = new PlayTimer(
 							songToPlay.getLastTimeMillis() - timeOfLastPause,
-							1000, toPlay, songPosition, this, context,
+							100, toPlay, songPosition, this, context,
 							mediaPlayer, numOfIteration,fadeIn);
 					cntr_aCounter.start();
 				}
@@ -97,7 +97,7 @@ public class MusicServiceReceiver extends BroadcastReceiver {
 					Log.v("FORWARD", "songToPlay != null" + songPosition);
 
 				cntr_aCounter = new PlayTimer(
-						songToPlay.getUserDuration() * 1000, 1000, toPlay,
+						songToPlay.getUserDuration() * 1000, 100, toPlay,
 						songPosition, this, context, numOfIteration,fadeIn);
 				cntr_aCounter.start();
 
@@ -131,7 +131,7 @@ public class MusicServiceReceiver extends BroadcastReceiver {
 
 				songToPlay = toPlay.get(songPosition);
 				cntr_aCounter = new PlayTimer(
-						songToPlay.getUserDuration() * 1000, 1000, toPlay,
+						songToPlay.getUserDuration() * 1000, 100, toPlay,
 						songPosition, this, context, numOfIteration,fadeIn);
 				cntr_aCounter.start();
 

@@ -24,10 +24,10 @@ public class MusicService extends Service {
 	public static String PAUSE_NOTIFICATION = "it.lma5.incorporesound.pause";
 	public static String FORWARD_NOTIFICATION = "it.lma5.incorporesound.forward";
 	public static String BACKWARD_NOTIFICATION = "it.lma5.incorporesound.backward";
-private static Integer NUMBER_OF_SHUFFLES=20;
+	private static Integer NUMBER_OF_SHUFFLES = 20;
 	private InCorporeSoundHelper helper;
 	private Playlist playlist;
-	private static  MediaPlayer mediaPlayer;
+	private static MediaPlayer mediaPlayer;
 	private MusicServiceReceiver musicServiceReceiver;
 
 	@Override
@@ -40,8 +40,9 @@ private static Integer NUMBER_OF_SHUFFLES=20;
 		playlist = helper.getPlaylistFromId(playlistName);
 		Log.v("PLAYLIST NAME", playlistName);
 		mediaPlayer = new MediaPlayer();
-		musicServiceReceiver = new MusicServiceReceiver(mediaPlayer,getApplicationContext());
-		
+		musicServiceReceiver = new MusicServiceReceiver(mediaPlayer,
+				getApplicationContext());
+
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(BACKWARD_NOTIFICATION);
 		intentFilter.addAction(FORWARD_NOTIFICATION);
@@ -71,23 +72,24 @@ private static Integer NUMBER_OF_SHUFFLES=20;
 		return Service.START_STICKY_COMPATIBILITY;
 	}
 
-	public void play() throws IllegalArgumentException, SecurityException, IllegalStateException, IOException {
+	public void play() throws IllegalArgumentException, SecurityException,
+			IllegalStateException, IOException {
 
 		ArrayList<Song> toPlay;
 
 		toPlay = playlist.getSongList();
 
 		Log.v("SONO IN PLAY", "toPlay" + toPlay.size());
-		
-		
-		if(playlist.is_random())
+
+		if (playlist.is_random())
 			Collections.shuffle(toPlay);
-		
+
 		Song songToPlay = playlist.getSongList().get(0);
 		PlayTimer playTimer = new PlayTimer(
-				songToPlay.getUserDuration() * 1000, 1000,
-				toPlay, 0, musicServiceReceiver,getApplicationContext(),playlist.getRound(),playlist.getFadeIn());
-		
+				songToPlay.getUserDuration() * 1000, 100, toPlay, 0,
+				musicServiceReceiver, getApplicationContext(),
+				playlist.getRound(), playlist.getFadeIn());
+
 		musicServiceReceiver.setCntr_aCounter(playTimer);
 		musicServiceReceiver.setSongToPlay(songToPlay);
 		musicServiceReceiver.setNumOfIteration(playlist.getRound());
@@ -98,14 +100,13 @@ private static Integer NUMBER_OF_SHUFFLES=20;
 
 	// shuffle songs
 	private void shuffleSongList(ArrayList<Song> toPlay) {
-		for(int i=0;i<NUMBER_OF_SHUFFLES;i++)
-		{
+		for (int i = 0; i < NUMBER_OF_SHUFFLES; i++) {
 			Random random = new Random();
-			Integer a= random.nextInt(toPlay.size());
-			Integer b= random.nextInt(toPlay.size());
+			Integer a = random.nextInt(toPlay.size());
+			Integer b = random.nextInt(toPlay.size());
 			Collections.swap(toPlay, a, b);
 		}
-		
+
 	}
 
 	@Override
@@ -116,14 +117,12 @@ private static Integer NUMBER_OF_SHUFFLES=20;
 		unregisterReceiver(musicServiceReceiver);
 
 	}
-	
 
 	@Override
 	public IBinder onBind(Intent arg0) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 
 	public static MediaPlayer getMediaPlayer() {
 		return mediaPlayer;
@@ -132,7 +131,5 @@ private static Integer NUMBER_OF_SHUFFLES=20;
 	public static void setMediaPlayer(MediaPlayer mediaPlayer) {
 		MusicService.mediaPlayer = mediaPlayer;
 	}
-	
-	
 
 }

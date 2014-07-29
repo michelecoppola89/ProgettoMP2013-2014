@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender.SendIntentException;
+import android.content.pm.FeatureInfo;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.CountDownTimer;
@@ -24,7 +25,9 @@ public class PlayTimer extends CountDownTimer {
 	private MusicServiceReceiver receiver;
 	private Context context;
 	private Boolean isInfinite;
-	
+	private float volume;
+	private float deltaVolume;
+	private long countDownInterval;
 
 	// used to start new song
 	public PlayTimer(long millisInFuture, long countDownInterval,
@@ -36,6 +39,8 @@ public class PlayTimer extends CountDownTimer {
 		super(millisInFuture, countDownInterval);
 		this.songList = songList;
 		this.numOfIteration = numOfIteration;
+		this.countDownInterval=countDownInterval;
+		volume=0.0f;
 		if (numOfIteration == 0)
 			isInfinite = true;
 		else
@@ -44,6 +49,8 @@ public class PlayTimer extends CountDownTimer {
 		this.receiver = receiver;
 		this.context = context;
 		this.fadeIn=fadeIn;
+		deltaVolume=(countDownInterval/(float)(fadeIn*1000/2));
+		Log.v("DELTA VOLUME", Float.toString(deltaVolume));
 
 		mediaPlayer = new MediaPlayer();
 
@@ -81,6 +88,9 @@ public class PlayTimer extends CountDownTimer {
 		this.context = context;
 		this.numOfIteration = numOfIteration;
 		this.fadeIn=fadeIn;
+		volume=1;
+		this.countDownInterval=countDownInterval;
+		deltaVolume=(countDownInterval/(float)(fadeIn*1000/2));
 		
 		if (numOfIteration == 0)
 			isInfinite = true;
@@ -121,15 +131,14 @@ public class PlayTimer extends CountDownTimer {
 					Uri.parse(songToPlay.getPath().toString()));
 			mediaPlayer.prepare();
 			mediaPlayer.seekTo(songToPlay.getBeginTime());
+			
 
 			PlayTimer timer = new PlayTimer(
-					songToPlay.getUserDuration() * 1000, 1000, songList,
+					songToPlay.getUserDuration() * 1000, 100, songList,
 					songPosition, receiver, context, numOfIteration,fadeIn);
 			receiver.setCntr_aCounter(timer);
 			receiver.setSongPosition(songPosition);
 			receiver.setSongToPlay(songToPlay);
-			// fade in
-			Thread.sleep(fadeIn*1000);
 			timer.start();
 
 		} catch (IllegalArgumentException e) {
@@ -140,20 +149,51 @@ public class PlayTimer extends CountDownTimer {
 			e.printStackTrace();
 		} catch (IllegalStateException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e.printStackTrace();	
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (InterruptedException e) {
-			
 		}
 
 	}
 
 	@Override
 	public void onTick(long millisUntilFinished) {
+		
+		
+		if(millisUntilFinished >= (songToPlay.getUserDuration()*1000-fadeIn*1000/2))
+		{
+			fadeIn(countDownInterval);
+			Log.v("fade in", "faccio fade in");
+		}
 		mediaPlayer.start();
-		Log.v("onTic", "----------------------");
+		
+		if(millisUntilFinished<=(fadeIn*1000/2))
+		{
+			fadeOut(countDownInterval);
+			Log.v("fade out", "faccio fade out");
+		}
+
+	}
+	
+	public void fadeOut(float deltaTime)
+	{
+	    mediaPlayer.setVolume(volume, volume);
+	    if(volume-deltaVolume<0)
+	    	volume=0.0f;
+	    else
+	    	volume -= deltaVolume;
+	    Log.v("FADE OUT",Float.toString(volume));
+
+	}
+	public void fadeIn(float deltaTime)
+	{
+	    mediaPlayer.setVolume(volume, volume);
+	    if(volume+deltaVolume>1)
+	    	volume=1.0f;
+	    else
+	    	volume += deltaVolume;
+	    Log.v("FADE IN", Float.toString(volume));
 
 	}
 
