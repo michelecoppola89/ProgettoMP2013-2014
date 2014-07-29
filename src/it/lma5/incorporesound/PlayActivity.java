@@ -15,6 +15,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.os.Build;
 
 public class PlayActivity extends Activity implements OnClickListener {
@@ -27,7 +30,14 @@ public class PlayActivity extends Activity implements OnClickListener {
 	private Button btStopSong;
 	private Button btForwardSong;
 	private Button btBackwardSong;
+	private TextView tvRunningPlaylistName;
+	private ProgressBar pbPlaySong;
+	private SongListToPlayAdapter adapter;
+	private ListView lvPlaySongList;
 	public static String STOP_PLAYLIST_NOTIFICATION = "it.lma5.incorporesound.PlayActivity.stopPlaylistNotification";
+	public static String PROGRESS_PLAYLIST_NOTIFICATION = "it.lma5.incorporesound.PlayActivity.progressPlaylistNotification";
+	public static String PLAYSONG_PLAYLIST_NOTIFICATION = "it.lma5.incorporesound.PlayActivity.playSongPlaylistNotification";
+
 	private PlaylistActivityReceiver receiver;
 
 	@Override
@@ -50,11 +60,17 @@ public class PlayActivity extends Activity implements OnClickListener {
 		btBackwardSong.setOnClickListener(this);
 		btForwardSong = (Button) findViewById(R.id.btForwardSong);
 		btForwardSong.setOnClickListener(this);
+		lvPlaySongList = (ListView) findViewById(R.id.lvPlaySongList);
+		tvRunningPlaylistName = (TextView) findViewById(R.id.tvRunninPlaylistName);
+		pbPlaySong = (ProgressBar) findViewById(R.id.pbPlaySong);
+		pbPlaySong.setProgress(0);
+		pbPlaySong.setMax(100);
 		helper = new InCorporeSoundHelper(this);
 		String playlistName = getIntent().getStringExtra("PLAYLIST_ID");
 		Log.v("PlayActivity!!!!", playlistName);
 
 		playlist = helper.getPlaylistFromId(playlistName);
+		tvRunningPlaylistName.setText(playlist.getName());
 
 		Log.v("PlayActivity", playlistName);
 
@@ -64,9 +80,14 @@ public class PlayActivity extends Activity implements OnClickListener {
 		serviceIntent = new Intent(getApplicationContext(), MusicService.class);
 		serviceIntent.putExtra("PL_ID", playlistName);
 		startService(serviceIntent);
+
 		
-		receiver= new PlaylistActivityReceiver(this);
+		adapter = new SongListToPlayAdapter(this,
+				R.layout.song_list_play_row_layout, playlist.getSongList());
+		lvPlaySongList.setAdapter(adapter);
 		
+		receiver = new PlaylistActivityReceiver(this,adapter);
+
 	}
 
 	@Override
@@ -147,20 +168,21 @@ public class PlayActivity extends Activity implements OnClickListener {
 
 	@Override
 	protected void onPause() {
-		
+
 		super.onPause();
 		unregisterReceiver(receiver);
 	}
 
 	@Override
 	protected void onResume() {
-		
+
 		super.onResume();
 		IntentFilter intentFilter = new IntentFilter();
 		intentFilter.addAction(STOP_PLAYLIST_NOTIFICATION);
+		intentFilter.addAction(PROGRESS_PLAYLIST_NOTIFICATION);
+		intentFilter.addAction(PLAYSONG_PLAYLIST_NOTIFICATION);
 		registerReceiver(receiver, intentFilter);
 
 	}
-	
-	
+
 }

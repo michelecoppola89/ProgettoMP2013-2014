@@ -33,14 +33,15 @@ public class PlayTimer extends CountDownTimer {
 	public PlayTimer(long millisInFuture, long countDownInterval,
 			ArrayList<Song> songList, Integer songPosition,
 			MusicServiceReceiver receiver, Context context,
-			Integer numOfIteration,Integer fadeIn) throws IllegalArgumentException,
-			SecurityException, IllegalStateException, IOException {
+			Integer numOfIteration, Integer fadeIn)
+			throws IllegalArgumentException, SecurityException,
+			IllegalStateException, IOException {
 
 		super(millisInFuture, countDownInterval);
 		this.songList = songList;
 		this.numOfIteration = numOfIteration;
-		this.countDownInterval=countDownInterval;
-		volume=0.0f;
+		this.countDownInterval = countDownInterval;
+		volume = 0.0f;
 		if (numOfIteration == 0)
 			isInfinite = true;
 		else
@@ -48,8 +49,8 @@ public class PlayTimer extends CountDownTimer {
 		this.songPosition = songPosition;
 		this.receiver = receiver;
 		this.context = context;
-		this.fadeIn=fadeIn;
-		deltaVolume=(countDownInterval/(float)(fadeIn*1000/2));
+		this.fadeIn = fadeIn;
+		deltaVolume = (countDownInterval / (float) (fadeIn * 1000 / 2));
 		Log.v("DELTA VOLUME", Float.toString(deltaVolume));
 
 		mediaPlayer = new MediaPlayer();
@@ -57,6 +58,12 @@ public class PlayTimer extends CountDownTimer {
 		MusicService.setMediaPlayer(mediaPlayer);
 		receiver.setMediaPlayer(mediaPlayer);
 		songToPlay = songList.get(songPosition);
+
+		// modify adapater
+		Intent intent = new Intent(PlayActivity.PLAYSONG_PLAYLIST_NOTIFICATION);
+		intent.putExtra("idSong", songToPlay.getId());
+		context.sendBroadcast(intent);
+
 		mediaPlayer.setDataSource(context,
 				Uri.parse(songToPlay.getPath().toString()));
 		mediaPlayer.prepare();
@@ -78,8 +85,9 @@ public class PlayTimer extends CountDownTimer {
 	public PlayTimer(long millisInFuture, long countDownInterval,
 			ArrayList<Song> songList, Integer songPosition,
 			MusicServiceReceiver receiver, Context context, MediaPlayer player,
-			Integer numOfIteration,Integer fadeIn) throws IllegalArgumentException,
-			SecurityException, IllegalStateException, IOException {
+			Integer numOfIteration, Integer fadeIn)
+			throws IllegalArgumentException, SecurityException,
+			IllegalStateException, IOException {
 
 		super(millisInFuture, countDownInterval);
 		this.songList = songList;
@@ -87,11 +95,11 @@ public class PlayTimer extends CountDownTimer {
 		this.receiver = receiver;
 		this.context = context;
 		this.numOfIteration = numOfIteration;
-		this.fadeIn=fadeIn;
-		volume=1;
-		this.countDownInterval=countDownInterval;
-		deltaVolume=(countDownInterval/(float)(fadeIn*1000/2));
-		
+		this.fadeIn = fadeIn;
+		volume = 1;
+		this.countDownInterval = countDownInterval;
+		deltaVolume = (countDownInterval / (float) (fadeIn * 1000 / 2));
+
 		if (numOfIteration == 0)
 			isInfinite = true;
 		else
@@ -100,6 +108,11 @@ public class PlayTimer extends CountDownTimer {
 		mediaPlayer = player;
 
 		songToPlay = songList.get(songPosition);
+
+		// modify adapater
+		Intent intent = new Intent(PlayActivity.PLAYSONG_PLAYLIST_NOTIFICATION);
+		intent.putExtra("idSong", songToPlay.getId());
+		context.sendBroadcast(intent);
 	}
 
 	@Override
@@ -119,7 +132,7 @@ public class PlayTimer extends CountDownTimer {
 				return;
 			}
 		}
-		
+
 		songPosition = songPosition % songList.size();
 
 		Log.v("PLAYTIMER", "canzone sucessiva");
@@ -131,11 +144,10 @@ public class PlayTimer extends CountDownTimer {
 					Uri.parse(songToPlay.getPath().toString()));
 			mediaPlayer.prepare();
 			mediaPlayer.seekTo(songToPlay.getBeginTime());
-			
 
 			PlayTimer timer = new PlayTimer(
 					songToPlay.getUserDuration() * 1000, 100, songList,
-					songPosition, receiver, context, numOfIteration,fadeIn);
+					songPosition, receiver, context, numOfIteration, fadeIn);
 			receiver.setCntr_aCounter(timer);
 			receiver.setSongPosition(songPosition);
 			receiver.setSongToPlay(songToPlay);
@@ -149,7 +161,7 @@ public class PlayTimer extends CountDownTimer {
 			e.printStackTrace();
 		} catch (IllegalStateException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();	
+			e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -159,42 +171,47 @@ public class PlayTimer extends CountDownTimer {
 
 	@Override
 	public void onTick(long millisUntilFinished) {
-		
-		
-		if(millisUntilFinished >= (songToPlay.getUserDuration()*1000-fadeIn*1000/2))
-		{
+
+		if (millisUntilFinished >= (songToPlay.getUserDuration() * 1000 - fadeIn * 1000 / 2)) {
 			fadeIn(countDownInterval);
 			Log.v("fade in", "faccio fade in");
 		}
 		mediaPlayer.start();
-		
-		if(millisUntilFinished<=(fadeIn*1000/2))
-		{
+
+		if (millisUntilFinished <= (fadeIn * 1000 / 2)) {
 			fadeOut(countDownInterval);
 			Log.v("fade out", "faccio fade out");
 		}
+		publishProgress(millisUntilFinished);
 
 	}
-	
-	public void fadeOut(float deltaTime)
-	{
-	    mediaPlayer.setVolume(volume, volume);
-	    if(volume-deltaVolume<0)
-	    	volume=0.0f;
-	    else
-	    	volume -= deltaVolume;
-	    Log.v("FADE OUT",Float.toString(volume));
+
+	public void fadeOut(float deltaTime) {
+		mediaPlayer.setVolume(volume, volume);
+		if (volume - deltaVolume < 0)
+			volume = 0.0f;
+		else
+			volume -= deltaVolume;
+		Log.v("FADE OUT", Float.toString(volume));
 
 	}
-	public void fadeIn(float deltaTime)
-	{
-	    mediaPlayer.setVolume(volume, volume);
-	    if(volume+deltaVolume>1)
-	    	volume=1.0f;
-	    else
-	    	volume += deltaVolume;
-	    Log.v("FADE IN", Float.toString(volume));
 
+	public void fadeIn(float deltaTime) {
+		mediaPlayer.setVolume(volume, volume);
+		if (volume + deltaVolume > 1)
+			volume = 1.0f;
+		else
+			volume += deltaVolume;
+		Log.v("FADE IN", Float.toString(volume));
+
+	}
+
+	public void publishProgress(long millisUntilFinished) {
+		int progress = (int) (100 * (1 - ((float) millisUntilFinished / (songToPlay
+				.getUserDuration() * 1000))));
+		Intent i = new Intent(PlayActivity.PROGRESS_PLAYLIST_NOTIFICATION);
+		i.putExtra("progress", progress);
+		context.sendBroadcast(i);
 	}
 
 }

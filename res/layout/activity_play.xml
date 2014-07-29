@@ -8,13 +8,13 @@
     tools:ignore="MergeRootFrame" >
 
     <TextView
-        android:id="@+id/textView1"
+        android:id="@+id/tvRunninPlaylistName"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:layout_height="wrap_content" />
 
-    <SeekBar
-        android:id="@+id/seekBar1"
+    <ProgressBar
+        android:id="@+id/pbPlaySong"
+        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
