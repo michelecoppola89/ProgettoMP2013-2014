@@ -37,7 +37,7 @@ public class SongListToPlayAdapter extends ArrayAdapter<Song> {
 			String artistName = rowSong.getArtist();
 			
 			TextView tvTitlePlay = (TextView) rowView
-					.findViewById(R.id.tvTitlePlay);
+					.findViewById(R.id.tvTitlePlaySong);
 			TextView tvArtistPlay = (TextView) rowView
 					.findViewById(R.id.tvArtistPlay);
 			ImageView ivPlayingSong = (ImageView) rowView.findViewById(R.id.ivPlayingSongImg);

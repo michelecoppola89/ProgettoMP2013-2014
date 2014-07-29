@@ -1,11 +1,16 @@
 package it.lma5.incorporesound;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.app.ActionBar;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,6 +36,7 @@ public class PlayActivity extends Activity implements OnClickListener {
 	private Button btForwardSong;
 	private Button btBackwardSong;
 	private TextView tvRunningPlaylistName;
+	private TextView tvRandomMode;
 	private ProgressBar pbPlaySong;
 	private SongListToPlayAdapter adapter;
 	private ListView lvPlaySongList;
@@ -62,6 +68,7 @@ public class PlayActivity extends Activity implements OnClickListener {
 		btForwardSong.setOnClickListener(this);
 		lvPlaySongList = (ListView) findViewById(R.id.lvPlaySongList);
 		tvRunningPlaylistName = (TextView) findViewById(R.id.tvRunninPlaylistName);
+		tvRandomMode = (TextView) findViewById(R.id.tvRandomMode);
 		pbPlaySong = (ProgressBar) findViewById(R.id.pbPlaySong);
 		pbPlaySong.setProgress(0);
 		pbPlaySong.setMax(100);
@@ -71,22 +78,26 @@ public class PlayActivity extends Activity implements OnClickListener {
 
 		playlist = helper.getPlaylistFromId(playlistName);
 		tvRunningPlaylistName.setText(playlist.getName());
-
+		if (playlist.is_random())
+			tvRandomMode.setText("Random Mode");
+		else
+			tvRandomMode.setText("Straight Mode");
 		Log.v("PlayActivity", playlistName);
 
 		if (playlist == null)
 			Log.v("PlayActivity", "ERR");
-
-		serviceIntent = new Intent(getApplicationContext(), MusicService.class);
-		serviceIntent.putExtra("PL_ID", playlistName);
-		startService(serviceIntent);
-
 		
 		adapter = new SongListToPlayAdapter(this,
 				R.layout.song_list_play_row_layout, playlist.getSongList());
 		lvPlaySongList.setAdapter(adapter);
 		
-		receiver = new PlaylistActivityReceiver(this,adapter);
+		checkSongs();
+
+		serviceIntent = new Intent(getApplicationContext(), MusicService.class);
+		serviceIntent.putExtra("PL_ID", playlistName);
+		startService(serviceIntent);
+
+		receiver = new PlaylistActivityReceiver(this, adapter);
 
 	}
 
@@ -183,6 +194,45 @@ public class PlayActivity extends Activity implements OnClickListener {
 		intentFilter.addAction(PLAYSONG_PLAYLIST_NOTIFICATION);
 		registerReceiver(receiver, intentFilter);
 
+	}
+	
+	public void checkSongs(){
+		MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+		ArrayList<Integer> missingSongPosition = new ArrayList<Integer>();
+		ArrayList<Song> toDelete = new ArrayList<Song>();
+
+		for (int i = 0; i < playlist.getSongList().size(); i++) {
+			Song temp = playlist.getSongList().get(i);
+			try {
+				retriever.setDataSource(this, temp.getPath());
+			} catch (IllegalArgumentException e) {
+				missingSongPosition.add(i);
+				toDelete.add(temp);
+			}
+		}
+
+		for (int i = missingSongPosition.size() - 1; i >= 0; i--) {
+			adapter.remove(playlist.getSongList().get(missingSongPosition.get(i)));
+		}
+
+		if (missingSongPosition.size() > 0) {
+
+			DbTaskDeleteSongs dbTaskDeleteSongs = new DbTaskDeleteSongs(helper);
+			dbTaskDeleteSongs.execute(toDelete);
+
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage("There are songs removed from device")
+					.setCancelable(false)
+					.setPositiveButton("OK",
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int id) {
+
+								}
+							});
+			AlertDialog alert = builder.create();
+			alert.show();
+		}
 	}
 
 }

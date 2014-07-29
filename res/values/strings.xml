@@ -56,4 +56,6 @@
 
     <string name="sForwardTemp">I ></string>
 
+    <string name="tvPlayListLabel">Playlist name: </string>
+
 </resources>
