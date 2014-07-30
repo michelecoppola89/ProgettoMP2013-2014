@@ -151,14 +151,7 @@ public class MusicServiceReceiver extends BroadcastReceiver {
 			}
 
 		}
-		else if(intent.getAction()
-				.equals(MusicService.CLOSE_SERVICE_NOTIFICATION)){
-			
-			cntr_aCounter.cancel();
-			context.stopService(PlayActivity.getServiceIntent());
-			// chiudere anche l'activity PlayActivity
-			
-		}
+		
 	}
 
 	public CountDownTimer getCntr_aCounter() {

@@ -28,14 +28,13 @@ public class MusicService extends Service {
 	public static String PAUSE_NOTIFICATION = "it.lma5.incorporesound.pause";
 	public static String FORWARD_NOTIFICATION = "it.lma5.incorporesound.forward";
 	public static String BACKWARD_NOTIFICATION = "it.lma5.incorporesound.backward";
-	public static String CLOSE_SERVICE_NOTIFICATION = "it.lma5.incorporesound.closeService";
+	
 	private static Integer NUMBER_OF_SHUFFLES = 20;
-	private NotificationManager notificationManager;
 	private InCorporeSoundHelper helper;
 	private Playlist playlist;
 	private static MediaPlayer mediaPlayer;
 	private MusicServiceReceiver musicServiceReceiver;
-	private Notification notification;
+	
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
@@ -56,7 +55,6 @@ public class MusicService extends Service {
 		intentFilter.addAction(PLAY_NOTIFICATION);
 		intentFilter.addAction(STOP_NOTIFICATION);
 		intentFilter.addAction(PAUSE_NOTIFICATION);
-		intentFilter.addAction(CLOSE_SERVICE_NOTIFICATION);
 		registerReceiver(musicServiceReceiver, intentFilter);
 		musicServiceReceiver.setSongPosition(0);
 		musicServiceReceiver.setToPlay(playlist.getSongList());
@@ -76,8 +74,7 @@ public class MusicService extends Service {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		initilizeNotification();
+	
 
 		return Service.START_STICKY_COMPATIBILITY;
 	}
@@ -114,7 +111,6 @@ public class MusicService extends Service {
 		mediaPlayer.stop();
 		mediaPlayer.release();
 		unregisterReceiver(musicServiceReceiver);
-		notificationManager.cancel(0);
 
 	}
 
@@ -132,33 +128,6 @@ public class MusicService extends Service {
 		MusicService.mediaPlayer = mediaPlayer;
 	}
 
-	public void initilizeNotification() {
-		// prepare intent which is triggered if the
-		// notification is selected
-
-		Intent intent = new Intent(this, PlayActivity.class);
-		PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
-		
-		Intent iStop = new Intent(CLOSE_SERVICE_NOTIFICATION);
-		PendingIntent pStop = PendingIntent.getBroadcast(getApplicationContext(), 0, iStop, 0);
-
-		// Create remote view and set bigContentView.
-		RemoteViews expandedView = new RemoteViews(this.getPackageName(),
-				R.layout.notification_layout);
-
-		// build notification
-		// the addAction re-use the same intent to keep the example short
-
-		notification = new Notification.Builder(this).setContentTitle("PROVA")
-				.setContentText("Subject").setSmallIcon(R.drawable.ic_launcher)
-				.setContentIntent(pIntent).setAutoCancel(false)
-				.setContent(expandedView).setDeleteIntent(pStop).build();
-		notification.bigContentView = expandedView;
-		
-
-		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-		notificationManager.notify(0, notification);
-
-	}
+	
 
 }

@@ -32,7 +32,7 @@ import android.os.Build;
 
 public class PlayActivity extends Activity implements OnClickListener {
 
-	private static Intent serviceIntent;
+	private Intent serviceIntent;
 	private InCorporeSoundHelper helper;
 	private Playlist playlist;
 	private Button btPlaySong;
@@ -45,11 +45,12 @@ public class PlayActivity extends Activity implements OnClickListener {
 	private ProgressBar pbPlaySong;
 	private SongListToPlayAdapter adapter;
 	private ListView lvPlaySongList;
-	Notification notification;
+	private Notification notification;
+	private NotificationManager notificationManager;
 	public static String STOP_PLAYLIST_NOTIFICATION = "it.lma5.incorporesound.PlayActivity.stopPlaylistNotification";
 	public static String PROGRESS_PLAYLIST_NOTIFICATION = "it.lma5.incorporesound.PlayActivity.progressPlaylistNotification";
 	public static String PLAYSONG_PLAYLIST_NOTIFICATION = "it.lma5.incorporesound.PlayActivity.playSongPlaylistNotification";
-
+	public static String CLOSE_SERVICE_NOTIFICATION = "it.lma5.incorporesound.closeService";
 	private PlaylistActivityReceiver receiver;
 
 	@Override
@@ -185,13 +186,8 @@ public class PlayActivity extends Activity implements OnClickListener {
 
 		}
 	}
+	
 
-	@Override
-	protected void onPause() {
-
-		super.onPause();
-		unregisterReceiver(receiver);
-	}
 
 	@Override
 	protected void onResume() {
@@ -201,6 +197,7 @@ public class PlayActivity extends Activity implements OnClickListener {
 		intentFilter.addAction(STOP_PLAYLIST_NOTIFICATION);
 		intentFilter.addAction(PROGRESS_PLAYLIST_NOTIFICATION);
 		intentFilter.addAction(PLAYSONG_PLAYLIST_NOTIFICATION);
+		intentFilter.addAction(CLOSE_SERVICE_NOTIFICATION);
 		registerReceiver(receiver, intentFilter);
 
 	}
@@ -245,12 +242,41 @@ public class PlayActivity extends Activity implements OnClickListener {
 		}
 	}
 
+
+
+	@Override
+	protected void onDestroy() {
+//		NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//
+//		notificationManager.notify(0, notification);
+		super.onDestroy();
+		unregisterReceiver(receiver);
+		
+	}
+
+	public Intent getServiceIntent() {
+		return serviceIntent;
+	}
+	
+	
+	
+	public NotificationManager getNotificationManager() {
+		return notificationManager;
+	}
+
+	public void setNotificationManager(NotificationManager notificationManager) {
+		this.notificationManager = notificationManager;
+	}
+
 	public void initilizeNotification() {
 		// prepare intent which is triggered if the
 		// notification is selected
 
-		Intent intent = new Intent(this, TempActivity.class);
+		Intent intent = new Intent(this, PlayActivity.class);
 		PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
+		
+		Intent iStop = new Intent(CLOSE_SERVICE_NOTIFICATION);
+		PendingIntent pStop = PendingIntent.getBroadcast(getApplicationContext(), 0, iStop, 0);
 
 		// Create remote view and set bigContentView.
 		RemoteViews expandedView = new RemoteViews(this.getPackageName(),
@@ -259,29 +285,16 @@ public class PlayActivity extends Activity implements OnClickListener {
 		// build notification
 		// the addAction re-use the same intent to keep the example short
 
-		notification = new Notification.Builder(this)
-				.setContentTitle("PROVA")
+		notification = new Notification.Builder(this).setContentTitle("PROVA")
 				.setContentText("Subject").setSmallIcon(R.drawable.ic_launcher)
-				.setContentIntent(pIntent).setAutoCancel(true)
-				.setContent(expandedView).build();
+				.setContentIntent(pIntent).setAutoCancel(false)
+				.setContent(expandedView).setDeleteIntent(pStop).build();
+		notification.bigContentView = expandedView;
 		
-		 notification.bigContentView = expandedView;
-	}
 
-	@Override
-	protected void onDestroy() {
-//		NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-//
-//		notificationManager.notify(0, notification);
-		super.onDestroy();
-	}
+		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+		notificationManager.notify(0, notification);
 
-	public static Intent getServiceIntent() {
-		return serviceIntent;
-	}
-
-	public static void setServiceIntent(Intent serviceIntent) {
-		PlayActivity.serviceIntent = serviceIntent;
 	}
 	
 	
