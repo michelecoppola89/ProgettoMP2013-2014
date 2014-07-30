@@ -79,6 +79,12 @@ public class PlayTimer extends CountDownTimer {
 		}
 		mediaPlayer.seekTo(songToPlay.getBeginTime());
 
+		// change artist and title in notification
+		Intent i1 = new Intent(NotificationReceiver.NOTIFICATION_PLAY);
+		i1.putExtra("artist", songToPlay.getArtist());
+		i1.putExtra("title", songToPlay.getName());
+		context.sendBroadcast(i1);
+
 	}
 
 	// used when a song starts after pause
@@ -113,6 +119,12 @@ public class PlayTimer extends CountDownTimer {
 		Intent intent = new Intent(PlayActivity.PLAYSONG_PLAYLIST_NOTIFICATION);
 		intent.putExtra("idSong", songToPlay.getId());
 		context.sendBroadcast(intent);
+
+		// change artist and title in notification
+		Intent i1 = new Intent(NotificationReceiver.NOTIFICATION_PLAY);
+		i1.putExtra("artist", songToPlay.getArtist());
+		i1.putExtra("title", songToPlay.getName());
+		context.sendBroadcast(i1);
 	}
 
 	@Override

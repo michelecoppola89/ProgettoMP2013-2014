@@ -57,8 +57,10 @@ public class MusicServiceReceiver extends BroadcastReceiver {
 					cntr_aCounter.start();
 				}
 				
-				Intent intentNot = new Intent(NotificationReceiver.NOTIFICATION_PLAY);
-				context.sendBroadcast(intentNot);
+//				Intent intentNot = new Intent(NotificationReceiver.NOTIFICATION_PLAY);
+//				intentNot.putExtra("artist", songToPlay.getArtist());
+//				intentNot.putExtra("title", songToPlay.getName());
+//				context.sendBroadcast(intentNot);
 
 			} catch (IllegalArgumentException e) {
 				// TODO Auto-generated catch block
@@ -86,6 +88,8 @@ public class MusicServiceReceiver extends BroadcastReceiver {
 			timeOfLastPause = mediaPlayer.getCurrentPosition();
 			
 			Intent intentNot = new Intent(NotificationReceiver.NOTIFICATION_PAUSE);
+			intentNot.putExtra("artist", songToPlay.getArtist());
+			intentNot.putExtra("title", songToPlay.getName());
 			context.sendBroadcast(intentNot);
 			Log.v("ENTRATO IN PAUSA", timeOfLastPause.toString());
 
@@ -107,6 +111,12 @@ public class MusicServiceReceiver extends BroadcastReceiver {
 						songToPlay.getUserDuration() * 1000, 100, toPlay,
 						songPosition, this, context, numOfIteration,fadeIn);
 				cntr_aCounter.start();
+				
+				// change artist and title in notification
+//				Intent i1=new Intent(NotificationReceiver.NOTIFICATION_CHANGESONG);
+//				i1.putExtra("artist", songToPlay.getArtist());
+//				i1.putExtra("title", songToPlay.getName());
+//				context.sendBroadcast(i1);
 
 			} catch (IllegalArgumentException e) {
 				// TODO Auto-generated catch block
@@ -141,6 +151,12 @@ public class MusicServiceReceiver extends BroadcastReceiver {
 						songToPlay.getUserDuration() * 1000, 100, toPlay,
 						songPosition, this, context, numOfIteration,fadeIn);
 				cntr_aCounter.start();
+				
+//				// change artist and title in notification
+//				Intent i1=new Intent(NotificationReceiver.NOTIFICATION_CHANGESONG);
+//				i1.putExtra("artist", songToPlay.getArtist());
+//				i1.putExtra("title", songToPlay.getName());
+//				context.sendBroadcast(i1);
 
 			} catch (IllegalArgumentException e) {
 				// TODO Auto-generated catch block
