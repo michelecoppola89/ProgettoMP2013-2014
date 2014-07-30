@@ -16,6 +16,7 @@ import android.content.IntentFilter;
 import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
+import android.transition.Visibility;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -28,6 +29,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RemoteViews;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.os.Build;
 
 public class PlayActivity extends Activity implements OnClickListener {
@@ -52,6 +54,7 @@ public class PlayActivity extends Activity implements OnClickListener {
 	public static String PLAYSONG_PLAYLIST_NOTIFICATION = "it.lma5.incorporesound.PlayActivity.playSongPlaylistNotification";
 	public static String CLOSE_SERVICE_NOTIFICATION = "it.lma5.incorporesound.closeService";
 	private PlaylistActivityReceiver receiver;
+	private NotificationReceiver notificationReceiver;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -186,8 +189,18 @@ public class PlayActivity extends Activity implements OnClickListener {
 
 		}
 	}
-	
 
+	@Override
+	public void onBackPressed() {
+		moveTaskToBack(true);
+		// super.onBackPressed();
+		// Intent i = new Intent(MusicService.STOP_NOTIFICATION);
+		// sendBroadcast(i);
+		// stopService(serviceIntent);
+		// notificationManager.cancel(0);
+		// finish();
+
+	}
 
 	@Override
 	protected void onResume() {
@@ -199,6 +212,11 @@ public class PlayActivity extends Activity implements OnClickListener {
 		intentFilter.addAction(PLAYSONG_PLAYLIST_NOTIFICATION);
 		intentFilter.addAction(CLOSE_SERVICE_NOTIFICATION);
 		registerReceiver(receiver, intentFilter);
+		
+		IntentFilter notificationIntentF = new IntentFilter();
+		notificationIntentF.addAction(NotificationReceiver.NOTIFICATION_PAUSE);
+		notificationIntentF.addAction(NotificationReceiver.NOTIFICATION_PLAY);
+		registerReceiver(notificationReceiver, notificationIntentF);
 
 	}
 
@@ -242,30 +260,71 @@ public class PlayActivity extends Activity implements OnClickListener {
 		}
 	}
 
-
-
 	@Override
 	protected void onDestroy() {
-//		NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-//
-//		notificationManager.notify(0, notification);
+
 		super.onDestroy();
 		unregisterReceiver(receiver);
-		
+		unregisterReceiver(notificationReceiver);
+		notificationManager.cancel(0);
+		stopService(serviceIntent);
+		Log.v("CLOSE PLAY ACTIVITY", "destroy()");
+
 	}
 
 	public Intent getServiceIntent() {
 		return serviceIntent;
 	}
-	
-	
-	
+
 	public NotificationManager getNotificationManager() {
 		return notificationManager;
 	}
 
 	public void setNotificationManager(NotificationManager notificationManager) {
 		this.notificationManager = notificationManager;
+	}
+	
+
+	public Playlist getPlaylist() {
+		return playlist;
+	}
+
+	public void setPlaylist(Playlist playlist) {
+		this.playlist = playlist;
+	}
+	
+	
+
+	public Button getBtPlaySong() {
+		return btPlaySong;
+	}
+
+	public void setBtPlaySong(Button btPlaySong) {
+		this.btPlaySong = btPlaySong;
+	}
+
+	public Button getBtPauseSong() {
+		return btPauseSong;
+	}
+
+	public void setBtPauseSong(Button btPauseSong) {
+		this.btPauseSong = btPauseSong;
+	}
+
+	public Button getBtForwardSong() {
+		return btForwardSong;
+	}
+
+	public void setBtForwardSong(Button btForwardSong) {
+		this.btForwardSong = btForwardSong;
+	}
+
+	public Button getBtBackwardSong() {
+		return btBackwardSong;
+	}
+
+	public void setBtBackwardSong(Button btBackwardSong) {
+		this.btBackwardSong = btBackwardSong;
 	}
 
 	public void initilizeNotification() {
@@ -274,14 +333,43 @@ public class PlayActivity extends Activity implements OnClickListener {
 
 		Intent intent = new Intent(this, PlayActivity.class);
 		PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
-		
+
 		Intent iStop = new Intent(CLOSE_SERVICE_NOTIFICATION);
-		PendingIntent pStop = PendingIntent.getBroadcast(getApplicationContext(), 0, iStop, 0);
+		PendingIntent pStop = PendingIntent.getBroadcast(
+				getApplicationContext(), 0, iStop, 0);
+
+		Intent iForward = new Intent(MusicService.FORWARD_NOTIFICATION);
+		PendingIntent pForward = PendingIntent.getBroadcast(
+				getApplicationContext(), 0, iForward, 0);
+
+		Intent iBackward = new Intent(MusicService.BACKWARD_NOTIFICATION);
+		PendingIntent pBackward = PendingIntent.getBroadcast(
+				getApplicationContext(), 0, iBackward, 0);
+		
+		Intent iPause = new Intent(MusicService.PAUSE_NOTIFICATION);
+		PendingIntent pPause = PendingIntent.getBroadcast(getApplicationContext(), 0, iPause, 0);
+		
+		Intent iPlay = new Intent(MusicService.PLAY_NOTIFICATION);
+		PendingIntent pPlay = PendingIntent.getBroadcast(getApplicationContext(), 0, iPlay, 0);
 
 		// Create remote view and set bigContentView.
 		RemoteViews expandedView = new RemoteViews(this.getPackageName(),
 				R.layout.notification_layout);
 
+		expandedView.setOnClickPendingIntent(R.id.btNotificationForward,
+				pForward);
+		expandedView.setOnClickPendingIntent(R.id.btNotificationBackward,
+				pBackward);
+		expandedView.setOnClickPendingIntent(R.id.btNotificationpause, pPause);
+		expandedView.setOnClickPendingIntent(R.id.btNotificationPlay, pPlay);
+		
+		expandedView.setTextViewText(R.id.tvNotificationPlaylistName,
+				playlist.getName());
+		
+		expandedView.setViewVisibility(R.id.btNotificationPlay, View.GONE);
+		
+		
+		
 		// build notification
 		// the addAction re-use the same intent to keep the example short
 
@@ -291,12 +379,11 @@ public class PlayActivity extends Activity implements OnClickListener {
 				.setContent(expandedView).setDeleteIntent(pStop).build();
 		notification.bigContentView = expandedView;
 		
+		notificationReceiver = new NotificationReceiver(this);
 
 		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		notificationManager.notify(0, notification);
 
 	}
-	
-	
 
 }

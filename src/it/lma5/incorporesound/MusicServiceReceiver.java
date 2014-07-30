@@ -56,6 +56,9 @@ public class MusicServiceReceiver extends BroadcastReceiver {
 							mediaPlayer, numOfIteration,fadeIn);
 					cntr_aCounter.start();
 				}
+				
+				Intent intentNot = new Intent(NotificationReceiver.NOTIFICATION_PLAY);
+				context.sendBroadcast(intentNot);
 
 			} catch (IllegalArgumentException e) {
 				// TODO Auto-generated catch block
@@ -81,6 +84,9 @@ public class MusicServiceReceiver extends BroadcastReceiver {
 			cntr_aCounter.cancel();
 			mediaPlayer.pause();
 			timeOfLastPause = mediaPlayer.getCurrentPosition();
+			
+			Intent intentNot = new Intent(NotificationReceiver.NOTIFICATION_PAUSE);
+			context.sendBroadcast(intentNot);
 			Log.v("ENTRATO IN PAUSA", timeOfLastPause.toString());
 
 		} else if (intent.getAction().equals(MusicService.FORWARD_NOTIFICATION)) {

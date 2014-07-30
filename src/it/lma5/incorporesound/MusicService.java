@@ -113,6 +113,7 @@ public class MusicService extends Service {
 		unregisterReceiver(musicServiceReceiver);
 
 	}
+	
 
 	@Override
 	public IBinder onBind(Intent arg0) {
