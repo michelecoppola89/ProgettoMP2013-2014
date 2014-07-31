@@ -4,7 +4,7 @@
     <uses-sdk android:minSdkVersion="16" android:targetSdkVersion="19"/>
     <uses-permission android:maxSdkVersion="18" android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <application android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/myluncher"
         android:label="@string/app_name" android:theme="@style/AppTheme">
         <activity android:label="@string/app_name"
             android:name="it.lma5.incorporesound.Activities.MainActivity"
