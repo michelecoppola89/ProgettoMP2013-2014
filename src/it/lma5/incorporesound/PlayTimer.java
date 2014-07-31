@@ -141,6 +141,8 @@ public class PlayTimer extends CountDownTimer {
 				mediaPlayer.release();
 				Intent i = new Intent(PlayActivity.STOP_PLAYLIST_NOTIFICATION);
 				context.sendBroadcast(i);
+				Intent i2=new Intent(NotificationReceiver.NOTIFICATION_PAUSE);
+				context.sendBroadcast(i2);
 				return;
 			}
 		}
