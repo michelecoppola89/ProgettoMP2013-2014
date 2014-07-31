@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -157,7 +156,6 @@ public class SongListAdapter extends ArrayAdapter<Song> {
 						int arg2, long arg3) {
 
 					String beginning = spSongStart.getSelectedItem().toString();
-					Log.v("PROVA", spSongStart.getSelectedItem().toString());
 					Song temp = list.get((Integer) arg0.getTag());
 					if (beginning.equals("random")) {
 						Integer interval = temp.getDuration()

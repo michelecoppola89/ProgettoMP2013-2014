@@ -9,7 +9,6 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RemoteViews;
@@ -125,7 +124,6 @@ public class NotificationReceiver extends BroadcastReceiver {
 			btForwardSong.setEnabled(false);
 			btPauseSong.setEnabled(false);
 			btPlaySong.setEnabled(true);
-			Log.v("NOTIFICATION RECEIVER", "onReceive()");
 
 			Intent intentAct = new Intent(playActivity, PlayActivity.class);
 			PendingIntent pIntentAct = PendingIntent.getActivity(playActivity,

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">InCorporeSound</string>
+    <string name="hello_world">Ciao mondo!</string>
+    <string name="action_settings">Impostazioni</string>
+    <string name="tvAddPlayList">Aggiungi playlist</string>
+    <string name="sPlus">+</string>
+    <string name="play">Play</string>
+    <string name="change">Cambia</string>
+    <string name="delete">Elimina</string>
+    <string name="title_activity_create_playlist">InCorporEdit</string>
+    <string name="sInsertPlayListName">Inserisci nome playlist</string>
+    <string name="btAddSong">+</string>
+    <string name="sAddSong">Aggiungi nuova canzone</string>
+    <string name="sRandom">Random</string>
+    <string name="sStraight">In ordine</string>
+    <string name="sOneTime">Una volta</string>
+    <string name="sRepeated">Ripetuto</string>
+    <string name="sNewPlaylist">Stretching Playlist</string>
+    <string name="sExampleRepetitions">2,3,4,&#8230;</string>
+    <string name="sRepetitionNum">Numero di ripetizioni</string>
+    <string name="sLoop">Loop</string>
+    <string name="minus">-</string>
+    <string name="sFadeIn">Dissolvenza(sec)</string>
+    <string name="sStart">Start</string>
+    <string name="sDuration">Durata</string>
+    <string name="title_activity_play">InCorporePlay</string>
+    <string name="sPlayTemp">></string>
+    <string name="sStopTemp">O</string>
+    <string name="sPauseTemp">II</string>
+    <string name="sForwardSongTemp">I></string>
+    <string name="sBackwardTemp">&lt; I</string>
+    <string name="sForwardTemp">I ></string>
+    <string name="tvPlayListLabel">Nome playlist: </string>
+    <string name="sErrorMessage">Canzoni rimosse dal dispositivo </string>
+    <string name="sOk">OK</string>
+    <string name="sToastNoSong">Canzoni non inserite</string>
+    <string name="sToastNoTitle">Titolo non inserito</string>
+    <string name="sInsertNumberOfRepetitions">Numero di ripetizioni non inserito</string>
+    <string name="sPlayListNameExist">Nome playlist non esistente</string>
+    <string name="sPlaylistSaved">Playlist salvata</string>
+    <string name="sWrongFormat">Formato non valido</string>
+    <string name="sDurationTooShort">Durata canzone troppo breve</string>
+    <string name="sRandomMode">Modalità random</string>
+    <string name="sStraightMode">Modalità in ordine</string>
+
+    <string-array name="arDurations">
+        <item>15</item>
+        <item>30</item>
+        <item>45</item>
+        <item>60</item>
+    </string-array>
+    <string-array name="arFadeIn">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+    <string-array name="arPlayMode">
+        <item>random</item>
+        <item>dall\'inizio</item>
+    </string-array>
+
+</resources>

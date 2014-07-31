@@ -11,7 +11,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.CountDownTimer;
-import android.util.Log;
 
 /**
  * Receives messages from PlayActivity when button of play, pause, 
@@ -88,7 +87,6 @@ public class MusicServiceReceiver extends BroadcastReceiver {
 			intentNot.putExtra("artist", songToPlay.getArtist());
 			intentNot.putExtra("title", songToPlay.getName());
 			context.sendBroadcast(intentNot);
-			Log.v("ENTRATO IN PAUSA", timeOfLastPause.toString());
 
 		} else if (intent.getAction().equals(MusicService.FORWARD_NOTIFICATION)) {
 
@@ -98,11 +96,8 @@ public class MusicServiceReceiver extends BroadcastReceiver {
 
 			try {
 				songPosition = (songPosition + 1) % toPlay.size();
-				Log.v("FORWARD", "new pos " + songPosition);
 				songToPlay = toPlay.get(songPosition);
 
-				if (songToPlay != null)
-					Log.v("FORWARD", "songToPlay != null" + songPosition);
 
 				cntr_aCounter = new PlayTimer(
 						songToPlay.getUserDuration() * 1000, 100, toPlay,
@@ -131,7 +126,6 @@ public class MusicServiceReceiver extends BroadcastReceiver {
 				songPosition = (songPosition - 1);
 				if (songPosition == -1)
 					songPosition = toPlay.size() - 1;
-				Log.v("BACKWARD", "new pos " + songPosition);
 
 				songToPlay = toPlay.get(songPosition);
 				cntr_aCounter = new PlayTimer(

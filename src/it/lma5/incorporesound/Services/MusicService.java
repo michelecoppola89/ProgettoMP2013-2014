@@ -14,7 +14,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.MediaPlayer;
 import android.os.IBinder;
-import android.util.Log;
 
 /**
  * Service used to play songs.
@@ -43,7 +42,6 @@ public class MusicService extends Service {
 
 		String playlistName = intent.getStringExtra("PL_ID");
 		playlist = helper.getPlaylistFromId(playlistName);
-		Log.v("PLAYLIST NAME", playlistName);
 		mediaPlayer = new MediaPlayer();
 		musicServiceReceiver = new MusicServiceReceiver(mediaPlayer,
 				getApplicationContext());
@@ -91,8 +89,6 @@ public class MusicService extends Service {
 		ArrayList<Song> toPlay;
 
 		toPlay = playlist.getSongList();
-
-		Log.v("SONO IN PLAY", "toPlay" + toPlay.size());
 
 		if (playlist.is_random())
 			Collections.shuffle(toPlay);

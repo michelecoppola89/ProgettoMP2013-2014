@@ -18,7 +18,6 @@ import android.content.Intent;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -100,10 +99,8 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 		helper = new InCorporeSoundHelper(this);
 
 		isUpdated = getIntent().getBooleanExtra("IS_UPDATED", false);
-		Log.v("ERR", "isUpdated" + Boolean.toString(isUpdated));
 
 		if (isUpdated) {
-			Log.v("ERR", "isUpdated" + Boolean.toString(isUpdated));
 			playListToUpdate = getIntent().getStringExtra("PLAYLIST_ID");
 			Playlist tempPlaylist = helper.getPlaylistFromId(playListToUpdate);
 
@@ -165,9 +162,9 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 			dbTaskDeleteSongs.execute(toDelete);
 
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage("There are songs removed from device")
+			builder.setMessage(getString(R.string.sErrorMessage))
 					.setCancelable(false)
-					.setPositiveButton("OK",
+					.setPositiveButton(getString(R.string.sOk),
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
 										int id) {
@@ -199,13 +196,13 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
 			if (songList.isEmpty()) {
-				Toast.makeText(this, "no Song inserted!", Toast.LENGTH_SHORT)
+				Toast.makeText(this,getString(R.string.sToastNoSong), Toast.LENGTH_SHORT)
 						.show();
 				return true;
 			}
 			String playListName = etPlaylistName.getText().toString();
 			if (playListName.isEmpty()) {
-				Toast.makeText(this, "no Playlist title inserted!",
+				Toast.makeText(this, getString(R.string.sToastNoTitle),
 						Toast.LENGTH_SHORT).show();
 				return true;
 			}
@@ -220,7 +217,7 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 			else {
 				String temp = etRepetitionNum.getText().toString();
 				if (temp.isEmpty()) {
-					Toast.makeText(this, "Insert number of repetition!!",
+					Toast.makeText(this, getString(R.string.sInsertNumberOfRepetitions),
 							Toast.LENGTH_SHORT).show();
 					return true;
 				}
@@ -240,7 +237,7 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 
 				if (helper.getPlaylistFromId(playListToInsert.getName()) != null) {
 					Toast.makeText(this,
-							"playlist name inserted already exists",
+							getString(R.string.sPlayListNameExist),
 							Toast.LENGTH_SHORT).show();
 					return true;
 				}
@@ -257,7 +254,7 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 
 					if (helper.getPlaylistFromId(playListName) != null) {
 						Toast.makeText(this,
-								"playlist name inserted already exists",
+								getString(R.string.sPlayListNameExist),
 								Toast.LENGTH_SHORT).show();
 						return true;
 					}
@@ -282,9 +279,9 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 			setResult(RESULT_OK);
 
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage("Playlist saved")
+			builder.setMessage(getString(R.string.sPlaylistSaved))
 					.setCancelable(false)
-					.setPositiveButton("OK",
+					.setPositiveButton(getString(R.string.sOk),
 							new DialogInterface.OnClickListener() {
 								public void onClick(DialogInterface dialog,
 										int id) {
@@ -335,15 +332,13 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 		if (resultCode == RESULT_OK && requestCode == 10) {
 			Uri uriSong;
 			uriSong = data.getData();
-
-			Log.v("PROVA", "URI:" + uriSong.toString());
 			MediaMetadataRetriever retriever = new MediaMetadataRetriever();
 			try {
 				retriever.setDataSource(this, uriSong);
 				String mimetype = retriever
 						.extractMetadata(MediaMetadataRetriever.METADATA_KEY_MIMETYPE);
 				if (!mimetype.contains("audio")) {
-					Toast.makeText(this, "Wrong format", Toast.LENGTH_SHORT)
+					Toast.makeText(this, getString(R.string.sWrongFormat), Toast.LENGTH_SHORT)
 							.show();
 				} else {
 
@@ -358,7 +353,7 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 							.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
 
 					if (duration < 15000) {
-						Toast.makeText(this, "song duration is too short",
+						Toast.makeText(this, getString(R.string.sDurationTooShort),
 								Toast.LENGTH_SHORT).show();
 
 					} else {
@@ -369,7 +364,7 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 
 				}
 			} catch (RuntimeException e) {
-				Toast.makeText(this, "Wrong format", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, getString(R.string.sWrongFormat), Toast.LENGTH_SHORT).show();
 			}
 
 		}

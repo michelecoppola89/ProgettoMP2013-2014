@@ -9,8 +9,8 @@
     <string name="play">Play</string>
     <string name="change">Change</string>
     <string name="delete">Delete</string>
-    <string name="title_activity_create_playlist">CreatePlaylistActivity</string>
-    <string name="sInsertPlayListName">Insert PlayList Name</string>
+    <string name="title_activity_create_playlist">InCorporEdit</string>
+    <string name="sInsertPlayListName">Insert Playlist Name</string>
     <string name="btAddSong">+</string>
     <string name="sAddSong">Add new song</string>
     <string name="sRandom">Random</string>
@@ -18,13 +18,32 @@
     <string name="sOneTime">One time</string>
     <string name="sRepeated">Repeated</string>
     <string name="sNewPlaylist">Stretching Playlist</string>
-    <string name="sExampleRepetitions">2,3,4,...</string>
+    <string name="sExampleRepetitions">2,3,4,&#8230;</string>
     <string name="sRepetitionNum">Number of repetitions</string>
     <string name="sLoop">Loop</string>
     <string name="minus">-</string>
     <string name="sFadeIn">Fade in (sec)</string>
     <string name="sStart">Start</string>
     <string name="sDuration">Duration</string>
+    <string name="title_activity_play">InCorporePlay</string>
+    <string name="sPlayTemp">></string>
+    <string name="sStopTemp">O</string>
+    <string name="sPauseTemp">II</string>
+    <string name="sForwardSongTemp">I></string>
+    <string name="sBackwardTemp">&lt; I</string>
+    <string name="sForwardTemp">I ></string>
+    <string name="tvPlayListLabel">Playlist name: </string>
+    <string name="sErrorMessage">There are songs removed from device </string>
+    <string name="sOk">OK</string>
+    <string name="sToastNoSong">No song inserted</string>
+    <string name="sToastNoTitle">No playlist title inserted</string>
+    <string name="sInsertNumberOfRepetitions">No repetition number inserted</string>
+    <string name="sPlayListNameExist">Playlist name inserted already exists</string>
+    <string name="sPlaylistSaved">Playlist saved</string>
+    <string name="sWrongFormat">Wrong format</string>
+    <string name="sDurationTooShort">Song duration is too short</string>
+    <string name="sRandomMode">Random mode</string>
+    <string name="sStraightMode">Straight mode</string>
 
     <string-array name="arDurations">
         <item>15</item>
@@ -41,21 +60,5 @@
         <item>random</item>
         <item>beginning</item>
     </string-array>
-
-    <string name="title_activity_play">PlayActivity</string>
-
-    <string name="sPlayTemp">></string>
-
-    <string name="sStopTemp">O</string>
-
-    <string name="sPauseTemp">II</string>
-
-    <string name="sForwardSongTemp">I></string>
-
-    <string name="sBackwardTemp">&lt; I</string>
-
-    <string name="sForwardTemp">I ></string>
-
-    <string name="tvPlayListLabel">Playlist name: </string>
 
 </resources>

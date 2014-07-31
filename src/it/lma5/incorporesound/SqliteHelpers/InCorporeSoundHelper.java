@@ -94,7 +94,6 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 
 		} catch (IOException e) {
 			Log.v("IN CORPORE SOUNDS", "IOException in copy");
-			e.printStackTrace();
 		}
 
 	}
@@ -200,7 +199,6 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 
 		try {
 			long ret = db.insert(TABLE_NAME_PLAYLIST, null, values);
-			Log.v("DBERR", Long.toString(ret));
 			if (ret == -1) {
 				return null;
 			}
@@ -212,7 +210,6 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 			}
 
 		} catch (Exception e) {
-			Log.e("DB_ERROR", e.toString());
 			e.printStackTrace();
 		}
 
@@ -394,8 +391,6 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 	 */
 	private Song getSongFromRow(Cursor cursor) {
 
-		Log.v("RICOGNIZIONE ERRORE",
-				Integer.toString(cursor.getColumnIndex(COLNAME_SONG_URI)));
 		Uri uri = Uri.parse(cursor.getString(cursor
 				.getColumnIndex(COLNAME_SONG_URI)));
 

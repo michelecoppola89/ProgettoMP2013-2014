@@ -77,7 +77,6 @@ public class PlayTimer extends CountDownTimer {
 		this.context = context;
 		this.fadeIn = fadeIn;
 		deltaVolume = (countDownInterval / (float) (fadeIn * 1000 / 2));
-		Log.v("DELTA VOLUME", Float.toString(deltaVolume));
 
 		mediaPlayer = new MediaPlayer();
 
@@ -239,7 +238,7 @@ public class PlayTimer extends CountDownTimer {
 
 		if (millisUntilFinished >= (songToPlay.getUserDuration() * 1000 - fadeIn * 1000 / 2)) {
 			fadeIn(countDownInterval);
-			Log.v("fade in", "faccio fade in");
+			Log.v("PLAYTIMER", "fade in");
 		}
 
 		try {
@@ -254,7 +253,7 @@ public class PlayTimer extends CountDownTimer {
 
 		if (millisUntilFinished <= (fadeIn * 1000 / 2)) {
 			fadeOut(countDownInterval);
-			Log.v("fade out", "faccio fade out");
+			Log.v("PLAYTIMER", "faccio fade out");
 		}
 		publishProgress(millisUntilFinished);
 
@@ -279,7 +278,6 @@ public class PlayTimer extends CountDownTimer {
 			volume = 0.0f;
 		else
 			volume -= deltaVolume;
-		Log.v("FADE OUT", Float.toString(volume));
 
 	}
 
@@ -301,7 +299,6 @@ public class PlayTimer extends CountDownTimer {
 			volume = 1.0f;
 		else
 			volume += deltaVolume;
-		Log.v("FADE IN", Float.toString(volume));
 
 	}
 

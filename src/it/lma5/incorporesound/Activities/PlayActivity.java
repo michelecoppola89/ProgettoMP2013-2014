@@ -93,16 +93,12 @@ public class PlayActivity extends Activity implements OnClickListener {
 		pbPlaySong.setMax(100);
 		helper = new InCorporeSoundHelper(this);
 		String playlistName = getIntent().getStringExtra("PLAYLIST_ID");
-		Log.v("PlayActivity!!!!", playlistName);
-
 		playlist = helper.getPlaylistFromId(playlistName);
 		tvRunningPlaylistName.setText(playlist.getName());
 		if (playlist.is_random())
-			tvRandomMode.setText("Random Mode");
+			tvRandomMode.setText(getString(R.string.sRandomMode));
 		else
-			tvRandomMode.setText("Straight Mode");
-		Log.v("PlayActivity", playlistName);
-
+			tvRandomMode.setText(getString(R.string.sStraightMode));
 		if (playlist == null)
 			Log.v("PlayActivity", "ERR");
 
@@ -249,7 +245,7 @@ public class PlayActivity extends Activity implements OnClickListener {
 			dbTaskDeleteSongs.execute(toDelete);
 
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage("There are songs removed from device")
+			builder.setMessage(getString(R.string.sErrorMessage))
 					.setCancelable(false)
 					.setPositiveButton("OK",
 							new DialogInterface.OnClickListener() {
@@ -271,7 +267,6 @@ public class PlayActivity extends Activity implements OnClickListener {
 		unregisterReceiver(notificationReceiver);
 		notificationManager.cancel(0);
 		stopService(serviceIntent);
-		Log.v("CLOSE PLAY ACTIVITY", "destroy()");
 
 	}
 
