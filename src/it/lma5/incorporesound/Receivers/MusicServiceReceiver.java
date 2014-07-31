@@ -1,17 +1,25 @@
-package it.lma5.incorporesound;
+package it.lma5.incorporesound.Receivers;
+
+import it.lma5.incorporesound.Entities.PlayTimer;
+import it.lma5.incorporesound.Entities.Song;
+import it.lma5.incorporesound.Services.MusicService;
 
 import java.io.IOException;
 import java.util.ArrayList;
-
-import android.R.integer;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
-import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
 
+/**
+ * Receives messages from PlayActivity when button of play, pause, 
+ * stop, backward, forward are clicked.
+ * 
+ * @author Andrea Di Lonardo, Luca Fanelli, Michele Coppola
+ *
+ */
 public class MusicServiceReceiver extends BroadcastReceiver {
 
 	private MediaPlayer mediaPlayer;
@@ -34,10 +42,6 @@ public class MusicServiceReceiver extends BroadcastReceiver {
 
 		if (intent.getAction().equals(MusicService.PLAY_NOTIFICATION)) {
 
-			// Integer temp = songToPlay.getLastTimeMillis() - timeOfLastPause;
-			// Log.v("ENTRATO IN PLAY", "rimanenti " + temp.toString() + "da "
-			// + timeOfLastPause);
-
 			try {
 				if (songPosition >= toPlay.size()) {
 					// play from start
@@ -57,22 +61,15 @@ public class MusicServiceReceiver extends BroadcastReceiver {
 					cntr_aCounter.start();
 				}
 				
-//				Intent intentNot = new Intent(NotificationReceiver.NOTIFICATION_PLAY);
-//				intentNot.putExtra("artist", songToPlay.getArtist());
-//				intentNot.putExtra("title", songToPlay.getName());
-//				context.sendBroadcast(intentNot);
+
 
 			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (SecurityException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IllegalStateException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -111,24 +108,14 @@ public class MusicServiceReceiver extends BroadcastReceiver {
 						songToPlay.getUserDuration() * 1000, 100, toPlay,
 						songPosition, this, context, numOfIteration,fadeIn);
 				cntr_aCounter.start();
-				
-				// change artist and title in notification
-//				Intent i1=new Intent(NotificationReceiver.NOTIFICATION_CHANGESONG);
-//				i1.putExtra("artist", songToPlay.getArtist());
-//				i1.putExtra("title", songToPlay.getName());
-//				context.sendBroadcast(i1);
 
 			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (SecurityException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IllegalStateException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -152,23 +139,14 @@ public class MusicServiceReceiver extends BroadcastReceiver {
 						songPosition, this, context, numOfIteration,fadeIn);
 				cntr_aCounter.start();
 				
-//				// change artist and title in notification
-//				Intent i1=new Intent(NotificationReceiver.NOTIFICATION_CHANGESONG);
-//				i1.putExtra("artist", songToPlay.getArtist());
-//				i1.putExtra("title", songToPlay.getName());
-//				context.sendBroadcast(i1);
 
 			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (SecurityException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IllegalStateException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 

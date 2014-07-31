@@ -1,15 +1,16 @@
-package it.lma5.incorporesound;
+package it.lma5.incorporesound.Activities;
 
-import java.io.Serializable;
+import it.lma5.incorporesound.R;
+import it.lma5.incorporesound.Adapters.PlayListAdapter;
+import it.lma5.incorporesound.Entities.Playlist;
+import it.lma5.incorporesound.SqliteHelpers.InCorporeSoundHelper;
 import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
-import android.app.ActionBar;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,10 +18,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
-import android.os.Build;
 
+/**
+ * Main activity of application. 
+ * @author Andrea Di Lonardo, Luca Fanelli, Michele Coppola
+ * 
+ */
 public class MainActivity extends Activity implements OnClickListener {
 
 	private ListView myListView;
@@ -99,12 +103,14 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
+		
 		if (v.getId() == R.id.btAddPlaylist) {
 			Intent intent = new Intent(this, CreatePlaylistActivity.class);
 			intent.putExtra("IS_UPDATED", false);
 			startActivityForResult(intent, 5);
-		} else if (v.getId() == R.id.btChange) {
+		}
+		
+		else if (v.getId() == R.id.btChange) {
 			String plName = v.getTag().toString();
 			Intent intent = new Intent(this, CreatePlaylistActivity.class);
 			intent.putExtra("IS_UPDATED", true);
@@ -112,6 +118,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			startActivityForResult(intent, 5);
 
 		}
+		
 		else if(v.getId() == R.id.btPlay){
 			Intent intent = new Intent(this, PlayActivity.class);
 			Integer plPos = Integer.parseInt(v.getTag().toString());
@@ -123,7 +130,6 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
 
 		if (requestCode == 5) {

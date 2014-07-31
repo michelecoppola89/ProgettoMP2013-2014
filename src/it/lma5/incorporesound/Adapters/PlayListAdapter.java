@@ -1,19 +1,25 @@
-package it.lma5.incorporesound;
+package it.lma5.incorporesound.Adapters;
 
-import java.io.Serializable;
+import it.lma5.incorporesound.R;
+import it.lma5.incorporesound.Activities.MainActivity;
+import it.lma5.incorporesound.AsyncTasks.DbTaskDeletePlaylist;
+import it.lma5.incorporesound.Entities.Playlist;
+import it.lma5.incorporesound.SqliteHelpers.InCorporeSoundHelper;
 import java.util.ArrayList;
-
 import android.content.Context;
-import android.sax.StartElementListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.webkit.WebView.FindListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+/**
+ * Adapter used for list of playlists in MainActivity.
+ * @author Andrea Di Lonardo, Luca Fanelli, Michele Coppola
+ * 
+ */
 public class PlayListAdapter extends ArrayAdapter<Playlist> implements
 		OnClickListener {
 

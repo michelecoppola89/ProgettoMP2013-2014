@@ -1,22 +1,28 @@
-package it.lma5.incorporesound;
+package it.lma5.incorporesound.Activities;
+
+import it.lma5.incorporesound.R;
+import it.lma5.incorporesound.Adapters.SongListToPlayAdapter;
+import it.lma5.incorporesound.AsyncTasks.DbTaskDeleteSongs;
+import it.lma5.incorporesound.Entities.Playlist;
+import it.lma5.incorporesound.Entities.Song;
+import it.lma5.incorporesound.Receivers.NotificationReceiver;
+import it.lma5.incorporesound.Receivers.PlaylistActivityReceiver;
+import it.lma5.incorporesound.Services.MusicService;
+import it.lma5.incorporesound.SqliteHelpers.InCorporeSoundHelper;
 
 import java.util.ArrayList;
 
 import android.app.Activity;
-import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.MediaMetadataRetriever;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
-import android.transition.Visibility;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -29,9 +35,11 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RemoteViews;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.os.Build;
 
+/**
+ * Activity for playing songs of a playlist.
+ * @author Andrea Di Lonardo, Luca Fanelli, Michele Coppola
+ */
 public class PlayActivity extends Activity implements OnClickListener {
 
 	private Intent serviceIntent;
@@ -153,7 +161,6 @@ public class PlayActivity extends Activity implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
 
 		if (v.getId() == R.id.btStopSong) {
 
@@ -172,18 +179,20 @@ public class PlayActivity extends Activity implements OnClickListener {
 			btPauseSong.setEnabled(true);
 			btPlaySong.setEnabled(false);
 			btStopSong.setEnabled(true);
-		} else if (v.getId() == R.id.btPauseSong) {
+		}
+		else if (v.getId() == R.id.btPauseSong) {
 			Intent i = new Intent(MusicService.PAUSE_NOTIFICATION);
 			sendBroadcast(i);
 			btBackwardSong.setEnabled(false);
 			btForwardSong.setEnabled(false);
 			btPauseSong.setEnabled(false);
 			btPlaySong.setEnabled(true);
-		} else if (v.getId() == R.id.btForwardSong) {
+		} 
+		else if (v.getId() == R.id.btForwardSong) {
 			Intent i = new Intent(MusicService.FORWARD_NOTIFICATION);
 			sendBroadcast(i);
-		} else {
-
+		}
+		else {
 			Intent i = new Intent(MusicService.BACKWARD_NOTIFICATION);
 			sendBroadcast(i);
 
@@ -193,13 +202,6 @@ public class PlayActivity extends Activity implements OnClickListener {
 	@Override
 	public void onBackPressed() {
 		moveTaskToBack(true);
-		// super.onBackPressed();
-		// Intent i = new Intent(MusicService.STOP_NOTIFICATION);
-		// sendBroadcast(i);
-		// stopService(serviceIntent);
-		// notificationManager.cancel(0);
-		// finish();
-
 	}
 
 	@Override
@@ -220,6 +222,7 @@ public class PlayActivity extends Activity implements OnClickListener {
 
 	}
 
+	@SuppressWarnings("unchecked")
 	public void checkSongs() {
 		MediaMetadataRetriever retriever = new MediaMetadataRetriever();
 		ArrayList<Integer> missingSongPosition = new ArrayList<Integer>();

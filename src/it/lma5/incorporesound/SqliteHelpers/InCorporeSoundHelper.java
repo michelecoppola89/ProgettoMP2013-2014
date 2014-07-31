@@ -1,30 +1,35 @@
-package it.lma5.incorporesound;
+package it.lma5.incorporesound.SqliteHelpers;
+
+import it.lma5.incorporesound.Entities.Playlist;
+import it.lma5.incorporesound.Entities.Song;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 import android.util.Log;
-import android.widget.Toast;
 
+
+/**
+ * sqlite helper used to save and load application's data.
+ * 
+ * @author Andrea Di Lonardo, Luca Fanelli, Michele Coppola
+ *
+ *
+ * 
+ */
 public class InCorporeSoundHelper extends SQLiteOpenHelper {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+
 	private static final String DBNAME = "InCorporeSounds.sqlite";
 	private static final String TABLE_NAME_PLAYLIST = "playlists";
 	private static final String TABLE_NAME_SONGS = "songs";
@@ -59,6 +64,11 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 
 	}
 
+	/**
+	 * Used to copy database in application folder for the first time
+	 * @param fileNameAsset 
+	 * @param out file object output
+	 */
 	private void copyDbFromAsset(String fileNameAsset, File out) {
 		InputStream myInput;
 		OutputStream myOutput;
@@ -99,6 +109,9 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 
 	}
 
+	/**
+	 * @return all playlists
+	 */
 	public List<Playlist> getAllPlaylists() {
 		ArrayList<Playlist> ret = new ArrayList<Playlist>();
 		String[] columns = { COLNAME_PLAYLIST_NAME, COLNAME_RANDOM,
@@ -118,6 +131,10 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 		return ret;
 	}
 
+	/**
+	 * @param playlistName
+	 * @return playlist selected by id 
+	 */
 	public Playlist getPlaylistFromId(String playlistName) {
 
 		String[] columns = { COLNAME_PLAYLIST_NAME, COLNAME_RANDOM,
@@ -138,6 +155,10 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 
 	}
 
+	/**
+	 * @param cursor
+	 * @return get playlist from cursor
+	 */
 	private Playlist getPlaylistFromRow(Cursor cursor) {
 
 		Integer round = Integer.parseInt(cursor.getString(cursor
@@ -160,6 +181,12 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 
 	}
 
+	/**
+	 * 
+	 * Save playlist in database
+	 * @param playlist
+	 * @return playlist added
+	 */
 	public Playlist addPlaylist(Playlist playlist) {
 
 		ContentValues values = new ContentValues();
@@ -193,6 +220,10 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 
 	}
 
+	/**
+	 * @param playlistId
+	 * @return list of playlist's song
+	 */
 	public ArrayList<Song> getSongsFromPlaylistId(String playlistId) {
 
 		ArrayList<Song> ret = new ArrayList<Song>();
@@ -218,6 +249,10 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 		return ret;
 	}
 
+	/**
+	 * Delete playlist from database
+	 * @param playlistName
+	 */
 	public void deletePlaylist(String playlistName) {
 
 		// remove all playlist's songs
@@ -238,6 +273,11 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 
 	}
 
+	/**
+	 * add song to playlist
+	 * @param song song to add
+	 * @param playlistName 
+	 */
 	public void addSongToPlaylist(Song song, String playlistName) {
 
 		ContentValues songValues = new ContentValues();
@@ -254,6 +294,15 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 		db.insert(TABLE_NAME_SONGS, null, songValues);
 	}
 
+	/** 
+	 * Update playlist
+	 * @param toUpdate playlist to update
+	 * @param playlistName new playlist name; null if name remains the same
+	 * @param round new playlist repetitions number; null if number remains the same
+	 * @param isRandom new random attribute; null if value remains the same
+	 * @param fadeIn new fade-in/fade-out; null if fade-in/fade-out remains the same
+	 * @param songList
+	 */
 	public void updatePlaylist(Playlist toUpdate, String playlistName,
 			Integer round, Boolean isRandom, Integer fadeIn,
 			ArrayList<Song> songList) {
@@ -322,10 +371,6 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 
 		if (playlistName != null) {
 
-			// deletePlaylist(toUpdate.getName());
-			// toUpdate.setName(playlistName);
-			// addPlaylist(toUpdate);
-
 			ContentValues values = new ContentValues();
 			values.put(COLNAME_PLAYLIST_NAME, playlistName);
 
@@ -342,6 +387,11 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 		}
 	}
 
+	/**
+	 * Get song from cursor
+	 * @param cursor
+	 * @return Song object
+	 */
 	private Song getSongFromRow(Cursor cursor) {
 
 		Log.v("RICOGNIZIONE ERRORE",
@@ -367,6 +417,10 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 		return ret;
 	}
 
+	/** 
+	 * delete song by id
+	 * @param id
+	 */
 	public void deleteSong(Integer id) {
 		try {
 			String[] varargs = new String[1];
@@ -377,6 +431,9 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 		}
 	}
 
+	/** delete all playlist's song
+	 * @param playlistName
+	 */
 	public void deleteAllSongsFromPlaylistId(String playlistName) {
 		try {
 			String[] varargs = new String[1];
@@ -387,6 +444,17 @@ public class InCorporeSoundHelper extends SQLiteOpenHelper {
 		}
 	}
 
+	/**
+	 * update song
+	 * 
+	 * @param toUpdate song to update
+	 * @param name new title; null if it remains the same
+	 * @param path new path; null if it remains the same
+	 * @param beginTime new start time; null if it remains the same
+	 * @param userDuration new song playing time; null if it remains the same
+	 * @param duration new song duration; null if it remains the same
+	 * @param artist new artist; null if it remains the same
+	 */
 	public void updateSong(Song toUpdate, String name, Uri path,
 			Integer beginTime, Integer userDuration, Integer duration,
 			String artist) {

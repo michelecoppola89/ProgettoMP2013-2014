@@ -1,20 +1,22 @@
-package it.lma5.incorporesound;
+package it.lma5.incorporesound.Activities;
 
+import it.lma5.incorporesound.R;
+import it.lma5.incorporesound.Adapters.SongListAdapter;
+import it.lma5.incorporesound.AsyncTasks.DbTaskAddPlaylist;
+import it.lma5.incorporesound.AsyncTasks.DbTaskDeleteSongs;
+import it.lma5.incorporesound.AsyncTasks.DbTaskUpdatePlaylist;
+import it.lma5.incorporesound.Entities.Playlist;
+import it.lma5.incorporesound.Entities.Song;
+import it.lma5.incorporesound.SqliteHelpers.InCorporeSoundHelper;
 import java.util.ArrayList;
-import java.util.List;
-
-import android.R.integer;
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.ActionBar;
 import android.app.AlertDialog;
-import android.app.AlertDialog.Builder;
 import android.app.Fragment;
-import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,22 +25,24 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Spinner;
 import android.widget.Toast;
-import android.os.Build;
 
+/**
+ * Activity for creating/updating a new playlist.
+ * 
+ * @author Andrea Di Lonardo, Luca Fanelli, Michele Coppola
+ *
+ */
+@SuppressLint("UseValueOf") 
 public class CreatePlaylistActivity extends Activity implements OnClickListener {
 
 	private Button btAddSong;
-	private Button btSavePlaylist;
 	private EditText etPlaylistName;
 	private EditText etRepetitionNum;
 	private RadioGroup rgOrder;
@@ -55,6 +59,7 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 
 	private InCorporeSoundHelper helper;
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -181,7 +186,6 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.create_playlist, menu);
-		Button btSave = (Button) findViewById(R.id.action_settings);
 
 		return true;
 	}
@@ -205,8 +209,6 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 						Toast.LENGTH_SHORT).show();
 				return true;
 			}
-
-			// helper = new InCorporeSoundHelper(this);
 
 			boolean isRandom;
 			Integer repetition;
@@ -243,7 +245,7 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 					return true;
 				}
 
-				DbTask runner = new DbTask(helper);
+				DbTaskAddPlaylist runner = new DbTaskAddPlaylist(helper);
 				runner.execute(playListToInsert);
 			} else {
 				// update playlist
@@ -324,10 +326,6 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 			intent.setType("audio/*");
 			startActivityForResult(intent, 10);
 		}
-		// else if (v.getId() == R.id.action_settings) {
-		// Toast.makeText(this, "acchiappa 'sto toast!!!!!!!",
-		// Toast.LENGTH_LONG).show();
-		// }
 
 	}
 
@@ -348,7 +346,6 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 					Toast.makeText(this, "Wrong format", Toast.LENGTH_SHORT)
 							.show();
 				} else {
-					// Toast.makeText(this, mimetype, Toast.LENGTH_LONG).show();
 
 					String name = retriever
 							.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
@@ -379,7 +376,6 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 	}
 
 	private void returnToMainActivity() {
-		// TODO Auto-generated method stub
 		finish();
 
 	}

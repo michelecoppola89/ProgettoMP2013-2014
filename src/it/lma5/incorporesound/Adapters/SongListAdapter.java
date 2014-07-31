@@ -1,30 +1,30 @@
-package it.lma5.incorporesound;
+package it.lma5.incorporesound.Adapters;
 
+import it.lma5.incorporesound.R;
+import it.lma5.incorporesound.Entities.Song;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-
-import android.R.integer;
-import android.app.Activity;
 import android.content.Context;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.webkit.WebView.FindListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListAdapter;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemSelectedListener;
 
+/**
+ * Adapter used for list of songs in CreatePlaylistActivity.
+ * 
+ * @author Andrea Di Lonardo, Luca Fanelli, Michele Coppola
+ *
+ */
 public class SongListAdapter extends ArrayAdapter<Song> {
 
 	private ArrayList<Song> list;

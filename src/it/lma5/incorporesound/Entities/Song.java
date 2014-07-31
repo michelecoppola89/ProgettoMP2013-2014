@@ -1,25 +1,38 @@
-package it.lma5.incorporesound;
+package it.lma5.incorporesound.Entities;
 
 import java.io.Serializable;
 
 import android.net.Uri;
 
+/**
+ *  * This class represents song object.
+ *  
+ * @author Andrea Di Lonardo, Luca Fanelli, Michele Coppola
+ *
+
+ */
+
 public class Song implements Serializable{
-	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	private String name;
 	private String artist;
 	private Uri path;
 
 	private Integer beginTime;     //mSec
-	private Integer duration;      //mSEc
+	private Integer duration;      //mSec
 	private Integer userDuration;  //sec
 
 	private Integer id;
 
+	/**
+	 * @param name title of song
+	 * @param path path of song
+	 * @param beginTime starting time
+	 * @param userDuration playing duration of song
+	 * @param duration song duration
+	 * @param artist name of the artist
+	 */
 	public Song(String name, Uri path, Integer beginTime, Integer userDuration,
 			Integer duration, String artist) {
 		if (name == null) {
@@ -103,6 +116,9 @@ public class Song implements Serializable{
 		this.id = id;
 	}
 	
+	/**
+	 * @return song end time in milliseconds
+	 */
 	public Integer getLastTimeMillis() {
 		return beginTime+userDuration*1000;
 	}

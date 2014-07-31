@@ -1,26 +1,26 @@
-package it.lma5.incorporesound;
+package it.lma5.incorporesound.Services;
+
+import it.lma5.incorporesound.Entities.PlayTimer;
+import it.lma5.incorporesound.Entities.Playlist;
+import it.lma5.incorporesound.Entities.Song;
+import it.lma5.incorporesound.Receivers.MusicServiceReceiver;
+import it.lma5.incorporesound.SqliteHelpers.InCorporeSoundHelper;
 
 import java.io.IOException;
-import java.net.URI;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Random;
-
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.MediaPlayer;
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.util.Log;
-import android.widget.RemoteViews;
 
+/**
+ * Service used to play songs.
+ * @author Andrea Di Lonardo, Luca Fanelli, Michele Coppola
+ *
+ */
 public class MusicService extends Service {
 
 	public static String PLAY_NOTIFICATION = "it.lma5.incorporesound.play";
@@ -28,8 +28,7 @@ public class MusicService extends Service {
 	public static String PAUSE_NOTIFICATION = "it.lma5.incorporesound.pause";
 	public static String FORWARD_NOTIFICATION = "it.lma5.incorporesound.forward";
 	public static String BACKWARD_NOTIFICATION = "it.lma5.incorporesound.backward";
-	
-	private static Integer NUMBER_OF_SHUFFLES = 20;
+
 	private InCorporeSoundHelper helper;
 	private Playlist playlist;
 	private static MediaPlayer mediaPlayer;
@@ -79,7 +78,14 @@ public class MusicService extends Service {
 		return Service.START_STICKY_COMPATIBILITY;
 	}
 
-	public void play() throws IllegalArgumentException, SecurityException,
+	/**
+	 * Start playing songs 
+	 * @throws IllegalArgumentException
+	 * @throws SecurityException
+	 * @throws IllegalStateException
+	 * @throws IOException
+	 */
+	private void play() throws IllegalArgumentException, SecurityException,
 			IllegalStateException, IOException {
 
 		ArrayList<Song> toPlay;
@@ -127,8 +133,6 @@ public class MusicService extends Service {
 
 	public static void setMediaPlayer(MediaPlayer mediaPlayer) {
 		MusicService.mediaPlayer = mediaPlayer;
-	}
-
-	
+	}	
 
 }

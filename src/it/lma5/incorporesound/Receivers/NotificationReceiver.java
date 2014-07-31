@@ -1,5 +1,8 @@
-package it.lma5.incorporesound;
+package it.lma5.incorporesound.Receivers;
 
+import it.lma5.incorporesound.R;
+import it.lma5.incorporesound.Activities.PlayActivity;
+import it.lma5.incorporesound.Services.MusicService;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -11,6 +14,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RemoteViews;
 
+/**
+ * Update notification bar when song is stopped or played.
+ * @author Andrea Di Lonardo, Luca Fanelli, Michele Coppola
+ */
 public class NotificationReceiver extends BroadcastReceiver {
 
 	private PlayActivity playActivity;

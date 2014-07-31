@@ -1,18 +1,23 @@
-package it.lma5.incorporesound;
+package it.lma5.incorporesound.Receivers;
 
+import it.lma5.incorporesound.R;
+import it.lma5.incorporesound.Activities.PlayActivity;
+import it.lma5.incorporesound.Adapters.SongListToPlayAdapter;
+import it.lma5.incorporesound.Entities.Song;
+import it.lma5.incorporesound.Services.MusicService;
 import java.util.ArrayList;
-
-import android.app.Activity;
-import android.app.Notification;
-import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.os.storage.StorageManager;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
+/**
+ * Update progress bar, current playing song and PlayActivity when a playlist 
+ * is stopped. 
+ * @author Andrea Di Lonardo, Luca Fanelli, Michele Coppola
+ * 
+ */
 public class PlaylistActivityReceiver extends BroadcastReceiver {
 
 	private PlayActivity playActivity;
@@ -23,7 +28,6 @@ public class PlaylistActivityReceiver extends BroadcastReceiver {
 	private Button btForwardSong;
 	private Button btPauseSong;
 	private ProgressBar pbPlaySong;
-	private NotificationManager notificationManager;
 	private Intent serviceIntent;
 
 	public PlaylistActivityReceiver(PlayActivity playActivity,
@@ -38,7 +42,6 @@ public class PlaylistActivityReceiver extends BroadcastReceiver {
 		btPlaySong = (Button) playActivity.findViewById(R.id.btPlaySong);
 		btStopSong = (Button) playActivity.findViewById(R.id.btStopSong);
 		pbPlaySong = (ProgressBar) playActivity.findViewById(R.id.pbPlaySong);
-		notificationManager = playActivity.getNotificationManager();
 		serviceIntent = playActivity.getServiceIntent();
 	}
 
@@ -81,6 +84,11 @@ public class PlaylistActivityReceiver extends BroadcastReceiver {
 
 	}
 
+	/** 
+	 * @param idSong id of requested song
+	 * @param songList list of songs to play
+	 * @return position of song in songList
+	 */
 	private Integer getPositionBySongId(Integer idSong, ArrayList<Song> songList) {
 
 		Integer ret = 0;

@@ -1,7 +1,8 @@
-package it.lma5.incorporesound;
+package it.lma5.incorporesound.Adapters;
 
+import it.lma5.incorporesound.R;
+import it.lma5.incorporesound.Entities.Song;
 import java.util.ArrayList;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,12 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+/**
+ * Adapter used for list of playing songs in PlayActivity.
+ * 
+ * @author Andrea Di Lonardo, Luca Fanelli, Michele Coppola
+ * 
+ */
 public class SongListToPlayAdapter extends ArrayAdapter<Song> {
 	private ArrayList<Song> list;
 	private Integer positionPlay;

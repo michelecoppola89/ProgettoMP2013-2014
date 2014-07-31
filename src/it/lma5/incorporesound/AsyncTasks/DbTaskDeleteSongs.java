@@ -1,9 +1,18 @@
-package it.lma5.incorporesound;
+package it.lma5.incorporesound.AsyncTasks;
+
+import it.lma5.incorporesound.Entities.Song;
+import it.lma5.incorporesound.SqliteHelpers.InCorporeSoundHelper;
 
 import java.util.ArrayList;
 
 import android.os.AsyncTask;
 
+/**
+ * Task used to delete songs in database.
+ * 
+ * @author Andrea Di Lonardo, Luca Fanelli, Michele Coppola
+ *
+ */
 public class DbTaskDeleteSongs extends AsyncTask<ArrayList<Song>, Integer, ArrayList<Song>> {
 	
 	private InCorporeSoundHelper helper;
@@ -14,7 +23,6 @@ public class DbTaskDeleteSongs extends AsyncTask<ArrayList<Song>, Integer, Array
 
 	@Override
 	protected ArrayList<Song> doInBackground(ArrayList<Song>... params) {
-		// TODO Auto-generated method stub
 		
 		ArrayList<Song> toDelete= params[0];
 		
@@ -22,8 +30,7 @@ public class DbTaskDeleteSongs extends AsyncTask<ArrayList<Song>, Integer, Array
 			
 			helper.deleteSong(toDelete.get(i).getId());
 		}
-		
-		
+			
 		return null;
 	}
 

@@ -1,19 +1,25 @@
-package it.lma5.incorporesound;
+package it.lma5.incorporesound.Entities;
 
+import it.lma5.incorporesound.Activities.PlayActivity;
+import it.lma5.incorporesound.Receivers.MusicServiceReceiver;
+import it.lma5.incorporesound.Receivers.NotificationReceiver;
+import it.lma5.incorporesound.Services.MusicService;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
-
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentSender.SendIntentException;
-import android.content.pm.FeatureInfo;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.CountDownTimer;
 import android.util.Log;
 
+/**
+ * * This class is used to play songs of playlist.
+ * 
+ * @author Andrea Di Lonardo, Luca Fanelli, Michele Coppola
+ * 
+ */
 public class PlayTimer extends CountDownTimer {
 
 	private ArrayList<Song> songList;
@@ -29,7 +35,27 @@ public class PlayTimer extends CountDownTimer {
 	private float deltaVolume;
 	private long countDownInterval;
 
-	// used to start new song
+	/**
+	 * used to start new song
+	 * 
+	 * @param millisInFuture
+	 *            duration of CountDownTimer
+	 * @param countDownInterval
+	 *            update frequency of CountDownTimer
+	 * @param songList
+	 *            list of songs to play
+	 * @param songPosition
+	 *            position of current playing song
+	 * @param receiver
+	 *            Music service receiver
+	 * @param context
+	 * @param numOfIteration
+	 * @param fadeIn
+	 * @throws IllegalArgumentException
+	 * @throws SecurityException
+	 * @throws IllegalStateException
+	 * @throws IOException
+	 */
 	public PlayTimer(long millisInFuture, long countDownInterval,
 			ArrayList<Song> songList, Integer songPosition,
 			MusicServiceReceiver receiver, Context context,
@@ -87,7 +113,29 @@ public class PlayTimer extends CountDownTimer {
 
 	}
 
-	// used when a song starts after pause
+	/**
+	 * used when a song starts after pause
+	 * 
+	 * @param millisInFuture
+	 *            duration of CountDownTimer
+	 * @param countDownInterval
+	 *            update frequency of CountDownTimer
+	 * @param songList
+	 *            list of songs to play
+	 * @param songPosition
+	 *            position of current playing song
+	 * @param receiver
+	 *            Music service receiver
+	 * @param context
+	 * @param player
+	 *            MediaPlayer of playing song
+	 * @param numOfIteration
+	 * @param fadeIn
+	 * @throws IllegalArgumentException
+	 * @throws SecurityException
+	 * @throws IllegalStateException
+	 * @throws IOException
+	 */
 	public PlayTimer(long millisInFuture, long countDownInterval,
 			ArrayList<Song> songList, Integer songPosition,
 			MusicServiceReceiver receiver, Context context, MediaPlayer player,
@@ -130,8 +178,15 @@ public class PlayTimer extends CountDownTimer {
 	@Override
 	public void onFinish() {
 		songPosition++;
-		mediaPlayer.stop();
-		mediaPlayer.reset();
+		try {
+			mediaPlayer.stop();
+			mediaPlayer.reset();
+
+		} catch (IllegalStateException e) {
+			
+			this.cancel();
+			return;
+		}
 
 		if (!isInfinite && songPosition >= songList.size()) {
 			numOfIteration--;
@@ -141,7 +196,7 @@ public class PlayTimer extends CountDownTimer {
 				mediaPlayer.release();
 				Intent i = new Intent(PlayActivity.STOP_PLAYLIST_NOTIFICATION);
 				context.sendBroadcast(i);
-				Intent i2=new Intent(NotificationReceiver.NOTIFICATION_PAUSE);
+				Intent i2 = new Intent(NotificationReceiver.NOTIFICATION_PAUSE);
 				context.sendBroadcast(i2);
 				return;
 			}
@@ -168,16 +223,12 @@ public class PlayTimer extends CountDownTimer {
 			timer.start();
 
 		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -190,7 +241,16 @@ public class PlayTimer extends CountDownTimer {
 			fadeIn(countDownInterval);
 			Log.v("fade in", "faccio fade in");
 		}
-		mediaPlayer.start();
+
+		try {
+			
+			mediaPlayer.start();
+
+		} catch (IllegalStateException e) {
+		
+			this.cancel();
+			return;
+		}
 
 		if (millisUntilFinished <= (fadeIn * 1000 / 2)) {
 			fadeOut(countDownInterval);
@@ -200,8 +260,21 @@ public class PlayTimer extends CountDownTimer {
 
 	}
 
-	public void fadeOut(float deltaTime) {
-		mediaPlayer.setVolume(volume, volume);
+	/**
+	 * Used to add fade-out to song
+	 * 
+	 * @param deltaTime
+	 *            time of fade-out
+	 */
+
+	private void fadeOut(float deltaTime) {
+
+		try {
+			mediaPlayer.setVolume(volume, volume);
+		} catch (IllegalStateException e) {
+			this.cancel();
+			return;
+		}
 		if (volume - deltaVolume < 0)
 			volume = 0.0f;
 		else
@@ -210,8 +283,20 @@ public class PlayTimer extends CountDownTimer {
 
 	}
 
-	public void fadeIn(float deltaTime) {
-		mediaPlayer.setVolume(volume, volume);
+	/**
+	 * Used to add fade-in to song
+	 * 
+	 * @param deltaTime
+	 *            time of fade-in
+	 */
+	private void fadeIn(float deltaTime) {
+		try {
+			mediaPlayer.setVolume(volume, volume);
+		} catch (IllegalStateException e) {
+
+			this.cancel();
+			return;
+		}
 		if (volume + deltaVolume > 1)
 			volume = 1.0f;
 		else
@@ -220,7 +305,13 @@ public class PlayTimer extends CountDownTimer {
 
 	}
 
-	public void publishProgress(long millisUntilFinished) {
+	/**
+	 * publish progress in progress bar of activity
+	 * 
+	 * @param millisUntilFinished
+	 *            milliseconds until song finishes
+	 */
+	private void publishProgress(long millisUntilFinished) {
 		int progress = (int) (100 * (1 - ((float) millisUntilFinished / (songToPlay
 				.getUserDuration() * 1000))));
 		Intent i = new Intent(PlayActivity.PROGRESS_PLAYLIST_NOTIFICATION);
