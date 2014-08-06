@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="it.lma5.incorporesound.Activities.MainActivity"
-    tools:ignore="MergeRootFrame" >
+    tools:ignore="MergeRootFrame" 
+    android:background="#071654">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,19 +16,29 @@
             android:id="@+id/btAddPlaylist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/sPlus" />
+            android:background="@drawable/addplaylist" 
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"/>
 
         <TextView
             android:id="@+id/tvAddPlayList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/tvAddPlayList" />
+            android:text="@string/tvAddPlayList"
+            android:textStyle="bold|italic" 
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/white" />
     </LinearLayout>
 
     <ListView
+        android:paddingTop="20dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
         android:id="@+id/lvPlaylist"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="20dp" >
     </ListView>
 
 </LinearLayout>

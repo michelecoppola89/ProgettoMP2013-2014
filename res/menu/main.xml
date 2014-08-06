@@ -1,6 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="it.lma5.incorporesound.MainActivity" >
+    tools:context="it.lma5.incorporesound.MainActivity" 
+    >
 
   
 </menu>
