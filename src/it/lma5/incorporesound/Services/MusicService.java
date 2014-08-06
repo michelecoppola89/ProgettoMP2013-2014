@@ -5,10 +5,10 @@ import it.lma5.incorporesound.Entities.Playlist;
 import it.lma5.incorporesound.Entities.Song;
 import it.lma5.incorporesound.Receivers.MusicServiceReceiver;
 import it.lma5.incorporesound.SqliteHelpers.InCorporeSoundHelper;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -17,8 +17,9 @@ import android.os.IBinder;
 
 /**
  * Service used to play songs.
+ * 
  * @author Andrea Di Lonardo, Luca Fanelli, Michele Coppola
- *
+ * 
  */
 public class MusicService extends Service {
 
@@ -32,7 +33,6 @@ public class MusicService extends Service {
 	private Playlist playlist;
 	private static MediaPlayer mediaPlayer;
 	private MusicServiceReceiver musicServiceReceiver;
-	
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
@@ -59,25 +59,21 @@ public class MusicService extends Service {
 		try {
 			play();
 		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IllegalStateException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	
 
 		return Service.START_STICKY_COMPATIBILITY;
 	}
 
 	/**
-	 * Start playing songs 
+	 * Start playing songs
+	 * 
 	 * @throws IllegalArgumentException
 	 * @throws SecurityException
 	 * @throws IllegalStateException
@@ -110,16 +106,22 @@ public class MusicService extends Service {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		mediaPlayer.stop();
+
+		try {
+			mediaPlayer.stop();
+		} 
+		catch (IllegalStateException e) {
+			NotificationManager notificationManager = 
+					(NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+			notificationManager.cancel(0);
+		}
 		mediaPlayer.release();
 		unregisterReceiver(musicServiceReceiver);
 
 	}
-	
 
 	@Override
 	public IBinder onBind(Intent arg0) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -129,6 +131,6 @@ public class MusicService extends Service {
 
 	public static void setMediaPlayer(MediaPlayer mediaPlayer) {
 		MusicService.mediaPlayer = mediaPlayer;
-	}	
+	}
 
 }

@@ -44,6 +44,7 @@
     <string name="sDurationTooShort">Song duration is too short</string>
     <string name="sRandomMode">Random mode</string>
     <string name="sStraightMode">Straight mode</string>
+    <string name="sZeroRepetetition">Number of repetition is zero</string>
 
     <string-array name="arDurations">
         <item>15</item>

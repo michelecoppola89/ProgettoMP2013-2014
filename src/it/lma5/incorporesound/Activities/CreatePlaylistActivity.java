@@ -221,6 +221,12 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 							Toast.LENGTH_SHORT).show();
 					return true;
 				}
+				if(temp.equals("0")) {
+					Toast.makeText(this, getString(R.string.sZeroRepetetition),
+							Toast.LENGTH_SHORT).show();
+					return true;
+				}
+					
 				repetition = Integer.parseInt(temp);
 			}
 			int selectedOrder = rgOrder.getCheckedRadioButtonId();

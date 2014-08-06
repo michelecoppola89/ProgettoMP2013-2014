@@ -147,6 +147,7 @@ public final class R {
         public static final int sToastNoSong=0x7f050022;
         public static final int sToastNoTitle=0x7f050023;
         public static final int sWrongFormat=0x7f050027;
+        public static final int sZeroRepetetition=0x7f05002b;
         public static final int title_activity_create_playlist=0x7f050008;
         public static final int title_activity_play=0x7f050018;
         public static final int tvAddPlayList=0x7f050003;

@@ -25,6 +25,7 @@ public class PlayTimer extends CountDownTimer {
 	private ArrayList<Song> songList;
 	private Integer songPosition;
 	private Integer numOfIteration;
+	private Integer startNumOfIteration;
 	private Integer fadeIn;
 	private MediaPlayer mediaPlayer;
 	private Song songToPlay;
@@ -66,6 +67,7 @@ public class PlayTimer extends CountDownTimer {
 		super(millisInFuture, countDownInterval);
 		this.songList = songList;
 		this.numOfIteration = numOfIteration;
+		this.startNumOfIteration = numOfIteration;
 		this.countDownInterval = countDownInterval;
 		volume = 0.0f;
 		if (numOfIteration == 0)
@@ -82,6 +84,7 @@ public class PlayTimer extends CountDownTimer {
 
 		MusicService.setMediaPlayer(mediaPlayer);
 		receiver.setMediaPlayer(mediaPlayer);
+		Log.v("Play timer","song position: "+songPosition);
 		songToPlay = songList.get(songPosition);
 
 		// modify adapter
@@ -89,6 +92,7 @@ public class PlayTimer extends CountDownTimer {
 		intent.putExtra("idSong", songToPlay.getId());
 		context.sendBroadcast(intent);
 
+		Log.v("Play timer","song to play: "+songToPlay.getName());
 		mediaPlayer.setDataSource(context,
 				Uri.parse(songToPlay.getPath().toString()));
 		mediaPlayer.prepare();
@@ -148,6 +152,7 @@ public class PlayTimer extends CountDownTimer {
 		this.receiver = receiver;
 		this.context = context;
 		this.numOfIteration = numOfIteration;
+		this.startNumOfIteration = numOfIteration;
 		this.fadeIn = fadeIn;
 		volume = 1;
 		this.countDownInterval = countDownInterval;
@@ -182,21 +187,26 @@ public class PlayTimer extends CountDownTimer {
 			mediaPlayer.reset();
 
 		} catch (IllegalStateException e) {
-			
+
 			this.cancel();
 			return;
 		}
 
 		if (!isInfinite && songPosition >= songList.size()) {
 			numOfIteration--;
+			receiver.setNumOfIteration(numOfIteration);
 
 			if (numOfIteration == 0) {
+				Log.v("PLAYTIMER","songposition = "+ songPosition);
+				songPosition=songList.size();
 				receiver.setSongPosition(songPosition);
+				receiver.setNumOfIteration(startNumOfIteration);
 				mediaPlayer.release();
 				Intent i = new Intent(PlayActivity.STOP_PLAYLIST_NOTIFICATION);
 				context.sendBroadcast(i);
 				Intent i2 = new Intent(NotificationReceiver.NOTIFICATION_PAUSE);
 				context.sendBroadcast(i2);
+				
 				return;
 			}
 		}
@@ -242,11 +252,11 @@ public class PlayTimer extends CountDownTimer {
 		}
 
 		try {
-			
+
 			mediaPlayer.start();
 
 		} catch (IllegalStateException e) {
-		
+
 			this.cancel();
 			return;
 		}

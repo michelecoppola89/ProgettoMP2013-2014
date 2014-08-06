@@ -44,6 +44,7 @@
     <string name="sDurationTooShort">Durata canzone troppo breve</string>
     <string name="sRandomMode">Modalità random</string>
     <string name="sStraightMode">Modalità in ordine</string>
+    <string name="sZeroRepetetition">Il numero di ripetizioni è zero</string>
 
     <string-array name="arDurations">
         <item>15</item>

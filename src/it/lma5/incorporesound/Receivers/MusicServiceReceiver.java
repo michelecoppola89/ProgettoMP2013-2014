@@ -6,11 +6,13 @@ import it.lma5.incorporesound.Services.MusicService;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.CountDownTimer;
+import android.util.Log;
 
 /**
  * Receives messages from PlayActivity when button of play, pause, 
@@ -40,13 +42,18 @@ public class MusicServiceReceiver extends BroadcastReceiver {
 	public void onReceive(Context context, Intent intent) {
 
 		if (intent.getAction().equals(MusicService.PLAY_NOTIFICATION)) {
-
+			
 			try {
 				if (songPosition >= toPlay.size()) {
 					// play from start
+					Log.v("RECEIVER","songposition = "+ songPosition);
+					Log.v("RECEIVER","num of iteration = "+ numOfIteration);
+					
 					songPosition = 0;
 					songToPlay = toPlay.get(songPosition);
-					cntr_aCounter = new PlayTimer(songToPlay.getBeginTime(),
+					Log.v("RECEIVER","song to play = "+ songToPlay.getName());
+					cntr_aCounter.cancel();
+					cntr_aCounter = new PlayTimer(songToPlay.getUserDuration()*1000,
 							100, toPlay, songPosition, this, context,
 							numOfIteration,fadeIn);
 					cntr_aCounter.start();
