@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="it.lma5.incorporesound.Activities.CreatePlaylistActivity"
-    tools:ignore="MergeRootFrame" >
+    tools:ignore="MergeRootFrame" 
+    android:background="@drawable/backgroundblue">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,7 +16,8 @@
             android:id="@+id/tvInsertPlayListName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/sInsertPlayListName" />
+            android:text="@string/sInsertPlayListName" 
+            android:textColor="@android:color/white"/>
 
         <EditText
             android:id="@+id/etNewPlaylistName"
@@ -36,7 +38,8 @@
             android:id="@+id/tvFadeIn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/sFadeIn" />
+            android:text="@string/sFadeIn" 
+            android:textColor="@android:color/white"/>
 
         <Spinner
             android:id="@+id/spFadeIn"
@@ -56,14 +59,16 @@
             android:id="@+id/rbRandom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/sRandom" />
+            android:text="@string/sRandom" 
+            android:textColor="@android:color/white"/>
 
         <RadioButton
             android:id="@+id/rbStraight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
              android:checked="true"
-            android:text="@string/sStraight" />
+            android:text="@string/sStraight" 
+            android:textColor="@android:color/white"/>
     </RadioGroup>
 
     <RadioGroup
@@ -76,20 +81,23 @@
             android:id="@+id/rbRepeated"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/sRepeated" />
+            android:text="@string/sRepeated" 
+            android:textColor="@android:color/white"/>
 
         <RadioButton
             android:id="@+id/rbOneTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:text="@string/sOneTime" />
+            android:text="@string/sOneTime" 
+            android:textColor="@android:color/white"/>
 
         <RadioButton
             android:id="@+id/rbLoop"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/sLoop" />
+            android:text="@string/sLoop" 
+            android:textColor="@android:color/white"/>
 
     </RadioGroup>
 
@@ -101,7 +109,8 @@
             android:id="@+id/tvRepetitionNum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/sRepetitionNum" />
+            android:text="@string/sRepetitionNum" 
+            android:textColor="@android:color/white"/>
 
         <EditText
             android:id="@+id/etRepetitionNum"
@@ -110,7 +119,8 @@
             android:ems="10"
             android:enabled="false"
             android:hint="@string/sExampleRepetitions"
-            android:inputType="numberSigned" />
+            android:inputType="numberSigned"
+            android:textColor="@android:color/white" />
 
     </LinearLayout>
 
@@ -122,13 +132,14 @@
             android:id="@+id/btAddSong"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/btAddSong" />
+            android:background="@drawable/plus" />
 
         <TextView
             android:id="@+id/tvAddSong"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/sAddSong" />
+            android:text="@string/sAddSong" 
+            android:textColor="@android:color/white"/>
     </LinearLayout>
 
     <ListView

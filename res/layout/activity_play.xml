@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="it.lma5.incorporesound.Activities.PlayActivity"
+    android:background="@drawable/backgroundblue"
     tools:ignore="MergeRootFrame" >
 
     <LinearLayout
@@ -16,20 +17,22 @@
             android:id="@+id/tvPlayListLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/tvPlayListLabel" />
+            android:text="@string/tvPlayListLabel"
+            android:textColor="@android:color/white" />
 
         <TextView
             android:id="@+id/tvRunninPlaylistName"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-        <TextView
-            android:id="@+id/tvRandomMode"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"/>
+            android:textColor="@android:color/white" />
+    </LinearLayout>
 
-
+    <TextView
+        android:id="@+id/tvRandomMode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@android:color/white" />
 
     <ProgressBar
         android:id="@+id/pbPlaySong"
@@ -42,41 +45,43 @@
         android:layout_height="wrap_content" >
 
         <Button
-            android:id="@+id/btPlaySong"
+            android:id="@+id/btBackwardSong"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/sPlayTemp" />
-
-        <Button
-            android:id="@+id/btStopSong"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/sStopTemp" />
+            android:background="@drawable/backward" />
 
         <Button
             android:id="@+id/btPauseSong"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/sPauseTemp" />
+            android:background="@drawable/pause" />
+
+        <Button
+            android:id="@+id/btPlaySong"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/play" />
+
+        <Button
+            android:id="@+id/btStopSong"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/stop" />
 
         <Button
             android:id="@+id/btForwardSong"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/sForwardTemp" />
-
-        <Button
-            android:id="@+id/btBackwardSong"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/sBackwardTemp" />
-
+            android:background="@drawable/forward" />
     </LinearLayout>
 
     <ListView
         android:id="@+id/lvPlaySongList"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        >
     </ListView>
 
 </LinearLayout>

@@ -6,7 +6,7 @@
     android:orientation="vertical"
     tools:context="it.lma5.incorporesound.Activities.MainActivity"
     tools:ignore="MergeRootFrame" 
-    android:background="#071654">
+    android:background="@drawable/backgroundblue">
 
     <LinearLayout
         android:layout_width="match_parent"

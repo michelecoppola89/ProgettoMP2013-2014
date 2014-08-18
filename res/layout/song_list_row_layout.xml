@@ -8,13 +8,15 @@
         android:id="@+id/tvSongTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:textAppearance="?android:attr/textAppearanceMedium" 
+        android:textColor="@android:color/white"/>
 
     <TextView
         android:id="@+id/tvArtist"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall" 
+        android:textColor="@android:color/white"/>
 
     <TableLayout
         android:id="@+id/TableLayout1"
@@ -32,38 +34,47 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="@string/sStart" />
+                android:text="@string/sStart" 
+                android:textColor="@android:color/white"/>
 
             <TextView
                 android:id="@+id/tvDuration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:text="@string/sDuration" />
+                android:text="@string/sDuration" 
+                android:textColor="@android:color/white"/>
         </TableRow>
 
         <TableRow
             android:id="@+id/tableRow2"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+             >
 
             <Spinner
                 android:id="@+id/spSongStart"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:entries="@array/arPlayMode" />
+                android:entries="@array/arPlayMode" 
+               />
 
             <Spinner
                 android:id="@+id/spSongDuration"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:entries="@array/arDurations" />
+                android:entries="@array/arDurations" 
+                />
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
             <Button
                 android:id="@+id/btRemoveSong"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/minus" />
+                android:background="@drawable/minus"/>
         </TableRow>
     </TableLayout>
 

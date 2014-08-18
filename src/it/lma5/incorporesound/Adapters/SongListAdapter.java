@@ -143,7 +143,7 @@ public class SongListAdapter extends ArrayAdapter<Song> {
 
 						@Override
 						public void onNothingSelected(AdapterView<?> arg0) {
-							// TODO Auto-generated method stub
+							
 
 						}
 
@@ -177,7 +177,6 @@ public class SongListAdapter extends ArrayAdapter<Song> {
 
 				@Override
 				public void onNothingSelected(AdapterView<?> arg0) {
-					// TODO Auto-generated method stub
 
 				}
 

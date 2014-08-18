@@ -28,14 +28,23 @@ public final class R {
     }
     public static final class drawable {
         public static final int addplaylist=0x7f020000;
-        public static final int changeplaylist=0x7f020001;
-        public static final int deleteplaylist=0x7f020002;
-        public static final int ic_launcher=0x7f020003;
-        public static final int kaydet=0x7f020004;
-        public static final int launcher=0x7f020005;
-        public static final int myluncher=0x7f020006;
-        public static final int playplaylist=0x7f020007;
-        public static final int wallpaper=0x7f020008;
+        public static final int backgroundblue=0x7f020001;
+        public static final int backward=0x7f020002;
+        public static final int changeplaylist=0x7f020003;
+        public static final int deleteplaylist=0x7f020004;
+        public static final int forward=0x7f020005;
+        public static final int ic_launcher=0x7f020006;
+        public static final int kaydet=0x7f020007;
+        public static final int launcher=0x7f020008;
+        public static final int minus=0x7f020009;
+        public static final int myluncher=0x7f02000a;
+        public static final int pause=0x7f02000b;
+        public static final int play=0x7f02000c;
+        public static final int playplaylist=0x7f02000d;
+        public static final int plus=0x7f02000e;
+        public static final int save=0x7f02000f;
+        public static final int stop=0x7f020010;
+        public static final int wallpaper=0x7f020011;
     }
     public static final class id {
         public static final int LinearLayout1=0x7f090029;
@@ -43,19 +52,19 @@ public final class R {
         public static final int action_settings=0x7f090037;
         public static final int btAddPlaylist=0x7f090011;
         public static final int btAddSong=0x7f09000e;
-        public static final int btBackwardSong=0x7f09001c;
+        public static final int btBackwardSong=0x7f090018;
         public static final int btChange=0x7f090027;
         public static final int btDelete=0x7f090028;
-        public static final int btForwardSong=0x7f09001b;
+        public static final int btForwardSong=0x7f09001c;
         public static final int btNotificationBackward=0x7f090021;
         public static final int btNotificationForward=0x7f090024;
         public static final int btNotificationPlay=0x7f090023;
         public static final int btNotificationpause=0x7f090022;
-        public static final int btPauseSong=0x7f09001a;
+        public static final int btPauseSong=0x7f090019;
         public static final int btPlay=0x7f090026;
-        public static final int btPlaySong=0x7f090018;
+        public static final int btPlaySong=0x7f09001a;
         public static final int btRemoveSong=0x7f090036;
-        public static final int btStopSong=0x7f090019;
+        public static final int btStopSong=0x7f09001b;
         public static final int container=0x7f090000;
         public static final int etNewPlaylistName=0x7f090002;
         public static final int etRepetitionNum=0x7f09000d;
