@@ -22,6 +22,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.MediaMetadataRetriever;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -38,6 +39,7 @@ import android.widget.TextView;
 
 /**
  * Activity for playing songs of a playlist.
+ * 
  * @author Andrea Di Lonardo, Luca Fanelli, Michele Coppola
  */
 public class PlayActivity extends Activity implements OnClickListener {
@@ -102,20 +104,53 @@ public class PlayActivity extends Activity implements OnClickListener {
 		if (playlist == null)
 			Log.v("PlayActivity", "ERR");
 
+		if (playlist.getSongList().size() == 0) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage(getString(R.string.sErrorMessage))
+					.setCancelable(false)
+					.setPositiveButton("OK",
+							new DialogInterface.OnClickListener() {
+								public void onClick(DialogInterface dialog,
+										int id) {
+									finish();
+
+								}
+							});
+			AlertDialog alert = builder.create();
+			alert.show();
+			return;
+		}
+
 		adapter = new SongListToPlayAdapter(this,
 				R.layout.song_list_play_row_layout, playlist.getSongList());
 		lvPlaySongList.setAdapter(adapter);
 
-		checkSongs();
+		if (checkSongs()) {
+			serviceIntent = new Intent(getApplicationContext(),
+					MusicService.class);
+			serviceIntent.putExtra("PL_ID", playlistName);
+			startService(serviceIntent);
 
-		serviceIntent = new Intent(getApplicationContext(), MusicService.class);
-		serviceIntent.putExtra("PL_ID", playlistName);
-		startService(serviceIntent);
+			receiver = new PlaylistActivityReceiver(this, adapter);
 
-		receiver = new PlaylistActivityReceiver(this, adapter);
+			initilizeNotification();
+		} else {
+			btBackwardSong.setEnabled(false);
+			btForwardSong.setEnabled(false);
+			btPauseSong.setEnabled(false);
+			btPlaySong.setEnabled(false);
 
-		initilizeNotification();
+			btStopSong.setOnClickListener(new OnClickListener() {
 
+				@Override
+				public void onClick(View v) {
+					terminateActivity();
+
+				}
+
+			});
+
+		}
 	}
 
 	@Override
@@ -175,20 +210,17 @@ public class PlayActivity extends Activity implements OnClickListener {
 			btPauseSong.setEnabled(true);
 			btPlaySong.setEnabled(false);
 			btStopSong.setEnabled(true);
-		}
-		else if (v.getId() == R.id.btPauseSong) {
+		} else if (v.getId() == R.id.btPauseSong) {
 			Intent i = new Intent(MusicService.PAUSE_NOTIFICATION);
 			sendBroadcast(i);
 			btBackwardSong.setEnabled(false);
 			btForwardSong.setEnabled(false);
 			btPauseSong.setEnabled(false);
 			btPlaySong.setEnabled(true);
-		} 
-		else if (v.getId() == R.id.btForwardSong) {
+		} else if (v.getId() == R.id.btForwardSong) {
 			Intent i = new Intent(MusicService.FORWARD_NOTIFICATION);
 			sendBroadcast(i);
-		}
-		else {
+		} else {
 			Intent i = new Intent(MusicService.BACKWARD_NOTIFICATION);
 			sendBroadcast(i);
 
@@ -204,22 +236,26 @@ public class PlayActivity extends Activity implements OnClickListener {
 	protected void onResume() {
 
 		super.onResume();
-		IntentFilter intentFilter = new IntentFilter();
-		intentFilter.addAction(STOP_PLAYLIST_NOTIFICATION);
-		intentFilter.addAction(PROGRESS_PLAYLIST_NOTIFICATION);
-		intentFilter.addAction(PLAYSONG_PLAYLIST_NOTIFICATION);
-		intentFilter.addAction(CLOSE_SERVICE_NOTIFICATION);
-		registerReceiver(receiver, intentFilter);
-		
-		IntentFilter notificationIntentF = new IntentFilter();
-		notificationIntentF.addAction(NotificationReceiver.NOTIFICATION_PAUSE);
-		notificationIntentF.addAction(NotificationReceiver.NOTIFICATION_PLAY);
-		registerReceiver(notificationReceiver, notificationIntentF);
+		if (receiver != null && notificationReceiver != null) {
+			IntentFilter intentFilter = new IntentFilter();
+			intentFilter.addAction(STOP_PLAYLIST_NOTIFICATION);
+			intentFilter.addAction(PROGRESS_PLAYLIST_NOTIFICATION);
+			intentFilter.addAction(PLAYSONG_PLAYLIST_NOTIFICATION);
+			intentFilter.addAction(CLOSE_SERVICE_NOTIFICATION);
+			registerReceiver(receiver, intentFilter);
 
+			IntentFilter notificationIntentF = new IntentFilter();
+			notificationIntentF
+					.addAction(NotificationReceiver.NOTIFICATION_PAUSE);
+			notificationIntentF
+					.addAction(NotificationReceiver.NOTIFICATION_PLAY);
+			registerReceiver(notificationReceiver, notificationIntentF);
+		}
 	}
 
 	@SuppressWarnings("unchecked")
-	public void checkSongs() {
+	public boolean checkSongs() {
+		boolean ret = true;
 		MediaMetadataRetriever retriever = new MediaMetadataRetriever();
 		ArrayList<Integer> missingSongPosition = new ArrayList<Integer>();
 		ArrayList<Song> toDelete = new ArrayList<Song>();
@@ -241,6 +277,7 @@ public class PlayActivity extends Activity implements OnClickListener {
 
 		if (missingSongPosition.size() > 0) {
 
+			ret = false;
 			DbTaskDeleteSongs dbTaskDeleteSongs = new DbTaskDeleteSongs(helper);
 			dbTaskDeleteSongs.execute(toDelete);
 
@@ -256,18 +293,21 @@ public class PlayActivity extends Activity implements OnClickListener {
 							});
 			AlertDialog alert = builder.create();
 			alert.show();
+
 		}
+		return ret;
 	}
 
 	@Override
 	protected void onDestroy() {
 
 		super.onDestroy();
-		unregisterReceiver(receiver);
-		unregisterReceiver(notificationReceiver);
-		notificationManager.cancel(0);
-		stopService(serviceIntent);
-
+		if (receiver != null && notification != null) {
+			unregisterReceiver(receiver);
+			unregisterReceiver(notificationReceiver);
+			notificationManager.cancel(0);
+			stopService(serviceIntent);
+		}
 	}
 
 	public Intent getServiceIntent() {
@@ -281,7 +321,6 @@ public class PlayActivity extends Activity implements OnClickListener {
 	public void setNotificationManager(NotificationManager notificationManager) {
 		this.notificationManager = notificationManager;
 	}
-	
 
 	public Playlist getPlaylist() {
 		return playlist;
@@ -290,8 +329,6 @@ public class PlayActivity extends Activity implements OnClickListener {
 	public void setPlaylist(Playlist playlist) {
 		this.playlist = playlist;
 	}
-	
-	
 
 	public Button getBtPlaySong() {
 		return btPlaySong;
@@ -330,7 +367,13 @@ public class PlayActivity extends Activity implements OnClickListener {
 		// notification is selected
 
 		Intent intent = new Intent(this, PlayActivity.class);
-		PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
+		PendingIntent pIntent;
+		
+		if (Build.VERSION.SDK_INT < 19)
+			pIntent = PendingIntent.getActivity(this, 0, intent, 0);
+		else
+			pIntent = PendingIntent.getActivity(this, 0, intent,
+					Intent.FLAG_ACTIVITY_NEW_TASK);
 
 		Intent iStop = new Intent(CLOSE_SERVICE_NOTIFICATION);
 		PendingIntent pStop = PendingIntent.getBroadcast(
@@ -343,12 +386,14 @@ public class PlayActivity extends Activity implements OnClickListener {
 		Intent iBackward = new Intent(MusicService.BACKWARD_NOTIFICATION);
 		PendingIntent pBackward = PendingIntent.getBroadcast(
 				getApplicationContext(), 0, iBackward, 0);
-		
+
 		Intent iPause = new Intent(MusicService.PAUSE_NOTIFICATION);
-		PendingIntent pPause = PendingIntent.getBroadcast(getApplicationContext(), 0, iPause, 0);
-		
+		PendingIntent pPause = PendingIntent.getBroadcast(
+				getApplicationContext(), 0, iPause, 0);
+
 		Intent iPlay = new Intent(MusicService.PLAY_NOTIFICATION);
-		PendingIntent pPlay = PendingIntent.getBroadcast(getApplicationContext(), 0, iPlay, 0);
+		PendingIntent pPlay = PendingIntent.getBroadcast(
+				getApplicationContext(), 0, iPlay, 0);
 
 		// Create remote view and set bigContentView.
 		RemoteViews expandedView = new RemoteViews(this.getPackageName(),
@@ -360,14 +405,12 @@ public class PlayActivity extends Activity implements OnClickListener {
 				pBackward);
 		expandedView.setOnClickPendingIntent(R.id.btNotificationpause, pPause);
 		expandedView.setOnClickPendingIntent(R.id.btNotificationPlay, pPlay);
-		
+
 		expandedView.setTextViewText(R.id.tvNotificationPlaylistName,
 				playlist.getName());
-		
+
 		expandedView.setViewVisibility(R.id.btNotificationPlay, View.GONE);
-		
-		
-		
+
 		// build notification
 		// the addAction re-use the same intent to keep the example short
 
@@ -376,11 +419,16 @@ public class PlayActivity extends Activity implements OnClickListener {
 				.setContentIntent(pIntent).setAutoCancel(false)
 				.setContent(expandedView).setDeleteIntent(pStop).build();
 		notification.bigContentView = expandedView;
-		
+
 		notificationReceiver = new NotificationReceiver(this);
 
 		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		notificationManager.notify(0, notification);
+
+	}
+
+	private void terminateActivity() {
+		this.finish();
 
 	}
 

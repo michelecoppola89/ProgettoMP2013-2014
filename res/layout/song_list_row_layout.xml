@@ -2,6 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#73073254"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
     android:orientation="vertical" >
 
     <TextView
@@ -56,7 +59,7 @@
                 android:id="@+id/spSongStart"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:entries="@array/arPlayMode" 
+                android:entries="@array/arPlayMode"
                />
 
             <Spinner

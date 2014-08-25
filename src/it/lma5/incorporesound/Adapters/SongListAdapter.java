@@ -22,7 +22,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
  * Adapter used for list of songs in CreatePlaylistActivity.
  * 
  * @author Andrea Di Lonardo, Luca Fanelli, Michele Coppola
- *
+ * 
  */
 public class SongListAdapter extends ArrayAdapter<Song> {
 
@@ -68,6 +68,7 @@ public class SongListAdapter extends ArrayAdapter<Song> {
 
 			spSongDuration = (Spinner) rowView
 					.findViewById(R.id.spSongDuration);
+
 			spSongStart = (Spinner) rowView.findViewById(R.id.spSongStart);
 			spSongStart.setTag(position);
 			spSongDuration.setTag(position);
@@ -83,9 +84,8 @@ public class SongListAdapter extends ArrayAdapter<Song> {
 				}
 
 				ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-						getContext(), android.R.layout.simple_spinner_item,
-						durationList);
-				adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+						getContext(), R.layout.spinner_item, durationList);
+				adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
 				spSongDuration.setAdapter(adapter);
 
 			} else if (songDuration < 45000) {
@@ -95,9 +95,8 @@ public class SongListAdapter extends ArrayAdapter<Song> {
 				}
 
 				ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-						getContext(), android.R.layout.simple_spinner_item,
-						durationList);
-				adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+						getContext(), R.layout.spinner_item, durationList);
+				adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
 				spSongDuration.setAdapter(adapter);
 
 			} else if (songDuration < 60000) {
@@ -105,16 +104,14 @@ public class SongListAdapter extends ArrayAdapter<Song> {
 				durationList.remove(durationList.size() - 1);
 
 				ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-						getContext(), android.R.layout.simple_spinner_item,
-						durationList);
-				adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+						getContext(), R.layout.spinner_item, durationList);
+				adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
 				spSongDuration.setAdapter(adapter);
 
 			} else {
 				ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-						getContext(), android.R.layout.simple_spinner_item,
-						durationList);
-				adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+						getContext(), R.layout.spinner_item, durationList);
+				adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
 				spSongDuration.setAdapter(adapter);
 			}
 
@@ -143,12 +140,15 @@ public class SongListAdapter extends ArrayAdapter<Song> {
 
 						@Override
 						public void onNothingSelected(AdapterView<?> arg0) {
-							
 
 						}
 
 					});
 
+			ArrayAdapter adapter = ArrayAdapter.createFromResource(getContext(),
+					R.array.arPlayMode, R.layout.spinner_item);
+			adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+			spSongStart.setAdapter(adapter);
 			spSongStart.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 				@Override
@@ -163,13 +163,13 @@ public class SongListAdapter extends ArrayAdapter<Song> {
 						if (interval >= 0) {
 
 							Random rand = new Random();
-							Integer beginTime = rand.nextInt(interval)+1;
+							Integer beginTime = rand.nextInt(interval) + 1;
 							temp.setBeginTime(beginTime);
 
 						}
 
 					} else {
-						//list.get((Integer) arg0.getTag()).setBeginTime(1);
+						// list.get((Integer) arg0.getTag()).setBeginTime(1);
 						temp.setBeginTime(0);
 					}
 

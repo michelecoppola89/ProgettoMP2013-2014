@@ -3,10 +3,10 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/backgroundblue"
     android:orientation="vertical"
     tools:context="it.lma5.incorporesound.Activities.CreatePlaylistActivity"
-    tools:ignore="MergeRootFrame" 
-    android:background="@drawable/backgroundblue">
+    tools:ignore="MergeRootFrame" >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,15 +16,16 @@
             android:id="@+id/tvInsertPlayListName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/sInsertPlayListName" 
-            android:textColor="@android:color/white"/>
+            android:text="@string/sInsertPlayListName"
+            android:textColor="@android:color/white" />
 
         <EditText
             android:id="@+id/etNewPlaylistName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="@string/sNewPlaylist" >
+            android:hint="@string/sNewPlaylist"
+            android:textColor="@android:color/white" >
 
             <requestFocus />
         </EditText>
@@ -38,15 +39,14 @@
             android:id="@+id/tvFadeIn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/sFadeIn" 
-            android:textColor="@android:color/white"/>
+            android:text="@string/sFadeIn"
+            android:textColor="@android:color/white" />
 
         <Spinner
             android:id="@+id/spFadeIn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:entries="@array/arFadeIn" />
-
     </LinearLayout>
 
     <RadioGroup
@@ -59,16 +59,16 @@
             android:id="@+id/rbRandom"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/sRandom" 
-            android:textColor="@android:color/white"/>
+            android:text="@string/sRandom"
+            android:textColor="@android:color/white" />
 
         <RadioButton
             android:id="@+id/rbStraight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-             android:checked="true"
-            android:text="@string/sStraight" 
-            android:textColor="@android:color/white"/>
+            android:checked="true"
+            android:text="@string/sStraight"
+            android:textColor="@android:color/white" />
     </RadioGroup>
 
     <RadioGroup
@@ -81,24 +81,23 @@
             android:id="@+id/rbRepeated"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/sRepeated" 
-            android:textColor="@android:color/white"/>
+            android:text="@string/sRepeated"
+            android:textColor="@android:color/white" />
 
         <RadioButton
             android:id="@+id/rbOneTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:checked="true"
-            android:text="@string/sOneTime" 
-            android:textColor="@android:color/white"/>
+            android:text="@string/sOneTime"
+            android:textColor="@android:color/white" />
 
         <RadioButton
             android:id="@+id/rbLoop"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/sLoop" 
-            android:textColor="@android:color/white"/>
-
+            android:text="@string/sLoop"
+            android:textColor="@android:color/white" />
     </RadioGroup>
 
     <LinearLayout
@@ -109,8 +108,8 @@
             android:id="@+id/tvRepetitionNum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/sRepetitionNum" 
-            android:textColor="@android:color/white"/>
+            android:text="@string/sRepetitionNum"
+            android:textColor="@android:color/white" />
 
         <EditText
             android:id="@+id/etRepetitionNum"
@@ -121,7 +120,6 @@
             android:hint="@string/sExampleRepetitions"
             android:inputType="numberSigned"
             android:textColor="@android:color/white" />
-
     </LinearLayout>
 
     <LinearLayout
@@ -138,14 +136,17 @@
             android:id="@+id/tvAddSong"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/sAddSong" 
-            android:textColor="@android:color/white"/>
+            android:text="@string/sAddSong"
+            android:textColor="@android:color/white" />
     </LinearLayout>
 
     <ListView
         android:id="@+id/lvSongList"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="20dp" >
     </ListView>
 
 </LinearLayout>

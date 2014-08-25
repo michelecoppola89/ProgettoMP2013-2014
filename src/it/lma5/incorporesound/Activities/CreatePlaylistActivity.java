@@ -8,7 +8,9 @@ import it.lma5.incorporesound.AsyncTasks.DbTaskUpdatePlaylist;
 import it.lma5.incorporesound.Entities.Playlist;
 import it.lma5.incorporesound.Entities.Song;
 import it.lma5.incorporesound.SqliteHelpers.InCorporeSoundHelper;
+
 import java.util.ArrayList;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -17,6 +19,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,6 +27,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -36,9 +40,9 @@ import android.widget.Toast;
  * Activity for creating/updating a new playlist.
  * 
  * @author Andrea Di Lonardo, Luca Fanelli, Michele Coppola
- *
+ * 
  */
-@SuppressLint("UseValueOf") 
+@SuppressLint({ "UseValueOf", "InlinedApi" })
 public class CreatePlaylistActivity extends Activity implements OnClickListener {
 
 	private Button btAddSong;
@@ -83,6 +87,9 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 		rgOrder = (RadioGroup) findViewById(R.id.rgOrder);
 		rgRepetition = (RadioGroup) findViewById(R.id.rgRepetition);
 		spFadeIn = (Spinner) findViewById(R.id.spFadeIn);
+		ArrayAdapter adapter = ArrayAdapter.createFromResource(this, R.array.arFadeIn, R.layout.spinner_item);
+		adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+		spFadeIn.setAdapter(adapter);
 
 		rgRepetition.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
@@ -196,8 +203,8 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
 			if (songList.isEmpty()) {
-				Toast.makeText(this,getString(R.string.sToastNoSong), Toast.LENGTH_SHORT)
-						.show();
+				Toast.makeText(this, getString(R.string.sToastNoSong),
+						Toast.LENGTH_SHORT).show();
 				return true;
 			}
 			String playListName = etPlaylistName.getText().toString();
@@ -217,16 +224,17 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 			else {
 				String temp = etRepetitionNum.getText().toString();
 				if (temp.isEmpty()) {
-					Toast.makeText(this, getString(R.string.sInsertNumberOfRepetitions),
+					Toast.makeText(this,
+							getString(R.string.sInsertNumberOfRepetitions),
 							Toast.LENGTH_SHORT).show();
 					return true;
 				}
-				if(temp.equals("0")) {
+				if (temp.equals("0")) {
 					Toast.makeText(this, getString(R.string.sZeroRepetetition),
 							Toast.LENGTH_SHORT).show();
 					return true;
 				}
-					
+
 				repetition = Integer.parseInt(temp);
 			}
 			int selectedOrder = rgOrder.getCheckedRadioButtonId();
@@ -325,9 +333,16 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 	@Override
 	public void onClick(View v) {
 		if (v.getId() == R.id.btAddSong) {
-			Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-			intent.setType("audio/*");
-			startActivityForResult(intent, 10);
+			if (Build.VERSION.SDK_INT < 19) {
+				Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+				intent.setType("audio/*");
+				startActivityForResult(intent, 10);
+			} else {
+				Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+				intent.addCategory(Intent.CATEGORY_OPENABLE);
+				intent.setType("audio/*");
+				startActivityForResult(intent, 10);
+			}
 		}
 
 	}
@@ -344,8 +359,8 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 				String mimetype = retriever
 						.extractMetadata(MediaMetadataRetriever.METADATA_KEY_MIMETYPE);
 				if (!mimetype.contains("audio")) {
-					Toast.makeText(this, getString(R.string.sWrongFormat), Toast.LENGTH_SHORT)
-							.show();
+					Toast.makeText(this, getString(R.string.sWrongFormat),
+							Toast.LENGTH_SHORT).show();
 				} else {
 
 					String name = retriever
@@ -359,7 +374,8 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 							.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
 
 					if (duration < 15000) {
-						Toast.makeText(this, getString(R.string.sDurationTooShort),
+						Toast.makeText(this,
+								getString(R.string.sDurationTooShort),
 								Toast.LENGTH_SHORT).show();
 
 					} else {
@@ -370,7 +386,8 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 
 				}
 			} catch (RuntimeException e) {
-				Toast.makeText(this, getString(R.string.sWrongFormat), Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, getString(R.string.sWrongFormat),
+						Toast.LENGTH_SHORT).show();
 			}
 
 		}
