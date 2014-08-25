@@ -48,31 +48,32 @@
             android:id="@+id/btBackwardSong"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/backward" />
+            android:background="@drawable/button_backward" />
 
         <Button
             android:id="@+id/btPauseSong"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/pause" />
+            android:background="@drawable/button_pause" />
 
         <Button
             android:id="@+id/btPlaySong"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/play" />
+            android:background="@drawable/button_play" 
+ 			/>
 
         <Button
             android:id="@+id/btStopSong"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/stop" />
+            android:background="@drawable/button_stop" />
 
         <Button
             android:id="@+id/btForwardSong"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/forward" />
+            android:background="@drawable/button_forward" />
     </LinearLayout>
 
     <ListView

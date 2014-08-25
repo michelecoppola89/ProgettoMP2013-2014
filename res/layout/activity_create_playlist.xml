@@ -130,7 +130,7 @@
             android:id="@+id/btAddSong"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/plus" />
+            android:background="@drawable/button_plus" />
 
         <TextView
             android:id="@+id/tvAddSong"

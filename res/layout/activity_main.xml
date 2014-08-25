@@ -16,7 +16,7 @@
             android:id="@+id/btAddPlaylist"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/addplaylist" 
+            android:background="@drawable/button_addplaylist" 
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"/>
 
