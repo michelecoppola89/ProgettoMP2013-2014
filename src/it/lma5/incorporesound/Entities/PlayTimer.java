@@ -78,7 +78,7 @@ public class PlayTimer extends CountDownTimer {
 		this.receiver = receiver;
 		this.context = context;
 		this.fadeIn = fadeIn;
-		deltaVolume = (countDownInterval / (float) (fadeIn * 1000 / 2));
+		deltaVolume = (countDownInterval / (float) (fadeIn * 1000));
 
 		mediaPlayer = new MediaPlayer();
 
