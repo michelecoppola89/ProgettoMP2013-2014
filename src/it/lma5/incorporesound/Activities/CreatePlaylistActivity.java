@@ -42,7 +42,7 @@ import android.widget.Toast;
  * @author Andrea Di Lonardo, Luca Fanelli, Michele Coppola
  * 
  */
-@SuppressLint({ "UseValueOf", "InlinedApi" })
+@SuppressLint({ "UseValueOf", "InlinedApi", "NewApi" })
 public class CreatePlaylistActivity extends Activity implements OnClickListener {
 
 	private Button btAddSong;
@@ -353,6 +353,11 @@ public class CreatePlaylistActivity extends Activity implements OnClickListener 
 		if (resultCode == RESULT_OK && requestCode == 10) {
 			Uri uriSong;
 			uriSong = data.getData();
+			 final int takeFlags = data.getFlags()
+		                & (Intent.FLAG_GRANT_READ_URI_PERMISSION
+		                | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+		        // Check for the freshest data.
+		        getContentResolver().takePersistableUriPermission(uriSong, takeFlags);
 			MediaMetadataRetriever retriever = new MediaMetadataRetriever();
 			try {
 				retriever.setDataSource(this, uriSong);
